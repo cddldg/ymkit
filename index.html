@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30aitool - 小而美的工具导航网</title>
+<meta name="description" content="小而美的免费工具集合网址">
+<meta name="keywords" content="免费工具集合,AI工具,在线工具,图片处理,视频工具">
+<meta name="theme-color" content="#d81e06">
+<style>
+:root {
+  --red: #d81e06;
+  --red-light: rgba(216, 30, 6, 0.08);
+  --red-lighter: rgba(216, 30, 6, 0.04);
+  --bg: #f2f2f2;
+  --card-bg: #fff;
+  --text: #222;
+  --text-secondary: #666;
+  --text-muted: #999;
+  --border: #e8e8e8;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* Header */
+.header {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top:0; z-index:100;
+}
+.header-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  gap: 28px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--red);
+  white-space: nowrap;
+}
+.logo svg { width:28px; height:28px; flex-shrink:0; }
+.nav { display:flex; gap:6px; }
+.nav a {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #444;
+  transition: all 0.15s;
+}
+.nav a:hover, .nav a.active { color: var(--red); background: var(--red-light); }
+
+.header-right { margin-left: auto; display:flex; align-items:center; gap:12px; }
+.search-box {
+  display:flex; align-items:center;
+  background: #f5f5f5;
+  border-radius: 20px;
+  padding: 0 14px;
+  height: 36px;
+  transition: all 0.2s;
+}
+.search-box:focus-within { background: #fff; box-shadow: 0 0 0 2px var(--red-light); }
+.search-box input {
+  border: none; background: transparent;
+  outline: none; font-size: 13px; width: 160px;
+  font-family: inherit;
+}
+.search-box svg { width:16px; height:16px; stroke: #999; fill:none; stroke-width:2; flex-shrink:0; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #fff 0%, #fff5f5 100%);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.hero h1 { font-size: 28px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+.hero p { font-size: 15px; color: var(--text-secondary); margin-bottom: 6px; }
+.hero .stats {
+  display:flex; justify-content:center; gap:32px;
+  margin-top: 20px; font-size:13px; color: var(--text-muted);
+}
+.hero .stats strong { color: var(--red); font-size:18px; }
+
+/* Category tabs */
+.tabs-wrap {
+  max-width: 1300px; margin: 0 auto; padding: 0 20px;
+}
+.tabs {
+  display:flex; gap:4px; padding: 20px 0 0;
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 8px 20px; border-radius: 20px;
+  font-size: 14px; cursor: pointer;
+  background: #fff; color: #555;
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+  user-select: none;
+}
+.tab:hover { border-color: var(--red); color: var(--red); }
+.tab.active { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* Search local */
+.local-search {
+  max-width: 1300px; margin: 0 auto; padding: 16px 20px 0;
+}
+.local-search input {
+  width: 100%; padding: 10px 18px;
+  border: 1px solid var(--border); border-radius: 22px;
+  font-size: 14px; outline: none; background: #fff;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.local-search input:focus { border-color: var(--red); }
+.local-search input::placeholder { color: #bbb; }
+
+/* Tool grid */
+.tools-container {
+  max-width: 1300px; margin: 0 auto; padding: 16px 20px 40px;
+}
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.tool-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: all 0.2s;
+  display:flex; flex-direction:column;
+  position: relative;
+}
+.tool-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  border-color: #ddd;
+}
+.tool-card .tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  background: var(--red-light);
+  color: var(--red);
+  margin-bottom: 10px;
+  align-self: flex-start;
+  white-space: nowrap;
+}
+.tool-card h3 {
+  font-size: 16px; font-weight: 600;
+  margin-bottom: 6px; color: #1a1a1a;
+}
+.tool-card .desc {
+  font-size: 13px; color: var(--text-muted);
+  margin-bottom: 14px; flex:1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tool-card .meta {
+  display:flex; align-items:center; justify-content:space-between;
+  font-size: 12px; color: var(--text-muted);
+}
+.tool-card .meta .free {
+  color: #22c55e; font-weight: 500;
+}
+.tool-card .btn-visit {
+  padding: 5px 14px; border-radius: 14px;
+  background: var(--red); color: #fff;
+  font-size: 12px; font-weight: 500;
+  transition: opacity 0.15s;
+}
+.tool-card .btn-visit:hover { opacity: 0.85; }
+
+.empty-state {
+  text-align:center; padding:60px 20px; color: var(--text-muted);
+}
+.empty-state svg { width:64px; height:64px; stroke:#ccc; margin-bottom:12px; }
+
+/* Footer */
+.footer {
+  text-align: center; padding: 24px 20px;
+  color: var(--text-muted); font-size: 13px;
+  border-top: 1px solid var(--border);
+  max-width: 1300px; margin: 0 auto;
+}
+.footer a { color: var(--red); }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .header-inner { height:48px; gap:12px; }
+  .logo { font-size:17px; }
+  .nav { display:none; }
+  .search-box input { width:100px; }
+  .hero { padding: 32px 16px 24px; }
+  .hero h1 { font-size: 22px; }
+  .hero .stats { gap: 16px; }
+  .tabs { padding-top: 14px; }
+  .tab { padding: 6px 14px; font-size: 13px; }
+  .tool-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
+      30aitool
+    </a>
+    <nav class="nav">
+      <a href="/" class="active">首页</a>
+      <a href="#tools">工具</a>
+      <a href="#ai">AI</a>
+      <a href="#efficiency">效率</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>小而美的工具导航网</h1>
+  <p>精选 50+ 免费实用在线工具，免登录、无广告、即用即走</p>
+  <div class="stats">
+    <div><strong>50+</strong> 精选工具</div>
+    <div><strong>6</strong> 大分类</div>
+    <div><strong>100%</strong> 免费</div>
+    <div><strong>0</strong> 广告</div>
+  </div>
+</section>
+
+<div class="local-search">
+  <input type="text" id="searchInput" placeholder="搜索工具名称或描述…" oninput="filterTools()">
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs">
+    <span class="tab active" data-cat="all">全部</span>
+    <span class="tab" data-cat="图片">🖼️ 图片</span>
+    <span class="tab" data-cat="视频">🎬 视频</span>
+    <span class="tab" data-cat="音频">🎵 音频</span>
+    <span class="tab" data-cat="文档">📄 文档</span>
+    <span class="tab" data-cat="AI工具">🤖 AI工具</span>
+    <span class="tab" data-cat="效率">⚡ 效率</span>
+    <span class="tab" data-cat="开发">💻 开发</span>
+  </div>
+</div>
+
+<div class="tools-container">
+  <div class="tool-grid" id="toolGrid"></div>
+</div>
+
+<footer class="footer">
+  <p>30aitool — 小而美的工具导航网 · 所有工具链接指向对应官方网站 · <a href="https://github.com" target="_blank">GitHub</a></p>
+</footer>
+
+<script>
+const tools = [
+  // 图片
+  { name:"Remove.bg", desc:"AI智能抠图，5秒去除图片背景，支持批量处理", cat:"图片", free:true, url:"https://www.remove.bg/zh" },
+  { name:"TinyPNG", desc:"在线图片压缩，减小体积同时保持画质", cat:"图片", free:true, url:"https://tinypng.com/" },
+  { name:"Optimizilla", desc:"批量图片压缩，JPEG/PNG可调质量滑块对比", cat:"图片", free:true, url:"https://imagecompressor.com/zh/" },
+  { name:"Canva可画", desc:"在线设计工具，海量模板，快速出图", cat:"图片", free:true, url:"https://www.canva.cn/" },
+  { name:"创客贴", desc:"简易平面设计，海报/Logo/封面一键生成", cat:"图片", free:true, url:"https://www.chuangkit.com/" },
+  { name:"Bigjpg", desc:"AI图片无损放大，动漫/照片专属算法", cat:"图片", free:true, url:"https://bigjpg.com/" },
+  { name:"搞定设计", desc:"新媒体配图模板，公众号/小红书封面", cat:"图片", free:true, url:"https://www.gaoding.com/" },
+  { name:"佐糖", desc:"在线抠图、去水印、图片编辑一站式工具", cat:"图片", free:true, url:"https://picwish.cn/" },
+  { name:"SVG Viewer", desc:"在线预览、编辑和优化SVG矢量图形", cat:"图片", free:true, url:"https://www.svgviewer.dev/" },
+  { name:"Carbon", desc:"代码截图美化工具，生成漂亮的代码图片", cat:"图片", free:true, url:"https://carbon.now.sh/" },
+
+  // 视频
+  { name:"猫抓", desc:"浏览器插件，嗅探网页视频/音频资源并下载", cat:"视频", free:true, url:"https://github.com/xifangczy/cat-catch" },
+  { name:"Downkyi", desc:"B站视频批量下载工具，支持高清/4K", cat:"视频", free:true, url:"https://github.com/leiurayer/downkyi" },
+  { name:"OBS Studio", desc:"开源免费录屏+直播推流，功能强大", cat:"视频", free:true, url:"https://obsproject.com/zh-cn" },
+  { name:"HandBrake", desc:"开源视频转码压缩，支持几乎所有格式", cat:"视频", free:true, url:"https://handbrake.fr/" },
+  { name:"剪映专业版", desc:"桌面端视频剪辑，素材库丰富，AI字幕生成", cat:"视频", free:true, url:"https://www.capcut.cn/" },
+  { name:"VideoCaptioner", desc:"视频字幕自动生成与翻译工具", cat:"视频", free:true, url:"https://github.com/WEIFENG2333/VideoCaptioner" },
+  { name:"小丸工具箱", desc:"视频压制工具，B站投稿必备", cat:"视频", free:true, url:"https://maruko.appinn.me/" },
+  { name:"Autocut", desc:"AI自动剪辑口播视频，去除静音片段", cat:"视频", free:true, url:"https://github.com/mli/autocut" },
+
+  // 音频
+  { name:"Vocal Remover", desc:"在线提取伴奏/人声分离，AI算法精准分离", cat:"音频", free:true, url:"https://vocalremover.org/zh/" },
+  { name:"Audacity", desc:"开源音频编辑软件，录音/剪辑/混音", cat:"音频", free:true, url:"https://www.audacityteam.org/" },
+  { name:"Text To Speech", desc:"文字转语音，多种自然发音人可选", cat:"音频", free:true, url:"https://ttsmaker.com/zh-cn" },
+  { name:"FreeConvert Audio", desc:"在线音频格式转换，MP3/WAV/FLAC等互转", cat:"音频", free:true, url:"https://www.freeconvert.com/zh/audio-converter" },
+  { name:"网易见外", desc:"网易AI音频转写/翻译平台", cat:"音频", free:true, url:"https://jianwai.youdao.com/" },
+  { name:"MuseScore", desc:"开源免费制谱软件，五线谱/简谱/吉他谱", cat:"音频", free:true, url:"https://musescore.org/zh-hans" },
+
+  // 文档
+  { name:"Smallpdf", desc:"PDF压缩/合并/转换一站式在线工具", cat:"文档", free:true, url:"https://smallpdf.com/cn" },
+  { name:"PDF Candy", desc:"PDF转Word/Excel/JPG，支持批量处理", cat:"文档", free:true, url:"https://pdfcandy.com/cn/" },
+  { name:"ilovepdf", desc:"在线PDF处理工具集：合并、拆分、压缩、转换", cat:"文档", free:true, url:"https://www.ilovepdf.com/zh-cn" },
+  { name:"PDF Guru", desc:"开源PDF工具箱，去水印/解密/编辑", cat:"文档", free:true, url:"https://github.com/kevin2li/PDF-Guru" },
+  { name:"OnlineOCR", desc:"图片/PDF文字识别提取，支持46种语言", cat:"文档", free:true, url:"https://www.onlineocr.net/zh/" },
+  { name:"FileZigZag", desc:"在线文件格式转换，支持文档/图片/音视频", cat:"文档", free:true, url:"https://www.filezigzag.com/zh/" },
+  { name:"Convertio", desc:"在线文件转换器，支持300+格式互转", cat:"文档", free:true, url:"https://convertio.co/zh/" },
+  { name:"草料二维码", desc:"二维码生成、美化、管理平台", cat:"文档", free:true, url:"https://cli.im/" },
+
+  // AI工具
+  { name:"Kimi", desc:"月之暗面AI助手，长文本理解、文件分析、联网搜索", cat:"AI工具", free:true, url:"https://kimi.moonshot.cn/" },
+  { name:"通义千问", desc:"阿里AI大模型，内容生成、文档分析、图像理解", cat:"AI工具", free:true, url:"https://tongyi.aliyun.com/" },
+  { name:"DeepSeek", desc:"深度求索AI，深度思考模式、联网搜索、代码生成", cat:"AI工具", free:true, url:"https://chat.deepseek.com/" },
+  { name:"文心一言", desc:"百度AI助手，对话/绘画/图表制作", cat:"AI工具", free:true, url:"https://yiyan.baidu.com/" },
+  { name:"豆包", desc:"字节跳动AI助手，对话/写作/翻译/编程", cat:"AI工具", free:true, url:"https://www.doubao.com/" },
+  { name:"通义听悟", desc:"AI音视频转文字/会议纪要/实时翻译", cat:"AI工具", free:true, url:"https://tingwu.aliyun.com/" },
+  { name:"ElevenLabs", desc:"AI语音合成与声音克隆，效果逼真", cat:"AI工具", free:true, url:"https://elevenlabs.io/" },
+  { name:"DALL·E", desc:"OpenAI AI绘图，根据文字描述生成高质量图片", cat:"AI工具", free:false, url:"https://openai.com/dall-e/" },
+  { name:"Stable Diffusion", desc:"开源AI绘画模型，可本地部署或在线使用", cat:"AI工具", free:true, url:"https://stablediffusionweb.com/" },
+  { name:"LiblibAI", desc:"国内AI绘画平台，模型丰富、在线出图", cat:"AI工具", free:true, url:"https://www.liblib.ai/" },
+
+  // 效率
+  { name:"Arya", desc:"在线Markdown编辑预览，所见即所得", cat:"效率", free:true, url:"https://markdown.lovejade.cn/" },
+  { name:"Obsidian", desc:"本地Markdown笔记软件，双向链接知识库", cat:"效率", free:true, url:"https://obsidian.md/" },
+  { name:"Notion", desc:"全能笔记/项目管理/数据库协作平台", cat:"效率", free:true, url:"https://www.notion.so/" },
+  { name:"幕布", desc:"大纲笔记+思维导图，结构化思考工具", cat:"效率", free:true, url:"https://mubu.com/" },
+  { name:"ProcessOn", desc:"在线流程图/思维导图/UML图绘制", cat:"效率", free:true, url:"https://www.processon.com/" },
+  { name:"AirPortal", desc:"跨设备文件传输，无需登录，即传即走", cat:"效率", free:true, url:"https://airportal.cn/" },
+  { name:"Send", desc:"端到端加密文件分享，最大10G", cat:"效率", free:true, url:"https://send.vis.ee/" },
+  { name:"SimpleMindMap", desc:"开源在线思维导图，支持多种布局导出", cat:"效率", free:true, url:"https://wanglin2.github.io/mind-map/" },
+
+  // 开发
+  { name:"JSON.cn", desc:"在线JSON格式化/校验/压缩/转义工具", cat:"开发", free:true, url:"https://www.json.cn/" },
+  { name:"IT Tools", desc:"开发者在线工具箱：编码/加密/转换/生成器", cat:"开发", free:true, url:"https://it-tools.tech/" },
+  { name:"Caniuse", desc:"查询前端特性在各浏览器的兼容性数据", cat:"开发", free:true, url:"https://caniuse.com/" },
+  { name:"CodePen", desc:"在线前端代码编辑与演示平台", cat:"开发", free:true, url:"https://codepen.io/" },
+  { name:"RegExr", desc:"正则表达式在线测试、学习与社区", cat:"开发", free:true, url:"https://regexr.com/" },
+  { name:"ExplainShell", desc:"Shell命令解析，逐段解释参数含义", cat:"开发", free:true, url:"https://explainshell.com/" },
+  { name:"QuickType", desc:"根据JSON自动生成各语言的类型定义", cat:"开发", free:true, url:"https://quicktype.io/" },
+];
+
+let activeCat = "all";
+
+function renderTools(filterText = "") {
+  const grid = document.getElementById("toolGrid");
+  const q = filterText.toLowerCase().trim();
+  let filtered = tools.filter(t => {
+    const matchCat = activeCat === "all" || t.cat === activeCat;
+    const matchSearch = !q || t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || t.cat.toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <p>没有找到匹配的工具</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(t => `
+    <div class="tool-card">
+      <span class="tag">${t.cat}</span>
+      <h3>${t.name}</h3>
+      <p class="desc">${t.desc}</p>
+      <div class="meta">
+        <span class="free">${t.free ? "免费" : "部分免费"}</span>
+        <a href="${t.url}" target="_blank" rel="noopener" class="btn-visit">访问官网 →</a>
+      </div>
+    </div>
+  `).join("");
+}
+
+function filterTools() {
+  renderTools(document.getElementById("searchInput").value);
+}
+
+// Tab switching
+document.getElementById("tabs").addEventListener("click", (e) => {
+  const tab = e.target.closest(".tab");
+  if (!tab) return;
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  tab.classList.add("active");
+  activeCat = tab.dataset.cat;
+  renderTools(document.getElementById("searchInput").value);
+});
+
+// Initial render
+renderTools();
+</script>
+</body>
+</html>
