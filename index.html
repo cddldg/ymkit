@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>YMKit — 工具 · AI · 资源 · 素材 · 教程</title>
+<meta name="description" content="精选软件工具、AI 应用、设计资源、创意素材与实用教程的集合导航">
+<meta name="theme-color" content="#FBFAF6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & VARS ===== */
+:root {
+  --cream: #FBFAF6;
+  --warm-stone: #E8E3DC;
+  --warm-stone-dim: #D5CFC6;
+  --charcoal: #2C2C2A;
+  --charcoal-soft: #3D3D3A;
+  --charcoal-muted: #6B6B67;
+  --accent: #B8472E;
+  --accent-soft: #C96B52;
+  --accent-light: rgba(184, 71, 46, 0.06);
+  --white: #FFFFFF;
+  --hairline: rgba(44, 44, 42, 0.08);
+  --hairline-strong: rgba(44, 44, 42, 0.12);
+  --shadow-diffuse: 0 20px 40px -15px rgba(44, 44, 42, 0.04);
+  --shadow-card: 0 1px 2px rgba(44, 44, 42, 0.04), 0 8px 24px -8px rgba(44, 44, 42, 0.06);
+  --radius-xl: 2rem;
+  --radius-lg: 1.25rem;
+  --radius-md: 0.875rem;
+  --radius-pill: 9999px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: var(--cream);
+  color: var(--charcoal);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+::selection { background: var(--accent); color: var(--white); }
+
+/* ===== GRAIN OVERLAY (fixed, pointer-events-none) ===== */
+.grain {
+  position: fixed; inset: 0; z-index: 100; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ===== ANNOUNCEMENT BAR ===== */
+.announcement {
+  background: var(--charcoal);
+  color: var(--warm-stone);
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  position: relative; z-index: 102;
+}
+.announcement a { color: var(--white); text-decoration: underline; text-underline-offset: 2px; }
+
+/* ===== NAVIGATION ===== */
+.nav-float {
+  position: sticky; top: 16px; z-index: 101;
+  display: flex; justify-content: center;
+  pointer-events: none;
+  padding: 0 20px;
+}
+.nav-pill {
+  pointer-events: auto;
+  display: flex; align-items: center; gap: 32px;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  padding: 10px 28px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 8px 32px -12px rgba(0,0,0,0.08);
+}
+.nav-logo {
+  font-family: "Playfair Display", serif;
+  font-size: 18px; font-weight: 600; color: var(--charcoal);
+  letter-spacing: -0.01em; text-decoration: none;
+}
+.nav-links { display: flex; gap: 4px; }
+.nav-links a {
+  text-decoration: none; color: var(--charcoal-muted);
+  font-size: 13px; font-weight: 500;
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.3s var(--ease-out-expo);
+}
+.nav-links a:hover { color: var(--charcoal); background: rgba(44,44,42,0.04); }
+.nav-cta {
+  background: var(--charcoal); color: var(--white);
+  font-size: 13px; font-weight: 500;
+  padding: 8px 18px; border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: transform 0.3s var(--ease-out-expo), opacity 0.3s var(--ease-out-expo);
+}
+.nav-cta:hover { transform: scale(1.03); opacity: 0.9; }
+.nav-cta:active { transform: scale(0.98); }
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none; background: none; border: none; cursor: pointer;
+  width: 32px; height: 32px; position: relative; pointer-events: auto;
+}
+.nav-toggle span {
+  display: block; width: 18px; height: 1.5px; background: var(--charcoal);
+  position: absolute; left: 7px;
+  transition: all 0.4s var(--ease-spring);
+}
+.nav-toggle span:nth-child(1) { top: 10px; }
+.nav-toggle span:nth-child(2) { top: 16px; }
+.nav-toggle span:nth-child(3) { top: 22px; }
+.nav-toggle.active span:nth-child(1) { top: 16px; transform: rotate(45deg); }
+.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(3) { top: 16px; transform: rotate(-45deg); }
+
+/* Mobile menu overlay */
+.mobile-menu {
+  display: none; position: fixed; inset: 0; z-index: 99;
+  background: rgba(251,250,246,0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+}
+.mobile-menu.active { display: flex; }
+.mobile-menu a {
+  font-size: 18px; font-weight: 500; color: var(--charcoal);
+  text-decoration: none; opacity: 0; transform: translateY(12px);
+  transition: all 0.4s var(--ease-out-expo);
+}
+.mobile-menu.active a { opacity: 1; transform: translateY(0); }
+.mobile-menu a:nth-child(1) { transition-delay: 0.06s; }
+.mobile-menu a:nth-child(2) { transition-delay: 0.12s; }
+.mobile-menu a:nth-child(3) { transition-delay: 0.18s; }
+.mobile-menu a:nth-child(4) { transition-delay: 0.24s; }
+.mobile-menu a:nth-child(5) { transition-delay: 0.30s; }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  min-height: calc(100dvh - 56px);
+  display: flex; align-items: center;
+  overflow: hidden;
+  margin: -60px 0 0 0;
+  background: var(--charcoal);
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, #3D3D3A 0%, #1A1A18 60%, #0D0D0C 100%);
+  z-index: 0;
+}
+/* Animated light orbs for video-like feel */
+.hero-orb {
+  position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.18;
+  animation: orbDrift 12s ease-in-out infinite;
+}
+.hero-orb:nth-child(1) {
+  width: 60vw; height: 60vw; max-width: 700px; max-height: 700px;
+  background: radial-gradient(circle, rgba(184,71,46,0.5) 0%, transparent 70%);
+  top: -15%; left: -10%;
+  animation-delay: 0s;
+}
+.hero-orb:nth-child(2) {
+  width: 50vw; height: 50vw; max-width: 500px; max-height: 500px;
+  background: radial-gradient(circle, rgba(140,120,100,0.4) 0%, transparent 70%);
+  bottom: -20%; right: -10%;
+  animation-delay: -5s;
+}
+.hero-orb:nth-child(3) {
+  width: 40vw; height: 40vw; max-width: 400px; max-height: 400px;
+  background: radial-gradient(circle, rgba(200,180,160,0.35) 0%, transparent 70%);
+  top: 40%; left: 50%;
+  animation-delay: -8s;
+}
+@keyframes orbDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(3vw, -2vh) scale(1.08); }
+  66% { transform: translate(-2vw, 3vh) scale(0.94); }
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 1400px; margin: 0 auto;
+  padding: 120px 64px 80px;
+  width: 100%;
+}
+.hero-eyebrow {
+  display: inline-block;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--warm-stone-dim);
+  border: 1px solid rgba(232,227,220,0.2);
+  border-radius: var(--radius-pill);
+  padding: 6px 16px;
+  margin-bottom: 28px;
+}
+.hero-title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(44px, 7vw, 96px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  max-width: 10em;
+  margin-bottom: 24px;
+}
+.hero-title em { font-style: italic; color: var(--accent-soft); }
+.hero-desc {
+  font-size: clamp(15px, 1.8vw, 18px);
+  color: rgba(232,227,220,0.65);
+  max-width: 36ch;
+  line-height: 1.7;
+  margin-bottom: 36px;
+  font-weight: 400;
+}
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--white); color: var(--charcoal);
+  font-size: 14px; font-weight: 600;
+  padding: 14px 28px; border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s var(--ease-out-expo);
+}
+.btn-primary:hover { transform: scale(1.03); box-shadow: 0 8px 32px rgba(255,255,255,0.12); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary .arrow-circle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--charcoal);
+  transition: transform 0.3s var(--ease-out-expo);
+}
+.btn-primary:hover .arrow-circle { transform: translateX(2px) translateY(-1px); }
+.btn-ghost {
+  display: inline-flex; align-items: center;
+  color: var(--warm-stone);
+  font-size: 14px; font-weight: 500;
+  padding: 14px 28px; border-radius: var(--radius-pill);
+  text-decoration: none;
+  border: 1px solid rgba(232,227,220,0.2);
+  transition: all 0.3s var(--ease-out-expo);
+}
+.btn-ghost:hover { border-color: rgba(232,227,220,0.5); background: rgba(255,255,255,0.04); }
+
+.hero-scroll-hint {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: rgba(232,227,220,0.5); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  animation: fadeInUp 1s var(--ease-out-expo) 2s both;
+}
+.hero-scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, rgba(232,227,220,0.5), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1.4); }
+}
+
+/* ===== SECTIONS ===== */
+.section { padding: clamp(64px, 10vw, 120px) 20px; }
+.section-inner { max-width: 1300px; margin: 0 auto; }
+
+/* Section header */
+.sec-eyebrow {
+  display: inline-block;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid rgba(184,71,46,0.15);
+  border-radius: var(--radius-pill);
+  padding: 5px 14px;
+  margin-bottom: 20px;
+}
+.sec-title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--charcoal);
+  margin-bottom: 16px;
+}
+.sec-desc {
+  font-size: 15px; color: var(--charcoal-muted);
+  max-width: 42ch; line-height: 1.7;
+  margin-bottom: 48px;
+}
+
+/* ===== CATEGORY PILLS ===== */
+.cat-scroll {
+  display: flex; gap: 10px; overflow-x: auto;
+  padding-bottom: 8px; margin-bottom: 40px;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.cat-scroll::-webkit-scrollbar { display: none; }
+.cat-pill {
+  flex-shrink: 0;
+  font-size: 13px; font-weight: 500;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--hairline);
+  background: var(--white);
+  color: var(--charcoal-muted);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.cat-pill:hover { border-color: var(--hairline-strong); color: var(--charcoal); }
+.cat-pill.active { background: var(--charcoal); color: var(--white); border-color: var(--charcoal); }
+
+/* ===== BENTO GRID ===== */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+/* ===== DOUBLE-BEZEL CARD (Doppelrand) ===== */
+.db-outer {
+  border-radius: var(--radius-xl);
+  padding: 2px;
+  background: var(--hairline);
+  transition: all 0.5s var(--ease-out-expo);
+}
+.db-outer:hover {
+  background: var(--hairline-strong);
+  box-shadow: var(--shadow-diffuse);
+}
+.db-inner {
+  background: var(--white);
+  border-radius: calc(var(--radius-xl) - 2px);
+  padding: 28px;
+  height: 100%;
+  display: flex; flex-direction: column;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.5);
+  position: relative; overflow: hidden;
+}
+
+/* Card sizes */
+.card-feature { grid-column: span 2; grid-row: span 2; }
+.card-wide { grid-column: span 2; }
+.card-tall { grid-row: span 2; }
+
+/* Card internals */
+.card-tag {
+  display: inline-block; align-self: flex-start;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-light);
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin-bottom: 16px;
+}
+.card-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px;
+  font-size: 20px;
+}
+.card-title {
+  font-family: "Playfair Display", serif;
+  font-size: 20px; font-weight: 600;
+  line-height: 1.2; letter-spacing: -0.01em;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+}
+.card-feature .card-title { font-size: clamp(24px, 2.5vw, 32px); }
+.card-desc {
+  font-size: 13px; color: var(--charcoal-muted);
+  line-height: 1.65; flex: 1;
+}
+.card-feature .card-desc { font-size: 14px; max-width: 48ch; }
+.card-link {
+  display: inline-flex; align-items: center; gap: 16px;
+  margin-top: 18px;
+  font-size: 13px; font-weight: 600; color: var(--charcoal);
+  text-decoration: none;
+  transition: gap 0.3s var(--ease-out-expo);
+}
+.card-link:hover { gap: 22px; }
+.card-link .arrow-nest {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(44,44,42,0.05);
+  transition: all 0.3s var(--ease-out-expo);
+}
+.card-link:hover .arrow-nest { background: var(--charcoal); color: var(--white); }
+
+/* ===== EDITORIAL SPLIT ===== */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.split-left { max-width: 440px; }
+.split-label {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--charcoal);
+  margin-bottom: 20px;
+}
+.split-text { font-size: 15px; color: var(--charcoal-muted); line-height: 1.7; max-width: 38ch; }
+
+/* Resource list */
+.resource-list { display: flex; flex-direction: column; gap: 2px; }
+.resource-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px;
+  border-radius: 12px;
+  text-decoration: none; color: var(--charcoal);
+  transition: all 0.3s var(--ease-out-expo);
+}
+.resource-item:hover { background: rgba(44,44,42,0.03); }
+.resource-item .res-name { font-weight: 500; font-size: 14px; }
+.resource-item .res-tag {
+  font-size: 11px; color: var(--charcoal-muted);
+  padding: 3px 10px; border-radius: var(--radius-pill);
+  background: rgba(44,44,42,0.04);
+}
+
+/* ===== Z-AXIS CASCADE ===== */
+.cascade { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.cascade-card {
+  width: 100%; max-width: 720px;
+  background: var(--white);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: 32px 36px;
+  transition: all 0.5s var(--ease-out-expo);
+  position: relative;
+}
+.cascade-card:nth-child(1) { z-index: 3; }
+.cascade-card:nth-child(2) { z-index: 2; margin-top: -16px; transform: scale(0.97); }
+.cascade-card:nth-child(3) { z-index: 1; margin-top: -16px; transform: scale(0.94); }
+.cascade-card:hover { transform: translateY(-4px) scale(1.01); z-index: 10; box-shadow: var(--shadow-card); }
+.cascade-card:nth-child(2):hover { transform: translateY(-4px) scale(0.98); }
+.cascade-card:nth-child(3):hover { transform: translateY(-4px) scale(0.95); }
+
+/* ===== FOOTER ===== */
+.footer {
+  border-top: 1px solid var(--hairline);
+  padding: 48px 20px;
+  text-align: center;
+}
+.footer-inner { max-width: 1300px; margin: 0 auto; }
+.footer-brand {
+  font-family: "Playfair Display", serif;
+  font-size: 20px; font-weight: 600; color: var(--charcoal);
+  margin-bottom: 8px;
+}
+.footer-text { font-size: 13px; color: var(--charcoal-muted); }
+
+/* ===== SCROLL REVEAL ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-5 { transition-delay: 0.40s; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .nav-links, .nav-cta { display: none; }
+  .nav-toggle { display: block; }
+  .nav-pill { width: 100%; justify-content: space-between; }
+  .hero { min-height: 100dvh; margin-top: -70px; }
+  .hero-content { padding: 100px 20px 60px; }
+  .hero-title { font-size: clamp(36px, 10vw, 56px); }
+  .bento { grid-template-columns: 1fr; }
+  .card-feature, .card-wide, .card-tall { grid-column: span 1; grid-row: span 1; }
+  .split { grid-template-columns: 1fr; gap: 36px; }
+  .cascade-card:nth-child(2), .cascade-card:nth-child(3) {
+    margin-top: 8px; transform: none;
+  }
+  .cascade-card:nth-child(2):hover, .cascade-card:nth-child(3):hover { transform: translateY(-4px); }
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- Announcement Bar -->
+<div class="announcement">
+  新上线：AI 工具专区 &amp; 设计素材库持续更新中 · <a href="#tools">探索工具</a>
+</div>
+
+<!-- Navigation -->
+<nav class="nav-float">
+  <div class="nav-pill">
+    <a href="/" class="nav-logo">YMKit</a>
+    <div class="nav-links">
+      <a href="#tools">工具</a>
+      <a href="#ai">AI</a>
+      <a href="#resources">资源</a>
+      <a href="#tutorials">教程</a>
+      <a href="#software">软件</a>
+    </div>
+    <a href="#tools" class="nav-cta">开始探索</a>
+    <button class="nav-toggle" id="navToggle" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#tools">工具</a>
+  <a href="#ai">AI</a>
+  <a href="#resources">资源</a>
+  <a href="#tutorials">教程</a>
+  <a href="#software">软件</a>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-orb"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-orb"></div>
+  </div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">Tools · AI · Resources</span>
+    <h1 class="hero-title">
+      发现<i>精选</i><br>数字工具与创意资源
+    </h1>
+    <p class="hero-desc">
+      覆盖 AI 应用、设计软件、开发工具、创意素材与实用教程，为创造者打造的高品质工具集合。
+    </p>
+    <div class="hero-actions">
+      <a href="#tools" class="btn-primary">
+        浏览工具集
+        <span class="arrow-circle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+      <a href="#resources" class="btn-ghost">设计资源</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- Tools Section -->
+<section class="section" id="tools">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="sec-eyebrow">Featured Tools</span>
+      <h2 class="sec-title">精选工具集</h2>
+      <p class="sec-desc">从 AI 绘画到视频剪辑，从代码工具到效率应用，每一款都经过实测筛选。</p>
+    </div>
+
+    <!-- Category Pills -->
+    <div class="cat-scroll reveal reveal-delay-1" id="catPills">
+      <span class="cat-pill active" data-cat="all">全部</span>
+      <span class="cat-pill" data-cat="ai">AI 工具</span>
+      <span class="cat-pill" data-cat="design">设计创意</span>
+      <span class="cat-pill" data-cat="dev">开发工具</span>
+      <span class="cat-pill" data-cat="video">视频音频</span>
+      <span class="cat-pill" data-cat="efficiency">效率办公</span>
+      <span class="cat-pill" data-cat="material">素材资源</span>
+    </div>
+
+    <!-- Bento Grid -->
+    <div class="bento" id="toolGrid">
+      <!-- AI featured card -->
+      <div class="card-feature" data-cat="ai">
+        <div class="db-outer reveal reveal-delay-1">
+          <div class="db-inner">
+            <span class="card-tag">AI 工具</span>
+            <div class="card-icon" style="background:#F5F0EC;">&#x25A3;</div>
+            <h3 class="card-title">Kimi</h3>
+            <p class="card-desc">月之暗面出品的长文本 AI 助手。支持 200 万字上下文、多文件分析、联网搜索，适合深度阅读、论文分析和代码审查场景。</p>
+            <a href="https://kimi.moonshot.cn/" target="_blank" rel="noopener" class="card-link">
+              访问官网 <span class="arrow-nest">&nearr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div data-cat="ai">
+        <div class="db-outer reveal reveal-delay-2">
+          <div class="db-inner">
+            <span class="card-tag">AI 工具</span>
+            <h3 class="card-title">DeepSeek</h3>
+            <p class="card-desc">深度求索大模型，深度思考模式 + 联网搜索，代码与推理能力突出。</p>
+            <a href="https://chat.deepseek.com/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div data-cat="ai">
+        <div class="db-outer reveal reveal-delay-3">
+          <div class="db-inner">
+            <span class="card-tag">AI 工具</span>
+            <h3 class="card-title">通义千问</h3>
+            <p class="card-desc">阿里出品的全能 AI 助手，支持文档分析、图像理解与创意写作。</p>
+            <a href="https://tongyi.aliyun.com/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design -->
+      <div data-cat="design">
+        <div class="db-outer reveal reveal-delay-1">
+          <div class="db-inner">
+            <span class="card-tag">设计创意</span>
+            <h3 class="card-title">Figma</h3>
+            <p class="card-desc">云端协作 UI/UX 设计工具，支持实时协作、组件变体与原型交互。</p>
+            <a href="https://www.figma.com/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div data-cat="design">
+        <div class="db-outer reveal reveal-delay-2">
+          <div class="db-inner">
+            <span class="card-tag">设计创意</span>
+            <h3 class="card-title">Canva</h3>
+            <p class="card-desc">在线平面设计平台，海量模板，零基础快速出图，适合社交媒体视觉内容。</p>
+            <a href="https://www.canva.cn/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dev -->
+      <div data-cat="dev">
+        <div class="db-outer reveal reveal-delay-1">
+          <div class="db-inner">
+            <span class="card-tag">开发工具</span>
+            <h3 class="card-title">VS Code</h3>
+            <p class="card-desc">微软开源编辑器，丰富的插件生态，前端/后端/数据科学全覆盖。</p>
+            <a href="https://code.visualstudio.com/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div data-cat="dev">
+        <div class="db-outer reveal reveal-delay-2">
+          <div class="db-inner">
+            <span class="card-tag">开发工具</span>
+            <h3 class="card-title">IT Tools</h3>
+            <p class="card-desc">开发者在线工具箱：编码解码、格式转换、加解密、生成器合集。</p>
+            <a href="https://it-tools.tech/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video -->
+      <div data-cat="video">
+        <div class="db-outer reveal reveal-delay-1">
+          <div class="db-inner">
+            <span class="card-tag">视频音频</span>
+            <h3 class="card-title">剪映专业版</h3>
+            <p class="card-desc">桌面端全能剪辑，AI 字幕生成、丰富素材库，创作者入门首选。</p>
+            <a href="https://www.capcut.cn/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div data-cat="video">
+        <div class="db-outer reveal reveal-delay-2">
+          <div class="db-inner">
+            <span class="card-tag">视频音频</span>
+            <h3 class="card-title">OBS Studio</h3>
+            <p class="card-desc">开源录屏推流软件，多场景切换、滤镜混音，直播与录课标配。</p>
+            <a href="https://obsproject.com/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Efficiency -->
+      <div data-cat="efficiency">
+        <div class="db-outer reveal reveal-delay-1">
+          <div class="db-inner">
+            <span class="card-tag">效率办公</span>
+            <h3 class="card-title">Notion</h3>
+            <p class="card-desc">全能笔记与项目管理工具，数据库 + 文档 + Wiki 三合一协作平台。</p>
+            <a href="https://www.notion.so/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div data-cat="efficiency">
+        <div class="db-outer reveal reveal-delay-2">
+          <div class="db-inner">
+            <span class="card-tag">效率办公</span>
+            <h3 class="card-title">Obsidian</h3>
+            <p class="card-desc">本地 Markdown 笔记，双向链接构建个人知识图谱，插件生态强大。</p>
+            <a href="https://obsidian.md/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Materials -->
+      <div data-cat="material">
+        <div class="db-outer reveal reveal-delay-1">
+          <div class="db-inner">
+            <span class="card-tag">素材资源</span>
+            <h3 class="card-title">Unsplash</h3>
+            <p class="card-desc">高质量免费摄影图片库，商业可用，覆盖自然、建筑、人文等主题。</p>
+            <a href="https://unsplash.com/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div data-cat="material">
+        <div class="db-outer reveal reveal-delay-2">
+          <div class="db-inner">
+            <span class="card-tag">素材资源</span>
+            <h3 class="card-title">Pexels</h3>
+            <p class="card-desc">免费图片与视频素材库，高清无版权，支持中文搜索，商用免授权。</p>
+            <a href="https://www.pexels.com/zh-cn/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Resources Section — Editorial Split -->
+<section class="section" id="resources" style="background: var(--white);">
+  <div class="section-inner">
+    <div class="split">
+      <div class="split-left reveal">
+        <span class="sec-eyebrow">Resources</span>
+        <h2 class="split-label">设计师<br>必备资源</h2>
+        <p class="split-text">从字体到图标，从配色到 3D 素材，每一份资源都经过筛选，直接可用。</p>
+      </div>
+      <div class="resource-list reveal reveal-delay-1">
+        <a href="https://fonts.google.com/" target="_blank" rel="noopener" class="resource-item">
+          <span class="res-name">Google Fonts</span>
+          <span class="res-tag">字体</span>
+        </a>
+        <a href="https://phosphoricons.com/" target="_blank" rel="noopener" class="resource-item">
+          <span class="res-name">Phosphor Icons</span>
+          <span class="res-tag">图标</span>
+        </a>
+        <a href="https://www.humaaans.com/" target="_blank" rel="noopener" class="resource-item">
+          <span class="res-name">Humaaans</span>
+          <span class="res-tag">插画</span>
+        </a>
+        <a href="https://uisual.com/" target="_blank" rel="noopener" class="resource-item">
+          <span class="res-name">Uisual</span>
+          <span class="res-tag">模板</span>
+        </a>
+        <a href="https://coolors.co/" target="_blank" rel="noopener" class="resource-item">
+          <span class="res-name">Coolors</span>
+          <span class="res-tag">配色</span>
+        </a>
+        <a href="https://www.blender.org/" target="_blank" rel="noopener" class="resource-item">
+          <span class="res-name">Blender</span>
+          <span class="res-tag">3D</span>
+        </a>
+        <a href="https://www.remove.bg/zh" target="_blank" rel="noopener" class="resource-item">
+          <span class="res-name">Remove.bg</span>
+          <span class="res-tag">抠图</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tutorials Section — Z-Axis Cascade -->
+<section class="section" id="tutorials">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center; margin-bottom:48px;">
+      <span class="sec-eyebrow">Tutorials</span>
+      <h2 class="sec-title">精选教程</h2>
+      <p class="sec-desc" style="margin:0 auto 0;">从入门到进阶，每份教程都注重实操与产出。</p>
+    </div>
+    <div class="cascade">
+      <div class="cascade-card reveal">
+        <span class="card-tag">前端开发</span>
+        <h3 class="card-title">现代 CSS 布局完全指南</h3>
+        <p class="card-desc" style="font-size:13px; color:var(--charcoal-muted);">从 Flexbox 到 Grid，从容器查询到图层合成，系统性掌握 CSS 布局的现代技法与实际项目中的应用策略。</p>
+      </div>
+      <div class="cascade-card reveal reveal-delay-1">
+        <span class="card-tag">设计系统</span>
+        <h3 class="card-title">Figma 组件库搭建实战</h3>
+        <p class="card-desc" style="font-size:13px; color:var(--charcoal-muted);">从 Design Token 到变体组件，从自动布局到发布规范，搭建一套可维护的设计系统。</p>
+      </div>
+      <div class="cascade-card reveal reveal-delay-2">
+        <span class="card-tag">AI 应用</span>
+        <h3 class="card-title">AI 辅助编程工作流</h3>
+        <p class="card-desc" style="font-size:13px; color:var(--charcoal-muted);">将大模型融入日常开发：代码生成、Review、文档撰写与重构的最佳实践。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Software Section -->
+<section class="section" id="software" style="background: var(--white);">
+  <div class="section-inner">
+    <div class="reveal" style="margin-bottom:48px;">
+      <span class="sec-eyebrow">Software</span>
+      <h2 class="sec-title">必备软件</h2>
+      <p class="sec-desc">跨平台精选，从创意生产到系统工具，覆盖 macOS 与 Windows。</p>
+    </div>
+    <div class="bento">
+      <div class="card-wide reveal reveal-delay-1">
+        <div class="db-outer"><div class="db-inner">
+          <span class="card-tag">创意生产</span>
+          <h3 class="card-title">Adobe Creative Cloud</h3>
+          <p class="card-desc">Photoshop、Illustrator、Premiere Pro、After Effects — 创意行业的工业标准工具套件，覆盖图像处理、矢量绘图、视频剪辑与动效设计。</p>
+          <a href="https://www.adobe.com/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+        </div></div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="db-outer"><div class="db-inner">
+          <span class="card-tag">系统工具</span>
+          <h3 class="card-title">Raycast</h3>
+          <p class="card-desc">macOS 效率启动器，取代 Spotlight，支持插件扩展与快捷工作流。</p>
+          <a href="https://www.raycast.com/" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+        </div></div>
+      </div>
+      <div class="reveal reveal-delay-3">
+        <div class="db-outer"><div class="db-inner">
+          <span class="card-tag">创作工具</span>
+          <h3 class="card-title">DaVinci Resolve</h3>
+          <p class="card-desc">专业级调色与剪辑一体软件，免费版功能已覆盖多数创作者需求。</p>
+          <a href="https://www.blackmagicdesign.com/products/davinciresolve" target="_blank" rel="noopener" class="card-link">访问官网 <span class="arrow-nest">&nearr;</span></a>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">YMKit</div>
+    <p class="footer-text">工具 · AI · 资源 · 素材 · 教程 — 为创造者打造的高品质数字工具集合</p>
+  </div>
+</footer>
+
+<script>
+// Mobile menu toggle
+const navToggle = document.getElementById('navToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+navToggle.addEventListener('click', () => {
+  navToggle.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+});
+mobileMenu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    navToggle.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+});
+
+// Category filter
+let activeCat = 'all';
+document.getElementById('catPills').addEventListener('click', (e) => {
+  const pill = e.target.closest('.cat-pill');
+  if (!pill) return;
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  activeCat = pill.dataset.cat;
+  document.querySelectorAll('#toolGrid > [data-cat]').forEach(card => {
+    card.style.display = (activeCat === 'all' || card.dataset.cat === activeCat) ? '' : 'none';
+  });
+});
+
+// Scroll reveal via IntersectionObserver
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
