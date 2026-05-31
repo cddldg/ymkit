@@ -1,30 +1,11 @@
 ---
-import {getCollection} from 'astro:content';
-import {getWordCount} from '../utils/readingTime';
 import DonationModal from './DonationModal.astro';
-
-const allPlugins = await getCollection('plugins');
-const allTools = await getCollection('tools');
-const allAi = await getCollection('ai');
-const allPosts = [...allPlugins, ...allTools, ...allAi];
-const totalArticles = allPosts.length;
-
-let totalWords = 0;
-for (const post of allPosts) {
-  totalWords += getWordCount(post.body || '');
-}
 
 const startYear = 2026;
 ---
 
 <footer class="border-t border-gray-200/50 dark:border-gray-700/50 mt-16">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400 dark:text-gray-500 mb-6">
-            <span>{Math.round(totalWords / 1000)}k 字</span>
-            <span class="w-px h-3 bg-gray-300 dark:bg-gray-600"></span>
-            <span>{totalArticles} 篇</span>
-        </div>
-
         <div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
             <span>&copy; {startYear} 一秒工具</span>
             <span class="hidden sm:inline text-gray-300 dark:text-gray-600">|</span>
