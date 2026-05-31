@@ -18,27 +18,44 @@ function stripMarkdown(raw: string): string {
 }
 
 export async function GET() {
-  const blogPosts = await getCollection('blog');
-  const weeklyPosts = await getCollection('weekly');
+  const plugins = await getCollection('plugins');
+  const tools = await getCollection('tools');
+  const ai = await getCollection('ai');
+
+  const collectionLabels: Record<string, string> = {
+    plugins: '插件',
+    tools: '工具',
+    ai: 'AI',
+  };
 
   const entries = [
-    ...blogPosts.map((p) => ({
+    ...plugins.map((p) => ({
       title: p.data.title,
       description: p.data.description || '',
-      category: p.data.category || '',
+      category: collectionLabels.plugins,
       tags: p.data.tags || [],
       slug: p.id,
-      type: 'blog',
+      type: 'plugins',
       date: p.data.date.toISOString(),
       body: stripMarkdown(p.body || '').slice(0, 400),
     })),
-    ...weeklyPosts.map((p) => ({
+    ...tools.map((p) => ({
       title: p.data.title,
       description: p.data.description || '',
-      category: '周刊',
+      category: collectionLabels.tools,
       tags: p.data.tags || [],
       slug: p.id,
-      type: 'weekly',
+      type: 'tools',
+      date: p.data.date.toISOString(),
+      body: stripMarkdown(p.body || '').slice(0, 400),
+    })),
+    ...ai.map((p) => ({
+      title: p.data.title,
+      description: p.data.description || '',
+      category: collectionLabels.ai,
+      tags: p.data.tags || [],
+      slug: p.id,
+      type: 'ai',
       date: p.data.date.toISOString(),
       body: stripMarkdown(p.body || '').slice(0, 400),
     })),
