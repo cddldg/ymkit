@@ -4,7 +4,16 @@ import BlogLayout from '../../layouts/BlogLayout.astro';
 import PostList from '../../components/PostList.astro';
 import { resolveCover } from '../_imageStore';
 
-const allPosts = await getCollection('blog');
+const allPlugins = await getCollection('plugins');
+const allTools = await getCollection('tools');
+const allAi = await getCollection('ai');
+
+const allPosts = [
+  ...allPlugins.map((p) => ({ ...p, collection: 'plugins' as const })),
+  ...allTools.map((p) => ({ ...p, collection: 'tools' as const })),
+  ...allAi.map((p) => ({ ...p, collection: 'ai' as const })),
+];
+
 const sorted = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const postData = sorted.map((p) => ({
@@ -12,9 +21,15 @@ const postData = sorted.map((p) => ({
   slug: p.id,
   data: {
     ...p.data,
-    cover: resolveCover('blog', p.id, p.data.cover),
+    cover: resolveCover(p.collection, p.id, p.data.cover),
   },
 }));
+
+const routeMap: Record<string, string> = {
+  plugins: '/plugins/',
+  tools: '/tools/',
+  ai: '/ai/',
+};
 ---
 
 <BlogLayout title="归档">
@@ -22,5 +37,5 @@ const postData = sorted.map((p) => ({
     <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
     归档
   </h1>
-  <PostList posts={postData} />
+  <PostList posts={postData} routePrefixMap={routeMap} />
 </BlogLayout>
