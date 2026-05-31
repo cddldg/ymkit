@@ -93,7 +93,7 @@ function formatDate(d: Date) {
       <div class="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500 mb-3">
         <time datetime={formatDate(date)}>{formatDate(date)}</time>
         {wordCount > 0 && <span>{wordCount} 字</span>}
-        {readingTime > 0 && <span>{readingTime} min read</span>}
+        {readingTime > 0 && <span>阅读时间{readingTime}分钟</span>}
       </div>
 
       <h2 class="text-lg font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
