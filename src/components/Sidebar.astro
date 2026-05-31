@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_AVATAR, SOCIAL_LINKS } from '../consts';
-import DonationModal from './DonationModal.astro';
 import { getWordCount } from '../utils/readingTime';
 
 const allPlugins = await getCollection('plugins');
@@ -146,8 +145,6 @@ const randomPosts = [...sorted].sort(() => Math.random() - 0.5).slice(0, 5);
     )
   }
 </aside>
-
-<DonationModal />
 
 <script is:inline>
   function initSidebarToggles() {
