@@ -1,0 +1,112 @@
+[
+  {
+    "id": "chatgpt",
+    "name": "ChatGPT",
+    "description": "OpenAI开发的AI聊天助手，支持多种语言任务",
+    "url": "https://chat.openai.com",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/chatgpt.webp",
+    "category": "chat",
+    "tags": ["对话", "写作", "翻译"],
+    "featured": true,
+    "rating": 4.9
+  },
+  {
+    "id": "claude",
+    "name": "Claude",
+    "description": "Anthropic开发的AI助手，擅长长文本处理",
+    "url": "https://claude.ai",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/claude.webp",
+    "category": "chat",
+    "tags": ["对话", "分析", "写作"],
+    "featured": true,
+    "rating": 4.8
+  },
+  {
+    "id": "midjourney",
+    "name": "Midjourney",
+    "description": "AI图像生成工具，创造精美艺术作品",
+    "url": "https://www.midjourney.com",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/midjourney.webp",
+    "category": "image",
+    "tags": ["绘画", "设计", "艺术"],
+    "featured": true,
+    "rating": 4.7
+  },
+  {
+    "id": "copilot",
+    "name": "GitHub Copilot",
+    "description": "AI编程助手，智能代码补全",
+    "url": "https://github.com/features/copilot",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/copilot.webp",
+    "category": "code",
+    "tags": ["编程", "开发", "代码"],
+    "featured": true,
+    "rating": 4.6
+  },
+  {
+    "id": "notion-ai",
+    "name": "Notion AI",
+    "description": "智能笔记和知识管理工具",
+    "url": "https://www.notion.so",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/notion.webp",
+    "category": "productivity",
+    "tags": ["笔记", "知识库", "协作"],
+    "featured": false,
+    "rating": 4.5
+  },
+  {
+    "id": "grammarly",
+    "name": "Grammarly",
+    "description": "AI写作助手，语法检查和风格优化",
+    "url": "https://www.grammarly.com",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/grammarly.webp",
+    "category": "writing",
+    "tags": ["写作", "语法", "翻译"],
+    "featured": false,
+    "rating": 4.4
+  },
+  {
+    "id": "runway",
+    "name": "Runway",
+    "description": "AI视频生成和编辑平台",
+    "url": "https://runwayml.com",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/runway.webp",
+    "category": "video",
+    "tags": ["视频", "编辑", "创作"],
+    "featured": true,
+    "rating": 4.5
+  },
+  {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "description": "AI语音合成和克隆技术",
+    "url": "https://elevenlabs.io",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/elevenlabs.webp",
+    "category": "audio",
+    "tags": ["语音", "配音", "合成"],
+    "featured": false,
+    "rating": 4.3
+  },
+  {
+    "id": "perplexity",
+    "name": "Perplexity",
+    "description": "AI搜索引擎，提供精准答案",
+    "url": "https://www.perplexity.ai",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/perplexity.webp",
+    "category": "search",
+    "tags": ["搜索", "研究", "问答"],
+    "featured": true,
+    "rating": 4.6
+  },
+  {
+    "id": "canva-ai",
+    "name": "Canva AI",
+    "description": "AI设计工具，快速创建视觉内容",
+    "url": "https://www.canva.com",
+    "icon": "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/canva.webp",
+    "category": "design",
+    "tags": ["设计", "海报", "演示"],
+    "featured": false,
+    "rating": 4.4
+  }
+]

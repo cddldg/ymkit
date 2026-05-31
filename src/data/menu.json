@@ -1,0 +1,91 @@
+{
+  "main": [
+    {
+      "label": "首页",
+      "path": "/"
+    },
+    {
+      "label": "AI工具",
+      "path": "/tools",
+      "children": [
+        {
+          "label": "AI对话",
+          "path": "/tools?category=chat",
+          "icon": "chat"
+        },
+        {
+          "label": "AI绘画",
+          "path": "/tools?category=image",
+          "icon": "image"
+        },
+        {
+          "label": "AI编程",
+          "path": "/tools?category=code",
+          "icon": "code"
+        },
+        {
+          "label": "AI视频",
+          "path": "/tools?category=video",
+          "icon": "video"
+        },
+        {
+          "label": "AI写作",
+          "path": "/tools?category=writing",
+          "icon": "writing"
+        },
+        {
+          "label": "AI语音",
+          "path": "/tools?category=audio",
+          "icon": "audio"
+        }
+      ]
+    },
+    {
+      "label": "关于",
+      "path": "/about"
+    }
+  ],
+  "footer": [
+    {
+      "title": "产品",
+      "links": [
+        { "label": "AI工具库", "path": "/tools" },
+        { "label": "最新收录", "path": "/tools?sort=newest" },
+        { "label": "热门工具", "path": "/tools?sort=popular" }
+      ]
+    },
+    {
+      "title": "资源",
+      "links": [
+        { "label": "使用教程", "path": "/tutorials" },
+        { "label": "API文档", "path": "/docs" },
+        { "label": "开发者", "path": "/developers" }
+      ]
+    },
+    {
+      "title": "支持",
+      "links": [
+        { "label": "帮助中心", "path": "/help" },
+        { "label": "联系我们", "path": "/contact" },
+        { "label": "隐私政策", "path": "/privacy" }
+      ]
+    }
+  ],
+  "social": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com",
+      "icon": "github"
+    },
+    {
+      "name": "Twitter",
+      "url": "https://twitter.com",
+      "icon": "twitter"
+    },
+    {
+      "name": "微信公众号",
+      "url": "#",
+      "icon": "wechat"
+    }
+  ]
+}

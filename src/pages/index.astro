@@ -1,0 +1,175 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.vue';
+import Banner from '../components/Banner.vue';
+import ToolGrid from '../components/ToolGrid.astro';
+import Reward from '../components/Reward.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="一秒工具">
+  <Navbar client:load />
+
+  <Banner client:visible />
+
+  <!-- Featured Tools Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">精选工具</h2>
+        <p class="section-desc">发现最好用的AI工具，提升工作效率</p>
+      </div>
+      <ToolGrid showFeatured={true} limit={8} />
+      <div class="section-footer">
+        <a href="/tools" class="btn btn-ghost">
+          查看全部工具
+          <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="section bg-gray">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">工具分类</h2>
+        <p class="section-desc">按类别浏览AI工具</p>
+      </div>
+      <div class="categories-grid">
+        <a href="/tools?category=chat" class="category-card">
+          <div class="category-icon">💬</div>
+          <h3>AI对话</h3>
+          <p>智能聊天助手</p>
+        </a>
+        <a href="/tools?category=image" class="category-card">
+          <div class="category-icon">🎨</div>
+          <h3>AI绘画</h3>
+          <p>图像生成工具</p>
+        </a>
+        <a href="/tools?category=code" class="category-card">
+          <div class="category-icon">💻</div>
+          <h3>AI编程</h3>
+          <p>代码助手工具</p>
+        </a>
+        <a href="/tools?category=video" class="category-card">
+          <div class="category-icon">🎬</div>
+          <h3>AI视频</h3>
+          <p>视频创作工具</p>
+        </a>
+        <a href="/tools?category=writing" class="category-card">
+          <div class="category-icon">✍️</div>
+          <h3>AI写作</h3>
+          <p>写作辅助工具</p>
+        </a>
+        <a href="/tools?category=audio" class="category-card">
+          <div class="category-icon">🎵</div>
+          <h3>AI语音</h3>
+          <p>语音合成工具</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reward Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">支持我们</h2>
+        <p class="section-desc">如果这个项目对你有帮助，欢迎打赏支持</p>
+      </div>
+      <Reward />
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<style>
+  .section {
+    padding: 5rem 0;
+  }
+
+  .bg-gray {
+    background: #f8fafc;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-desc {
+    font-size: 1.125rem;
+    color: #64748b;
+  }
+
+  .section-footer {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .category-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.1);
+    transform: translateY(-4px);
+  }
+
+  .category-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-card h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+
+  .category-card p {
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  @media (max-width: 768px) {
+    .categories-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .categories-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
