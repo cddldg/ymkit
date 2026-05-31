@@ -6,7 +6,7 @@ interface Props {
 const { class: className } = Astro.props;
 ---
 
-<div id="donation-modal" class="fixed inset-0 z-[100] hidden" aria-hidden="true">
+<div id="donation-modal" class="fixed inset-0 z-[200] hidden" aria-hidden="true">
   <div id="donation-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
     <div class="relative max-w-lg w-full">
@@ -562,9 +562,6 @@ const { class: className } = Astro.props;
     modal.classList.remove('hidden');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    document.querySelectorAll('aside').forEach(function(el) {
-      el.style.visibility = 'hidden';
-    });
   }
 
   function closeDonation() {
@@ -573,9 +570,6 @@ const { class: className } = Astro.props;
     modal.classList.add('hidden');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    document.querySelectorAll('aside').forEach(function(el) {
-      el.style.visibility = '';
-    });
   }
 
   document.addEventListener('DOMContentLoaded', function() {
