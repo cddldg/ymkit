@@ -46,7 +46,7 @@ const {title, description, headings, cover} = Astro.props;
       </div>
       <aside class="hidden lg:block w-48 shrink-0 order-3">
         <div class="sticky top-24">
-          {headings && headings.length > 0 && <TableOfContents headings={headings}/>}
+          <TableOfContents headings={headings || []}/>
         </div>
       </aside>
     </div>
