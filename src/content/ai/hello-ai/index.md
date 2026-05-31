@@ -1,5 +1,5 @@
 ---
-title: Hello AI
+title: 终端
 description: 这是一个示例 AI 资源文档，展示 AI 页面的内容格式。
 date: 2026-05-31
 tags: [AI]
