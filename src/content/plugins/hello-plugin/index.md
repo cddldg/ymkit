@@ -2,7 +2,7 @@
 title: Hello Plugin
 description: 这是一个示例插件文档，展示插件页面的内容格式。
 date: 2026-05-31
-tags: [示例, 浏览器插件]
+tags: []
 cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/logo.png
 pinned: false
 draft: false
