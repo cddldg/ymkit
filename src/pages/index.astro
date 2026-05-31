@@ -2,29 +2,41 @@
 import { getCollection } from 'astro:content';
 import BlogLayout from '../layouts/BlogLayout.astro';
 import Hero from '../components/Hero.astro';
+import CategoryCards from '../components/CategoryCards.astro';
 import PostList from '../components/PostList.astro';
-import Pagination from '../components/Pagination.astro';
 import { PAGE_SIZE } from '../consts';
 import { resolveCover } from './_imageStore';
 
-const allPosts = await getCollection('blog');
+const allPlugins = await getCollection('plugins');
+const allTools = await getCollection('tools');
+const allAi = await getCollection('ai');
+
+const allPosts = [
+  ...allPlugins.map((p) => ({ ...p, collection: 'plugins' as const })),
+  ...allTools.map((p) => ({ ...p, collection: 'tools' as const })),
+  ...allAi.map((p) => ({ ...p, collection: 'ai' as const })),
+];
+
 const sorted = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const totalPages = Math.ceil(sorted.length / PAGE_SIZE);
-const paginatedPosts = sorted.slice(0, PAGE_SIZE);
-
-const postData = paginatedPosts.map((p) => ({
+const postData = sorted.slice(0, PAGE_SIZE).map((p) => ({
   ...p,
   slug: p.id,
   data: {
     ...p.data,
-    cover: resolveCover('blog', p.id, p.data.cover),
+    cover: resolveCover(p.collection, p.id, p.data.cover),
   },
 }));
+
+const routeMap: Record<string, string> = {
+  plugins: '/plugins/',
+  tools: '/tools/',
+  ai: '/ai/',
+};
 ---
 
 <BlogLayout>
-  <Hero />
-  <PostList posts={postData} showPinned />
-  <Pagination currentPage={1} totalPages={totalPages} baseUrl="/" />
+  <Hero collections={[allPlugins, allTools, allAi]} />
+  <CategoryCards />
+  <PostList posts={postData} showPinned routePrefixMap={routeMap} />
 </BlogLayout>
