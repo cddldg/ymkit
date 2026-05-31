@@ -2,7 +2,15 @@
 import { getCollection } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 
-const allPosts = await getCollection('blog');
+const allPlugins = await getCollection('plugins');
+const allTools = await getCollection('tools');
+const allAi = await getCollection('ai');
+
+const allPosts = [
+  ...allPlugins,
+  ...allTools,
+  ...allAi,
+];
 
 const tagMap = new Map<string, number>();
 for (const post of allPosts) {
@@ -11,9 +19,7 @@ for (const post of allPosts) {
   }
 }
 
-const tags = Array.from(tagMap.entries())
-  .map(([name, count]) => ({ name, count }))
-  .sort((a, b) => b.count - a.count);
+const allTags = Array.from(tagMap.entries()).sort((a, b) => b[1] - a[1]);
 ---
 
 <BlogLayout title="标签">
@@ -22,17 +28,13 @@ const tags = Array.from(tagMap.entries())
     标签
   </h1>
   <div class="flex flex-wrap gap-3">
-    {tags.map((tag) => (
+    {allTags.map(([tag, count]) => (
       <a
-        href={`/tags/${tag.name}`}
-        class="card-hover bg-white dark:bg-[var(--color-card-dark)] rounded-xl shadow-sm px-4 py-2.5 group"
+        href={`/tags/${tag}`}
+        class="text-sm px-4 py-2 rounded-full bg-white dark:bg-[var(--color-card-dark)] shadow-sm text-gray-600 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors"
       >
-        <span class="font-medium group-hover:text-primary transition-colors">
-          {tag.name}
-        </span>
-        <span class="text-xs text-gray-400 dark:text-gray-500 ml-1.5">
-          {tag.count}
-        </span>
+        {tag}
+        <span class="ml-1 opacity-60">({count})</span>
       </a>
     ))}
   </div>
