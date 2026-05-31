@@ -1,14 +1,16 @@
 ---
 import {getCollection} from 'astro:content';
-import {SITE_TITLE, NAV_ITEMS} from '../consts';
+import {SITE_TITLE, SITE_AUTHOR, NAV_ITEMS} from '../consts';
 import {getWordCount} from '../utils/readingTime';
-import {SITE_AUTHOR} from "../consts.ts";
 
-const allBlogPosts = await getCollection('blog');
-const totalArticles = allBlogPosts.length;
+const allPlugins = await getCollection('plugins');
+const allTools = await getCollection('tools');
+const allAi = await getCollection('ai');
+const allPosts = [...allPlugins, ...allTools, ...allAi];
+const totalArticles = allPosts.length;
 
 let totalWords = 0;
-for (const post of allBlogPosts) {
+for (const post of allPosts) {
   totalWords += getWordCount(post.body || '');
 }
 
@@ -25,8 +27,7 @@ const startYear = 2026;
         </div>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <span>&copy; {startYear}{currentYear > startYear ? ` - ${currentYear}` : ''} <a
-                    class="text-yellow-300 hover:underline" href="https://santisify.top">{SITE_AUTHOR}</a></span>
+            <span>&copy; {startYear}{currentYear > startYear ? ` - ${currentYear}` : ''} {SITE_AUTHOR}</span>
             <span class="hidden sm:inline text-gray-300 dark:text-gray-600">|</span>
             <span>
         Powered by <a href="https://astro.build" class="text-primary hover:underline">Astro</a> & <a href="https://tailwindcss.com/" class="text-cyan-500 hover:underline">Tailwind</a>
