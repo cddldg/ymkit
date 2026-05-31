@@ -203,5 +203,11 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeDonation();
     });
+
+    document.addEventListener('astro:after-swap', function() {
+      widgetLoaded = false;
+      var root = document.getElementById('donation-widget-root');
+      if (root) root.innerHTML = '';
+    });
   })();
 </script>
