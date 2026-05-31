@@ -13,6 +13,8 @@ interface Props {
   pinned?: boolean;
   draft?: boolean;
   routePrefix?: string;
+  collection?: string;
+  routePrefixMap?: Record<string, string>;
 }
 
 const {
@@ -27,7 +29,11 @@ const {
   pinned = false,
   draft = false,
   routePrefix = '/post/',
+  collection,
+  routePrefixMap,
 } = Astro.props;
+
+const linkPrefix = collection && routePrefixMap?.[collection] ? routePrefixMap[collection] : routePrefix;
 
 const wordCount = body ? getWordCount(body) : 0;
 const readingTime = body ? getReadingTime(body) : 0;
@@ -41,7 +47,7 @@ function formatDate(d: Date) {
   class="card-hover bg-white dark:bg-[var(--color-card-dark)] rounded-2xl shadow-sm overflow-hidden group"
   transition:animate="fade"
 >
-  <a href={`${routePrefix}${slug}`} class="block">
+  <a href={`${linkPrefix}${slug}`} class="block">
     {cover ? (
       <div class="aspect-[2/1] overflow-hidden">
         <img

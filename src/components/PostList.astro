@@ -5,6 +5,7 @@ interface Post {
   id: string;
   slug: string;
   body: string;
+  collection: string;
   data: {
     title: string;
     description?: string;
@@ -21,9 +22,10 @@ interface Props {
   posts: Post[];
   showPinned?: boolean;
   routePrefix?: string;
+  routePrefixMap?: Record<string, string>;
 }
 
-const { posts, showPinned = false, routePrefix = '/post/' } = Astro.props;
+const { posts, showPinned = false, routePrefix = '/post/', routePrefixMap } = Astro.props;
 
 const pinnedPosts = posts.filter((p) => p.data.pinned);
 const normalPosts = posts.filter((p) => !p.data.pinned);
@@ -50,6 +52,8 @@ const normalPosts = posts.filter((p) => !p.data.pinned);
             pinned={true}
             draft={post.data.draft}
             routePrefix={routePrefix}
+            collection={post.collection}
+            routePrefixMap={routePrefixMap}
           />
         ))}
       </div>
@@ -85,6 +89,8 @@ const normalPosts = posts.filter((p) => !p.data.pinned);
             body={post.body}
             draft={post.data.draft}
             routePrefix={routePrefix}
+            collection={post.collection}
+            routePrefixMap={routePrefixMap}
           />
         ))}
       </div>
