@@ -42,3 +42,6 @@ dist/
 
 # 系统
 *.log
+
+# Superpowers brainstorm
+.superpowers/
