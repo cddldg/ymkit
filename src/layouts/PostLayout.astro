@@ -39,20 +39,16 @@ const {title, description, headings, cover} = Astro.props;
           <Sidebar />
         </div>
       </aside>
-      <div class="flex-1 min-w-0 order-2">
-        <article class="prose max-w-none bg-white dark:bg-[var(--color-card-dark)] rounded-2xl shadow-sm p-6 sm:p-8">
+      <div class="flex-1 min-w-0 max-w-4xl mx-auto order-2">
+        <article class="prose bg-white dark:bg-[var(--color-card-dark)] rounded-2xl shadow-sm p-6 sm:p-8">
           <slot/>
         </article>
       </div>
-      {
-        headings && headings.length > 0 && (
-          <aside class="w-full lg:w-48 shrink-0 order-3">
-            <div class="sticky top-24">
-              <TableOfContents headings={headings}/>
-            </div>
-          </aside>
-        )
-      }
+      <aside class="hidden lg:block w-48 shrink-0 order-3">
+        <div class="sticky top-24">
+          {headings && headings.length > 0 && <TableOfContents headings={headings}/>}
+        </div>
+      </aside>
     </div>
   </div>
 </BaseLayout>
