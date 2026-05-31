@@ -1,18 +1,23 @@
 import path from 'node:path';
 
-const blogRaw = import.meta.glob<{ default: any }>('../content/blog/**/*.{png,jpg,jpeg,gif,webp,svg}', {
+const pluginsRaw = import.meta.glob<{ default: any }>('../content/plugins/**/*.{png,jpg,jpeg,gif,webp,svg}', {
   eager: true,
   query: '?url',
 });
 
-const weeklyRaw = import.meta.glob<{ default: any }>('../content/weekly/**/*.{png,jpg,jpeg,gif,webp,svg}', {
+const toolsRaw = import.meta.glob<{ default: any }>('../content/tools/**/*.{png,jpg,jpeg,gif,webp,svg}', {
+  eager: true,
+  query: '?url',
+});
+
+const aiRaw = import.meta.glob<{ default: any }>('../content/ai/**/*.{png,jpg,jpeg,gif,webp,svg}', {
   eager: true,
   query: '?url',
 });
 
 const imageMap: Record<string, string> = {};
 
-function buildMap(glob: typeof blogRaw) {
+function buildMap(glob: typeof pluginsRaw) {
   for (const [key, mod] of Object.entries(glob)) {
     const val: any = mod;
     const inner = val?.default || val;
@@ -24,8 +29,9 @@ function buildMap(glob: typeof blogRaw) {
   }
 }
 
-buildMap(blogRaw);
-buildMap(weeklyRaw);
+buildMap(pluginsRaw);
+buildMap(toolsRaw);
+buildMap(aiRaw);
 
 export function resolveCover(collection: string, entryId: string, cover?: string): string | undefined {
   if (!cover) return undefined;
