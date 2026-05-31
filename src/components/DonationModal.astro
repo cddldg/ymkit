@@ -562,6 +562,9 @@ const { class: className } = Astro.props;
     modal.classList.remove('hidden');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    document.querySelectorAll('aside').forEach(function(el) {
+      el.style.visibility = 'hidden';
+    });
   }
 
   function closeDonation() {
@@ -570,6 +573,9 @@ const { class: className } = Astro.props;
     modal.classList.add('hidden');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    document.querySelectorAll('aside').forEach(function(el) {
+      el.style.visibility = '';
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function() {
