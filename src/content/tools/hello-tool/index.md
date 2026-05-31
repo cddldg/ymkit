@@ -2,7 +2,7 @@
 title: Hello Tool
 description: 这是一个示例工具文档，展示工具页面的内容格式。
 date: 2026-05-31
-tags: []
+tags: [在线工具]
 cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/logo.png
 pinned: false
 draft: false
