@@ -1,0 +1,592 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div id="donation-modal" class="fixed inset-0 z-[100] hidden" aria-hidden="true">
+  <div id="donation-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="relative max-w-lg w-full">
+      <button
+        id="donation-close"
+        class="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+        aria-label="关闭"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+      <div id="donation-widget-root">
+        <style>
+          #donation-widget-root {
+            --primary-cyan: #00f2fe;
+            --primary-pink: #f35588;
+            --cyber-blue: #4facfe;
+            --bg-dark: #0d1117;
+            --text-gray: #8b949e;
+            --glass-bg: rgba(13, 17, 23, 0.95);
+            --glass-border: rgba(0, 242, 254, 0.15);
+            --neon-glow: 0 0 15px rgba(0, 242, 254, 0.2);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            perspective: 1200px;
+            box-sizing: border-box;
+          }
+
+          #donation-widget-root * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+          }
+
+          #donation-widget-root .cyber-card-wrapper {
+            position: relative;
+            width: 420px;
+            height: 480px;
+            transform-style: preserve-3d;
+          }
+
+          #donation-widget-root .cyber-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          }
+
+          #donation-widget-root .cyber-card-wrapper.flipped .cyber-card {
+            transform: rotateY(180deg);
+          }
+
+          #donation-widget-root .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: var(--glass-bg);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), var(--neon-glow);
+            overflow: hidden;
+          }
+
+          #donation-widget-root .card-face::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 1;
+          }
+
+          #donation-widget-root .decor-corner {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--primary-cyan);
+            z-index: 2;
+          }
+
+          #donation-widget-root .decor-t-l { top: 12px; left: 12px; border-right: none; border-bottom: none; }
+          #donation-widget-root .decor-t-r { top: 12px; right: 12px; border-left: none; border-bottom: none; }
+          #donation-widget-root .decor-b-l { bottom: 12px; left: 12px; border-right: none; border-top: none; }
+          #donation-widget-root .decor-b-r { bottom: 12px; right: 12px; border-left: none; border-top: none; }
+
+          #donation-widget-root .card-front { z-index: 2; transform: rotateY(0deg); }
+
+          #donation-widget-root .hint-section {
+            text-align: center;
+            margin-bottom: 12px;
+            z-index: 2;
+            background: rgba(0, 242, 254, 0.06);
+            border-left: 3px solid var(--primary-cyan);
+            border-right: 3px solid var(--primary-cyan);
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 15px rgba(0, 242, 254, 0.1);
+            position: relative;
+            overflow: hidden;
+          }
+
+          #donation-widget-root .hint-section::after {
+            content: '';
+            position: absolute;
+            width: 6px; height: 6px;
+            top: 0; left: 0;
+            border-top: 2px solid var(--primary-cyan);
+            border-left: 2px solid var(--primary-cyan);
+          }
+
+          #donation-widget-root .hint-section::before {
+            content: '';
+            position: absolute;
+            width: 6px; height: 6px;
+            bottom: 0; right: 0;
+            border-bottom: 2px solid var(--primary-cyan);
+            border-right: 2px solid var(--primary-cyan);
+          }
+
+          #donation-widget-root .tech-tag {
+            font-size: 10px;
+            background: rgba(0, 242, 254, 0.15);
+            color: var(--primary-cyan);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            vertical-align: middle;
+            letter-spacing: 1px;
+            display: inline-block;
+            font-weight: bold;
+          }
+
+          #donation-widget-root .pink-tag {
+            background: rgba(243, 85, 136, 0.15);
+            color: var(--primary-pink);
+            border-color: rgba(243, 85, 136, 0.3);
+          }
+
+          #donation-widget-root .hint-title {
+            font-size: 13px;
+            color: var(--primary-cyan);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            animation: cyber-breathing 2s infinite ease-in-out;
+          }
+
+          #donation-widget-root .hint-text {
+            font-size: 15px;
+            color: #ffffff;
+            line-height: 1.5;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+          }
+
+          #donation-widget-root .qr-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin: 15px 0 20px 0;
+            z-index: 2;
+          }
+
+          #donation-widget-root .qr-box { text-align: center; position: relative; }
+
+          #donation-widget-root .mini-card-container {
+            width: 100%;
+            aspect-ratio: 1;
+            perspective: 600px;
+            cursor: pointer;
+          }
+
+          #donation-widget-root .mini-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+
+          #donation-widget-root .mini-card-container.flipped .mini-card {
+            transform: rotateY(180deg);
+          }
+
+          #donation-widget-root .mini-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            overflow: hidden;
+          }
+
+          #donation-widget-root .mini-front {
+            background: rgba(255, 255, 255, 0.02);
+            transform: rotateY(0deg);
+            z-index: 2;
+          }
+
+          #donation-widget-root .mini-front::before {
+            content: '';
+            position: absolute;
+            width: 150%; height: 150%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+          }
+
+          #donation-widget-root .brand-icon-wrapper {
+            position: relative;
+            width: 58px; height: 58px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            margin-bottom: 15px;
+          }
+
+          #donation-widget-root .icon-wx-front {
+            background: rgba(7, 193, 96, 0.1);
+            border: 1px solid rgba(7, 193, 96, 0.3);
+            box-shadow: 0 0 10px rgba(7, 193, 96, 0.2);
+          }
+
+          #donation-widget-root .icon-zfb-front {
+            background: rgba(22, 119, 255, 0.1);
+            border: 1px solid rgba(22, 119, 255, 0.3);
+            box-shadow: 0 0 10px rgba(22, 119, 255, 0.2);
+          }
+
+          #donation-widget-root .brand-svg { width: 32px; height: 32px; }
+
+          #donation-widget-root .tap-to-reveal {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            padding: 5px 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+          }
+
+          #donation-widget-root .tap-wx {
+            color: #07c160;
+            border: 1px solid rgba(7, 193, 96, 0.2);
+            text-shadow: 0 0 8px rgba(7, 193, 96, 0.3);
+            animation: pulse-wx 2s infinite;
+          }
+
+          #donation-widget-root .tap-zfb {
+            color: #1677ff;
+            border: 1px solid rgba(22, 119, 255, 0.2);
+            text-shadow: 0 0 8px rgba(22, 119, 255, 0.3);
+            animation: pulse-zfb 2s infinite;
+          }
+
+          #donation-widget-root .mini-card-container:hover .mini-front { background: rgba(255, 255, 255, 0.05); }
+          #donation-widget-root .mini-card-container:hover .tap-wx {
+            background: rgba(7, 193, 96, 0.15);
+            border-color: rgba(7, 193, 96, 0.5);
+            box-shadow: 0 0 10px rgba(7, 193, 96, 0.3);
+          }
+          #donation-widget-root .mini-card-container:hover .tap-zfb {
+            background: rgba(22, 119, 255, 0.15);
+            border-color: rgba(22, 119, 255, 0.5);
+            box-shadow: 0 0 10px rgba(22, 119, 255, 0.3);
+          }
+
+          #donation-widget-root .mini-back {
+            background: #ffffff;
+            transform: rotateY(180deg);
+            z-index: 1;
+            padding: 6px;
+          }
+
+          #donation-widget-root .qr-img-wrapper {
+            width: 100%; height: 100%;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+          }
+
+          #donation-widget-root .qr-image { width: 100%; height: 100%; object-fit: contain; }
+
+          #donation-widget-root .action-btn {
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.08), rgba(79, 172, 254, 0.12));
+            border: 1px dashed var(--primary-cyan);
+            color: var(--primary-cyan);
+            border-radius: 30px;
+            padding: 11px 20px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 2;
+            width: 100%;
+            outline: none;
+          }
+
+          #donation-widget-root .action-btn:hover {
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.18), rgba(79, 172, 254, 0.25));
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
+            border-style: solid;
+            transform: translateY(-2px);
+          }
+
+          #donation-widget-root .card-back {
+            z-index: 1;
+            transform: rotateY(180deg);
+            border-color: rgba(243, 85, 136, 0.25);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 15px rgba(243, 85, 136, 0.2);
+          }
+
+          #donation-widget-root .card-back .decor-corner { border-color: var(--primary-pink); }
+
+          #donation-widget-root .card-back .hint-section {
+            background: rgba(243, 85, 136, 0.06);
+            border-left: 3px solid var(--primary-pink);
+            border-right: 3px solid var(--primary-pink);
+            box-shadow: inset 0 0 15px rgba(243, 85, 136, 0.1);
+          }
+
+          #donation-widget-root .card-back .hint-section::after { border-top: 2px solid var(--primary-pink); border-left: 2px solid var(--primary-pink); }
+          #donation-widget-root .card-back .hint-section::before { border-bottom: 2px solid var(--primary-pink); border-right: 2px solid var(--primary-pink); }
+
+          #donation-widget-root .gzh-title {
+            font-size: 13px;
+            color: var(--primary-pink);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            animation: pink-breathing 2s infinite ease-in-out;
+          }
+
+          #donation-widget-root .gzh-text {
+            font-size: 14px;
+            color: #ffffff;
+            line-height: 1.5;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+          }
+
+          #donation-widget-root .gzh-qr-box {
+            margin: 20px auto;
+            width: 180px; height: 180px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 8px;
+            box-shadow: 0 0 20px rgba(243, 85, 136, 0.15);
+            z-index: 2;
+          }
+
+          #donation-widget-root .back-btn {
+            background: linear-gradient(90deg, rgba(243, 85, 136, 0.08), rgba(243, 85, 136, 0.15));
+            border: 1px dashed var(--primary-pink);
+            color: var(--primary-pink);
+            border-radius: 30px;
+            padding: 11px 20px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 2;
+            width: 100%;
+          }
+
+          #donation-widget-root .back-btn:hover {
+            background: linear-gradient(90deg, rgba(243, 85, 136, 0.2), rgba(243, 85, 136, 0.3));
+            box-shadow: 0 0 15px rgba(243, 85, 136, 0.35);
+            border-style: solid;
+            transform: translateY(-2px);
+          }
+
+          #donation-widget-root .scan-line {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent);
+            animation: scan 3.5s linear infinite;
+            opacity: 0.6;
+            z-index: 3;
+            pointer-events: none;
+          }
+
+          #donation-widget-root .card-back .scan-line {
+            background: linear-gradient(90deg, transparent, var(--primary-pink), transparent);
+          }
+
+          @keyframes scan { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
+          @keyframes cyber-breathing { 0%, 100% { text-shadow: 0 0 6px rgba(0, 242, 254, 0.6); } 50% { text-shadow: 0 0 14px rgba(0, 242, 254, 0.95), 0 0 25px rgba(0, 242, 254, 0.45); } }
+          @keyframes pink-breathing { 0%, 100% { text-shadow: 0 0 6px rgba(243, 85, 136, 0.6); } 50% { text-shadow: 0 0 14px rgba(243, 85, 136, 0.95), 0 0 25px rgba(243, 85, 136, 0.45); } }
+          @keyframes pulse-wx { 0%, 100% { box-shadow: 0 0 0 rgba(7, 193, 96, 0); } 50% { box-shadow: 0 0 8px rgba(7, 193, 96, 0.35); } }
+          @keyframes pulse-zfb { 0%, 100% { box-shadow: 0 0 0 rgba(22, 119, 255, 0); } 50% { box-shadow: 0 0 8px rgba(22, 119, 255, 0.35); } }
+        </style>
+
+        <div class="cyber-card-wrapper" id="cyberCardWrapper">
+          <div class="cyber-card">
+            <div class="card-face card-front">
+              <div class="scan-line"></div>
+              <div class="decor-corner decor-t-l"></div>
+              <div class="decor-corner decor-t-r"></div>
+              <div class="decor-corner decor-b-l"></div>
+              <div class="decor-corner decor-b-r"></div>
+
+              <div class="hint-section">
+                <div class="hint-title">SYSTEM REWARD <span class="tech-tag">[ ONLINE ]</span></div>
+                <div class="hint-text" id="hintText">能量注入 - 请作者喝杯冰可乐</div>
+              </div>
+
+              <div class="qr-grid">
+                <div class="qr-box">
+                  <div class="mini-card-container flipped" onclick="toggleQrFlip(this, event)">
+                    <div class="mini-card" style="transform: rotateY(180deg);">
+                      <div class="mini-face mini-front">
+                        <div class="brand-icon-wrapper icon-wx-front">
+                          <svg class="brand-svg" viewBox="0 0 24 24" fill="none">
+                            <path d="M8.5 11c-.414 0-.75-.336-.75-.75S8.086 9.5 8.5 9.5s.75.336.75.75-.336.75-.75.75zm5 0c-.414 0-.75-.336-.75-.75s.336-.75.75-.75.75.336.75.75-.336.75-.75.75z" fill="#07C160" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.001 2C6.93 2 3 5.372 3 9.75c0 2.473 1.282 4.654 3.321 6.03l-.841 2.508 2.87-1.488c1.1.309 2.27.475 3.483.475.244 0 .487-.007.728-.02-.106-.44-.162-.897-.162-1.368 0-4.045 3.693-7.342 8.23-7.342.115 0 .229.002.343.006C20.47 5.163 16.666 2 12.001 2zm6.666 7.643c-3.791 0-6.884 2.768-6.884 6.16 0 3.391 3.093 6.16 6.884 6.16 1.012 0 1.97-.197 2.833-.548l2.164 1.121-.634-1.892c1.383-1.04 2.247-2.656 2.247-4.437 0-3.392-3.093-6.164-6.884-6.164zm-2.41 4.777c-.31 0-.562-.252-.562-.563 0-.31.252-.562.562-.562s.563.251.563.562c0 .311-.252.563-.563.563zm3.765 0c-.31 0-.563-.252-.563-.563 0-.31.252-.562.563-.562s.562.251.562.562c0 .311-.251.563-.562.563z" fill="#07C160" />
+                          </svg>
+                        </div>
+                        <div class="tap-to-reveal tap-wx">微信</div>
+                      </div>
+                      <div class="mini-face mini-back">
+                        <div class="qr-img-wrapper">
+                          <img class="qr-image" src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/wx.webp" alt="微信" loading="lazy" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="qr-box">
+                  <div class="mini-card-container" onclick="toggleQrFlip(this, event)">
+                    <div class="mini-card">
+                      <div class="mini-face mini-front">
+                        <div class="brand-icon-wrapper icon-zfb-front">
+                          <svg class="brand-svg" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.327 13.911h-2.149c-.218.777-.557 1.543-1.01 2.24-.766-.583-1.61-.954-2.5-1.12.56-.632.993-1.373 1.282-2.176H8.253v-.942h3.428v-1.144H8.729V12h2.952v-1.63H8.35v-.942h3.33V7.81h1.155v1.617h3.344v.942H12.84V12h2.943v.919H12.84v1.144h3.149l-.662 1.848zM12.84 12.919v1.144h-1.002c-.173.498-.415.96-.717 1.38h1.719v-.252l-.001-2.272z" fill="#1677FF" />
+                          </svg>
+                        </div>
+                        <div class="tap-to-reveal tap-zfb">支付宝</div>
+                      </div>
+                      <div class="mini-face mini-back">
+                        <div class="qr-img-wrapper">
+                          <img class="qr-image" src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/zfb.webp" alt="支付宝" loading="lazy" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="action-btn" onclick="toggleFlip(event)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                </svg>
+                联系作者 - 意见反馈
+              </button>
+            </div>
+
+            <div class="card-face card-back">
+              <div class="scan-line"></div>
+              <div class="decor-corner decor-t-l"></div>
+              <div class="decor-corner decor-t-r"></div>
+              <div class="decor-corner decor-b-l"></div>
+              <div class="decor-corner decor-b-r"></div>
+
+              <div class="hint-section">
+                <div class="gzh-title">FEEDBACK & CONTACT <span class="tech-tag pink-tag">[ SECURE ]</span></div>
+                <div class="gzh-text">建议/反馈/联系 - 扫码关注</div>
+              </div>
+
+              <div class="gzh-qr-box">
+                <div class="qr-img-wrapper" style="width:100%; height:100%;">
+                  <img class="qr-image" src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/gzh.webp" alt="公众号" loading="lazy" />
+                </div>
+              </div>
+
+              <button class="back-btn" onclick="toggleFlip(event)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+                返回打赏通道
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function toggleFlip(event) {
+    event.stopPropagation();
+    var wrapper = document.getElementById('cyberCardWrapper');
+    if (!wrapper) return;
+    wrapper.classList.toggle('flipped');
+    var card = wrapper.querySelector('.cyber-card');
+    card.style.transform = wrapper.classList.contains('flipped') ? 'rotateY(180deg)' : 'rotateY(0deg)';
+  }
+
+  function toggleQrFlip(container, event) {
+    event.stopPropagation();
+    container.classList.toggle('flipped');
+    var card = container.querySelector('.mini-card');
+    if (container.classList.contains('flipped')) {
+      card.style.transform = 'rotateY(180deg)';
+    } else {
+      card.style.transform = 'rotateY(0deg)';
+    }
+  }
+
+  function openDonation() {
+    var modal = document.getElementById('donation-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDonation() {
+    var modal = document.getElementById('donation-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var closeBtn = document.getElementById('donation-close');
+    var backdrop = document.getElementById('donation-backdrop');
+    if (closeBtn) closeBtn.addEventListener('click', closeDonation);
+    if (backdrop) backdrop.addEventListener('click', closeDonation);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeDonation();
+    });
+  });
+
+  document.addEventListener('astro:after-swap', function() {
+    var closeBtn = document.getElementById('donation-close');
+    var backdrop = document.getElementById('donation-backdrop');
+    if (closeBtn) closeBtn.addEventListener('click', closeDonation);
+    if (backdrop) backdrop.addEventListener('click', closeDonation);
+  });
+</script>

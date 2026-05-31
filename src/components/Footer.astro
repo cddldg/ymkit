@@ -1,7 +1,7 @@
 ---
 import {getCollection} from 'astro:content';
-import {SITE_AUTHOR} from '../consts';
 import {getWordCount} from '../utils/readingTime';
+import DonationModal from './DonationModal.astro';
 
 const allPlugins = await getCollection('plugins');
 const allTools = await getCollection('tools');
@@ -27,11 +27,22 @@ const startYear = 2026;
         </div>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <span>&copy; {startYear}{currentYear > startYear ? ` - ${currentYear}` : ''} {SITE_AUTHOR}</span>
+            <span>&copy; {startYear}{currentYear > startYear ? ` - ${currentYear}` : ''} <a href="https://www.ymkit.cn/" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">YMKit</a></span>
             <span class="hidden sm:inline text-gray-300 dark:text-gray-600">|</span>
-            <span>
-        Powered by <a href="https://astro.build" class="text-primary hover:underline">Astro</a> & <a href="https://tailwindcss.com/" class="text-cyan-500 hover:underline">Tailwind</a>
-      </span>
+            <button id="donate-trigger" class="text-primary hover:underline cursor-pointer bg-transparent border-none text-sm text-gray-500 dark:text-gray-400 p-0">打赏</button>
         </div>
     </div>
 </footer>
+
+<DonationModal />
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('donate-trigger');
+    if (btn) btn.addEventListener('click', openDonation);
+  });
+  document.addEventListener('astro:after-swap', function() {
+    var btn = document.getElementById('donate-trigger');
+    if (btn) btn.addEventListener('click', openDonation);
+  });
+</script>
