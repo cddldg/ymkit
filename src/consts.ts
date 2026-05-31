@@ -1,23 +1,43 @@
-export const SITE_TITLE = 'Sify Blog';
-export const SITE_DESCRIPTION = '一个基于 Astro 的现代化博客主题';
-export const SITE_AUTHOR = 'santisify';
-export const SITE_URL = 'https://santisify.top';
-export const SITE_AVATAR = 'https://santisify.top/_vercel/image?url=_astro%2Favatar.BpCip-1B.png&w=1200&q=100';
-export const SITE_COVER = 'https://santisify.top/_vercel/image?url=_astro%2Fcf2227.wczNDBh1.webp&w=1920&q=100';
+export const SITE_TITLE = '一秒工具';
+export const SITE_DESCRIPTION = '分享实用插件、工具和 AI 资源';
+export const SITE_AUTHOR = '一秒工具';
+export const SITE_URL = 'https://www.ymkit.cn';
+export const SITE_AVATAR = 'https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/logo.png';
+export const SITE_COVER = 'https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/logo.png';
 
-export const PAGE_SIZE = 10;
+export const PAGE_SIZE = 12;
 
 export const NAV_ITEMS = [
   { label: '首页', href: '/' },
-  { label: '周刊', href: '/weekly' },
-  { label: '文章', href: '/archives' },
-  { label: '友链', href: '/friends' },
-  { label: '关于', href: '/about' },
+  { label: '插件', href: '/plugins' },
+  { label: '工具', href: '/tools' },
+  { label: 'AI', href: '/ai' },
+  { label: '归档', href: '/archives' },
 ];
 
 export const SOCIAL_LINKS = [
-  { name: 'GitHub', href: 'https://github.com/santisify', icon: 'github' },
   { name: 'RSS', href: '/rss.xml', icon: 'rss' },
+];
+
+export const CATEGORY_CARDS = [
+  {
+    label: '插件',
+    href: '/plugins',
+    description: '浏览器插件、VS Code 扩展等实用插件',
+    icon: 'plugin',
+  },
+  {
+    label: '工具',
+    href: '/tools',
+    description: '在线工具、桌面应用、效率软件',
+    icon: 'tool',
+  },
+  {
+    label: 'AI',
+    href: '/ai',
+    description: 'AI 工具、模型、提示词资源',
+    icon: 'ai',
+  },
 ];
 
 export const npmCDN = '';
