@@ -8,8 +8,13 @@ const postSchema = z.object({
   updated: z.coerce.date().optional(),
   tags: z.array(z.string()).default([]),
   cover: z.string().optional(),
+  coverAlt: z.string().optional(),
+  author: z.string().default('一秒工具'),
   pinned: z.boolean().default(false),
   draft: z.boolean().default(false),
+  canonical: z.string().url().optional(),
+  category: z.string().optional(),
+  readingTime: z.number().optional(),
 });
 
 const pluginCollection = defineCollection({
