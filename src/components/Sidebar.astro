@@ -3,6 +3,18 @@ import { getCollection } from 'astro:content';
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_AVATAR, SOCIAL_LINKS } from '../consts';
 import { getWordCount } from '../utils/readingTime';
 
+interface CurrentPost {
+  id: string;
+  collection: string;
+  tags: string[];
+}
+
+interface Props {
+  currentPost?: CurrentPost;
+}
+
+const { currentPost } = Astro.props;
+
 const allPlugins = await getCollection('plugins');
 const allTools = await getCollection('tools');
 const allAi = await getCollection('ai');
@@ -36,7 +48,45 @@ const routeMap: Record<string, string> = {
   ai: '/ai/',
 };
 
-const randomPosts = [...sorted].sort(() => Math.random() - 0.5).slice(0, 5);
+// 相关推荐逻辑
+let recommendedPosts: typeof sorted = [];
+let recommendationTitle = '随机推荐';
+
+if (currentPost) {
+  // 详情页：根据标签推荐相关文章
+  const currentTags = new Set(currentPost.tags);
+
+  // 计算每篇文章与当前文章的标签匹配数
+  const scoredPosts = sorted
+    .filter((post) => post.id !== currentPost.id) // 排除当前文章
+    .map((post) => {
+      const matchCount = (post.data.tags || []).filter((tag) => currentTags.has(tag)).length;
+      return { ...post, matchCount };
+    })
+    .filter((post) => post.matchCount > 0) // 只保留有标签匹配的
+    .sort((a, b) => b.matchCount - a.matchCount || b.data.date.getTime() - a.data.date.getTime());
+
+  recommendedPosts = scoredPosts.slice(0, 5);
+
+  // 如果有相关文章，显示"相关推荐"
+  if (recommendedPosts.length > 0) {
+    recommendationTitle = '相关推荐';
+  }
+
+  // 如果相关文章不足 5 篇，用随机文章补充
+  if (recommendedPosts.length < 5) {
+    const existingIds = new Set(recommendedPosts.map((p) => p.id));
+    existingIds.add(currentPost.id);
+    const additional = [...sorted]
+      .filter((post) => !existingIds.has(post.id))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 5 - recommendedPosts.length);
+    recommendedPosts = [...recommendedPosts, ...additional];
+  }
+} else {
+  // 非详情页：随机推荐
+  recommendedPosts = [...sorted].sort(() => Math.random() - 0.5).slice(0, 5);
+}
 ---
 
 <aside class="space-y-6">
@@ -126,13 +176,13 @@ const randomPosts = [...sorted].sort(() => Math.random() - 0.5).slice(0, 5);
   }
 
   {
-    randomPosts.length > 0 && (
+    recommendedPosts.length > 0 && (
       <div class="bg-white dark:bg-[var(--color-card-dark)] rounded-2xl shadow-sm p-5">
         <h2 class="text-sm font-semibold mb-4 text-gray-900 dark:text-gray-100">
-          随机推荐
+          {recommendationTitle}
         </h2>
         <div class="space-y-2">
-          {randomPosts.map((post) => (
+          {recommendedPosts.map((post) => (
             <a
               href={`${routeMap[post.collection]}${post.id}`}
               class="block text-xs text-gray-500 dark:text-gray-400 truncate hover:text-primary transition-colors"

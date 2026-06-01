@@ -8,17 +8,24 @@ interface MarkdownHeading {
   text: string;
 }
 
+interface CurrentPost {
+  id: string;
+  collection: string;
+  tags: string[];
+}
+
 interface Props {
   title: string;
   description?: string;
   headings: MarkdownHeading[];
   cover?: string;
+  currentPost?: CurrentPost;
 }
 
-const {title, description, headings, cover} = Astro.props;
+const {title, description, headings, cover, currentPost} = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} ogType="article" ogImage={cover}>
+<BaseLayout title={title} description={description} ogType="article" image={cover}>
   {
     cover && (
       <div class="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden -mt-16 mb-8">
@@ -36,11 +43,11 @@ const {title, description, headings, cover} = Astro.props;
     <div class="flex flex-col lg:flex-row gap-6 py-8">
       <aside class="hidden lg:block w-full lg:w-64 shrink-0 order-first">
         <div class="sticky top-20 space-y-6">
-          <Sidebar />
+          <Sidebar currentPost={currentPost} />
         </div>
       </aside>
       <div class="flex-1 min-w-0 max-w-4xl mx-auto order-2">
-        <article class="prose bg-white dark:bg-[var(--color-card-dark)] rounded-2xl shadow-sm p-6 sm:p-8">
+        <article class="prose bg-white dark:bg-[var(--color-card-dark)] rounded-2xl shadow-sm p-6 sm:p-8" id="article-content">
           <slot/>
         </article>
       </div>
@@ -51,4 +58,138 @@ const {title, description, headings, cover} = Astro.props;
       </aside>
     </div>
   </div>
+
+  {/* 图片灯箱 - 使用原生 dialog 元素 */}
+  <dialog id="image-lightbox" class="lightbox">
+    <img id="lightbox-image" src="" alt="" />
+    <button class="lightbox-close" aria-label="关闭" autofocus>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </dialog>
 </BaseLayout>
+
+<style>
+  .lightbox {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: auto;
+    max-width: 95vw;
+    max-height: 95vh;
+    overflow: visible;
+  }
+
+  /* dialog 背景遮罩 */
+  .lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+  }
+
+  /* 打开动画 */
+  .lightbox[open] {
+    animation: lightbox-open 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lightbox[open]::backdrop {
+    animation: backdrop-open 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 8px;
+    display: block;
+  }
+
+  .lightbox-close {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    z-index: 10;
+  }
+
+  .lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  /* 文章内图片样式 */
+  #article-content :global(img) {
+    cursor: zoom-in;
+  }
+
+  @keyframes lightbox-open {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes backdrop-open {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  function initLightbox() {
+    const dialog = document.getElementById('image-lightbox') as HTMLDialogElement | null;
+    const lightboxImg = document.getElementById('lightbox-image') as HTMLImageElement | null;
+    const article = document.getElementById('article-content');
+
+    if (!dialog || !lightboxImg || !article) return;
+
+    const closeBtn = dialog.querySelector('.lightbox-close');
+
+    // 使用事件委托，只绑定一个事件
+    article.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'IMG') {
+        const img = target as HTMLImageElement;
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        dialog.showModal();
+      }
+    });
+
+    // 关闭灯箱
+    function closeLightbox() {
+      dialog.close();
+    }
+
+    // 点击关闭按钮
+    closeBtn?.addEventListener('click', closeLightbox);
+
+    // 点击遮罩层关闭（dialog 本身）
+    dialog?.addEventListener('click', (e) => {
+      if (e.target === dialog) {
+        closeLightbox();
+      }
+    });
+  }
+
+  // 页面加载时初始化
+  document.addEventListener('astro:page-load', initLightbox);
+  initLightbox();
+</script>
