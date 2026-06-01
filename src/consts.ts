@@ -50,7 +50,7 @@ export const BANNERS = [
   },
   {
     image: 'https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260601005013578.gif',
-    title: '',
+    title: '数字人',
     link: '/ai',
   }
 ];

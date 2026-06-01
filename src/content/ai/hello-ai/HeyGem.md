@@ -1,7 +1,7 @@
 ---
 title: HeyGem本地、稳定、效果好的数字人
 description: 这是一个示例 AI 资源文档，展示 AI 页面的内容格式。
-date: 2026-05-31
+date: 2026-06-01
 tags: [AI, 数字人]
 cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260601005013578.gif
 pinned: false
