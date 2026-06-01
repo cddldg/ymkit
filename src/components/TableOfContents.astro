@@ -36,4 +36,32 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
   ) : (
     <p class="text-xs text-gray-400 dark:text-gray-500">暂无目录</p>
   )}
+
+  <!-- 阅读进度 + 回到顶部 -->
+  <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+    <span id="reading-progress" class="text-xs text-gray-400 dark:text-gray-500">已读 0%</span>
+    <button
+      id="back-to-top"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      class="text-xs text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary transition-colors cursor-pointer"
+    >
+      ↑ 回到顶部
+    </button>
+  </div>
 </nav>
+
+<script is:inline>
+  (function () {
+    function updateProgress() {
+      var el = document.getElementById('reading-progress');
+      if (!el) return;
+      var scrollTop = window.scrollY;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var percent = docHeight > 0 ? Math.min(Math.round((scrollTop / docHeight) * 100), 100) : 0;
+      el.textContent = '已读 ' + percent + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('load', updateProgress);
+    updateProgress();
+  })();
+</script>
