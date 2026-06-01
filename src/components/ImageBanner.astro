@@ -1,0 +1,235 @@
+---
+import { BANNERS, BANNER_INTERVAL } from '../consts';
+
+interface Props {
+  banners?: typeof BANNERS;
+  objectFit?: 'cover' | 'contain'; // 图片适配方式
+}
+
+const {
+  banners = BANNERS,
+  objectFit = 'cover',
+} = Astro.props;
+
+const count = banners.length;
+---
+
+<section
+  class="banner-container mb-8"
+  data-count={count}
+  data-interval={BANNER_INTERVAL}
+  style={`--fit: ${objectFit}`}
+>
+  <div class="banner-wrapper">
+    {banners.map((banner, index) => (
+      <a
+        href={banner.link}
+        class={`banner-slide ${index === 0 ? 'active' : ''}`}
+        data-index={index}
+      >
+        <img
+          src={banner.image}
+          alt={banner.title}
+          loading={index === 0 ? 'eager' : 'lazy'}
+          class="banner-image"
+        />
+        <div class="banner-overlay">
+          <h2 class="banner-title">{banner.title}</h2>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  {/* 指示器 - 可点击 */}
+  <div class="banner-indicators">
+    {banners.map((_, index) => (
+      <button
+        class={`banner-dot ${index === 0 ? 'active' : ''}`}
+        data-index={index}
+        aria-label={`切换到第 ${index + 1} 张图片`}
+      />
+    ))}
+  </div>
+</section>
+
+<style>
+  .banner-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .banner-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 40%; /* 2.5:1 宽高比 */
+  }
+
+  .banner-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    text-decoration: none;
+    pointer-events: none;
+  }
+
+  .banner-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: var(--fit);
+    background: #1a1a2e;
+  }
+
+  .banner-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem 1.5rem 1.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  }
+
+  .banner-title {
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .banner-indicators {
+    position: absolute;
+    bottom: 1rem;
+    right: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    z-index: 10;
+  }
+
+  .banner-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .banner-dot:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.2);
+  }
+
+  .banner-dot.active {
+    background: white;
+    transform: scale(1.1);
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 640px) {
+    .banner-wrapper {
+      padding-bottom: 60%; /* 移动端使用更高的宽高比 */
+    }
+
+    .banner-title {
+      font-size: 1rem;
+    }
+
+    .banner-overlay {
+      padding: 1.5rem 1rem 1rem;
+    }
+
+    .banner-dot {
+      width: 14px;
+      height: 14px;
+    }
+
+    .banner-indicators {
+      gap: 1rem;
+    }
+  }
+</style>
+
+<script>
+  function initBanner() {
+    const containers = document.querySelectorAll('.banner-container');
+
+    containers.forEach((container) => {
+      const slides = container.querySelectorAll('.banner-slide');
+      const dots = container.querySelectorAll('.banner-dot');
+      const count = parseInt(container.getAttribute('data-count') || '0');
+      const interval = parseInt(container.getAttribute('data-interval') || '5') * 1000;
+
+      if (count <= 1) return;
+
+      let currentIndex = 0;
+      let autoPlayTimer: ReturnType<typeof setInterval> | null = null;
+
+      // 切换到指定索引
+      function goToSlide(index: number) {
+        // 移除当前活跃状态
+        slides[currentIndex].classList.remove('active');
+        dots[currentIndex].classList.remove('active');
+
+        // 更新索引
+        currentIndex = index;
+
+        // 添加新的活跃状态
+        slides[currentIndex].classList.add('active');
+        dots[currentIndex].classList.add('active');
+      }
+
+      // 下一张
+      function nextSlide() {
+        goToSlide((currentIndex + 1) % count);
+      }
+
+      // 开始自动播放
+      function startAutoPlay() {
+        stopAutoPlay();
+        autoPlayTimer = setInterval(nextSlide, interval);
+      }
+
+      // 停止自动播放
+      function stopAutoPlay() {
+        if (autoPlayTimer) {
+          clearInterval(autoPlayTimer);
+          autoPlayTimer = null;
+        }
+      }
+
+      // 绑定圆点点击事件
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          goToSlide(index);
+          startAutoPlay(); // 点击后重新开始自动播放
+        });
+      });
+
+      // 鼠标悬停暂停
+      container.addEventListener('mouseenter', stopAutoPlay);
+      container.addEventListener('mouseleave', startAutoPlay);
+
+      // 开始自动播放
+      startAutoPlay();
+    });
+  }
+
+  // 页面加载时初始化
+  document.addEventListener('astro:page-load', initBanner);
+  initBanner();
+</script>

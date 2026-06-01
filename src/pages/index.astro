@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BlogLayout from '../layouts/BlogLayout.astro';
-import Hero from '../components/Hero.astro';
+import ImageBanner from '../components/ImageBanner.astro';
 import CategoryCards from '../components/CategoryCards.astro';
 import PostList from '../components/PostList.astro';
 import { PAGE_SIZE } from '../consts';
@@ -36,7 +36,7 @@ const routeMap: Record<string, string> = {
 ---
 
 <BlogLayout>
-  <Hero collections={[allPlugins, allTools, allAi]} />
+  <ImageBanner slot="banner" />
   <CategoryCards />
   <PostList posts={postData} showPinned routePrefixMap={routeMap} />
 </BlogLayout>

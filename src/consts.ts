@@ -40,5 +40,15 @@ export const CATEGORY_CARDS = [
   },
 ];
 
+export const BANNER_INTERVAL = 5; // 轮播间隔时间（秒）
+
+export const BANNERS = [
+  {
+    image: 'https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/banner1.webp',
+    title: '不只是工具',
+    link: 'https://www.ymkit.cn',
+  }
+];
+
 export const npmCDN = '';
 export const walineServer = '';
