@@ -18,17 +18,17 @@ const postSchema = z.object({
 });
 
 const pluginCollection = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/plugins' }),
+  loader: glob({ pattern: '*.{md,mdx}', base: './src/content/plugins' }),
   schema: postSchema,
 });
 
 const toolCollection = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/tools' }),
+  loader: glob({ pattern: '*.{md,mdx}', base: './src/content/tools' }),
   schema: postSchema,
 });
 
 const aiCollection = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/ai' }),
+  loader: glob({ pattern: '*.{md,mdx}', base: './src/content/ai' }),
   schema: postSchema,
 });
 
