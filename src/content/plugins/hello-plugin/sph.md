@@ -20,7 +20,9 @@ draft: false
 
 ## 安装方式
 
-前往 [插件商店](https://example.com) 安装。
+前往安装。
+
+[插件商店](https://microsoftedge.microsoft.com/addons/detail/figpfhcabjegdifmenidmhnbdlahhedg)
 
 ## 使用方法
 

@@ -20,4 +20,8 @@ draft: false
 
 ## 使用方法
 
-访问 [工具网站](https://example.com) 即可在线使用。
+访问即可在线使用。
+
+[工具网站](https://example.com)
+
+
