@@ -1,14 +1,23 @@
 ---
 // 字体加载组件 - 使用 Google Fonts CDN
 // 所有字体均为免费开源（SIL Open Font License 1.1）
+// 使用 media="print" onload 异步加载，不阻塞渲染
 ---
 
 <!-- 预连接 Google Fonts CDN -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<!-- 加载字体 -->
+<!-- 异步加载字体，不阻塞渲染 -->
 <link
   href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Fira+Code:wght@400;500&display=swap"
   rel="stylesheet"
+  media="print"
+  onload="this.media='all'"
 />
+<noscript>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+</noscript>

@@ -41,6 +41,7 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com" />
     <FontLoader />
 
     <SEO
@@ -131,6 +132,36 @@ const {
 
       initCopyButtons();
       document.addEventListener('astro:after-swap', initCopyButtons);
+    </script>
+
+    <!-- 不蒜子页面阅读量统计（延迟加载，不阻塞页面渲染） -->
+    <script is:inline>
+      (function() {
+        var timer;
+        function loadBusuanzi() {
+          var el = document.getElementById('busuanzi_value_page_pv');
+          if (!el) return;
+          el.textContent = '...';
+          clearTimeout(timer);
+          timer = setTimeout(function() {
+            if (el.textContent === '...') el.textContent = '-';
+          }, 5000);
+          var old = document.getElementById('busuanzi-script');
+          if (old) old.remove();
+          var s = document.createElement('script');
+          s.id = 'busuanzi-script';
+          s.src = '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
+          document.body.appendChild(s);
+        }
+        if (document.readyState === 'complete') {
+          loadBusuanzi();
+        } else {
+          window.addEventListener('load', loadBusuanzi);
+        }
+        document.addEventListener('astro:after-swap', function() {
+          setTimeout(loadBusuanzi, 100);
+        });
+      })();
     </script>
   </body>
 </html>
