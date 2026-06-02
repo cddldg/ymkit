@@ -118,17 +118,19 @@ html {
 
 /* 外部链接按钮样式 */
 .prose a[target="_blank"] {
-  @apply inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl no-underline;
-  @apply bg-gradient-to-r from-primary to-primary-dark text-white;
-  @apply shadow-sm hover:shadow-lg transition-all duration-300;
+  @apply inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold no-underline;
+  @apply shadow-sm hover:shadow-md transition-all duration-200;
   @apply border-0 cursor-pointer;
+  background-color: #D81E06;
+  color: white;
+  border-radius: 6px;
   text-decoration: none !important;
 }
 
 .prose a[target="_blank"]:hover {
   @apply no-underline;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(233, 83, 106, 0.3);
+  background-color: #C41A05;
+  transform: translateY(-1px);
 }
 
 .prose h1 {
