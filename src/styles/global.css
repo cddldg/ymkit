@@ -125,21 +125,10 @@ html {
   text-decoration: none !important;
 }
 
-.prose a[target="_blank"]::after {
-  content: "↗";
-  font-size: 0.875em;
-  opacity: 0.9;
-  transition: transform 0.2s;
-}
-
 .prose a[target="_blank"]:hover {
   @apply no-underline;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(233, 83, 106, 0.3);
-}
-
-.prose a[target="_blank"]:hover::after {
-  transform: translate(2px, -2px);
 }
 
 .prose h1 {
