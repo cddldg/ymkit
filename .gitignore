@@ -18,15 +18,13 @@ reward.html
 Thumbs.db
 desktop.ini
 
-# 日志
+# 日志和临时文件
 *.log
-
-# 临时文件
 *.tmp
 *.temp
 .tmp/
 
-# Node
+# Node.js
 node_modules/
 package-lock.json
 yarn.lock
@@ -42,8 +40,5 @@ yarn.lock
 dist/
 .astro/
 
-# 系统
-*.log
-
-# Superpowers brainstorm
+# 其他
 .superpowers/
