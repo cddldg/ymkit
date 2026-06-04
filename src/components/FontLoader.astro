@@ -1,23 +1,24 @@
 ---
 // 字体加载组件 - 使用 Google Fonts CDN
 // 所有字体均为免费开源（SIL Open Font License 1.1）
-// 使用 media="print" onload 异步加载，不阻塞渲染
+// 使用 media="print" onload 异步加载 + display=swap，不阻塞渲染
+// 精简字体权重：正文 400/500/600，代号 400/500
 ---
 
-<!-- 预连接 Google Fonts CDN -->
+<!-- 预连接 Google Fonts CDN（提前建立连接） -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<!-- 异步加载字体，不阻塞渲染 -->
+<!-- 异步加载字体，精简权重减少请求数 -->
 <link
-  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Fira+Code:wght@400;500&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
   rel="stylesheet"
   media="print"
   onload="this.media='all'"
 />
 <noscript>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Fira+Code:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet"
   />
 </noscript>

@@ -12,6 +12,7 @@ interface Props {
   modifiedTime?: string;
   tags?: string[];
   author?: string;
+  keywords?: string;
 }
 
 const {
@@ -25,17 +26,31 @@ const {
   modifiedTime,
   tags,
   author = SITE_AUTHOR,
+  keywords,
 } = Astro.props;
 
 const pageTitle = title ? `${title} - ${SITE_TITLE}` : SITE_TITLE;
-const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site);
+
+// 清理 pathname：移除 .html 后缀和 /index.html 尾缀
+let cleanPath = Astro.url.pathname;
+if (cleanPath.endsWith('/index.html')) {
+  cleanPath = cleanPath.replace(/\/index\.html$/, '/');
+} else if (cleanPath.endsWith('.html')) {
+  cleanPath = cleanPath.replace(/\.html$/, '');
+}
+const canonicalURL = canonical || new URL(cleanPath, Astro.site);
 const imageURL = image ? new URL(image, Astro.site) : undefined;
+
+// 从 tags 生成默认 keywords
+const defaultKeywords = tags?.join(', ') || '';
+const metaKeywords = keywords || defaultKeywords;
 ---
 
 <!-- Primary Meta Tags -->
 <title>{pageTitle}</title>
 <meta name="title" content={pageTitle} />
 <meta name="description" content={description} />
+<meta name="keywords" content={metaKeywords} />
 <meta name="author" content={author} />
 <meta name="robots" content="index, follow" />
 <link rel="canonical" href={canonicalURL} />

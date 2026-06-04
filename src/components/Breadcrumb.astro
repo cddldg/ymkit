@@ -1,0 +1,55 @@
+---
+interface Props {
+  collection?: string;
+  collectionLabel?: string;
+  currentTitle?: string;
+}
+
+const { collection, collectionLabel, currentTitle } = Astro.props;
+
+// 集合名称映射
+const collectionMap: Record<string, { label: string; path: string }> = {
+  plugins: { label: '插件', path: '/plugins' },
+  tools: { label: '工具', path: '/tools' },
+  ai: { label: 'AI', path: '/ai' },
+};
+
+const breadcrumbItems: { label: string; href?: string }[] = [
+  { label: '首页', href: '/' },
+];
+
+if (collection) {
+  const colInfo = collectionMap[collection];
+  breadcrumbItems.push({
+    label: collectionLabel || colInfo?.label || collection,
+    href: colInfo?.path || `/${collection}`,
+  });
+}
+
+if (currentTitle) {
+  breadcrumbItems.push({ label: currentTitle });
+}
+---
+
+<nav aria-label="面包屑导航" class="mb-6">
+  <ol class="flex flex-wrap items-center text-sm text-gray-500 dark:text-gray-400">
+    {breadcrumbItems.map((item, i) => (
+      <li class="flex items-center">
+        {i > 0 && (
+          <svg class="w-4 h-4 mx-2 text-gray-300 dark:text-gray-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        )}
+        {item.href ? (
+          <a href={item.href} class="hover:text-primary dark:hover:text-primary transition-colors">
+            {item.label}
+          </a>
+        ) : (
+          <span class="text-gray-900 dark:text-gray-100 font-medium truncate max-w-[200px] sm:max-w-xs">
+            {item.label}
+          </span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

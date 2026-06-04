@@ -35,7 +35,9 @@ const routeMap: Record<string, string> = {
 };
 ---
 
-<BlogLayout>
+<BlogLayout
+  description="分享实用插件、工具和 AI 资源，发现高效好用的数字工具"
+  keywords="插件,工具,AI,浏览器插件,在线工具,AI工具,数字人,效率工具">
   <ImageBanner slot="banner" />
   <CategoryCards />
   <PostList posts={postData} showPinned routePrefixMap={routeMap} />

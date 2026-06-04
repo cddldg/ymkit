@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import PostList from '../../components/PostList.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import { resolveCover } from '../_imageStore';
 
 const allPosts = await getCollection('plugins');
@@ -18,7 +19,11 @@ const postData = sorted.map((p) => ({
 }));
 ---
 
-<BlogLayout title="插件">
+<BlogLayout
+  title="插件"
+  description="浏览器插件、VS Code 扩展等实用插件推荐，提升开发效率和浏览体验"
+  keywords="浏览器插件,VS Code扩展,Chrome插件,Edge插件,开发工具">
+  <Breadcrumb collection="plugins" />
   <h1 class="text-2xl font-bold mb-8 flex items-center gap-2">
     <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
     插件

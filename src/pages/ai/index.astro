@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import PostList from '../../components/PostList.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import { resolveCover } from '../_imageStore';
 
 const allPosts = await getCollection('ai');
@@ -18,7 +19,11 @@ const postData = sorted.map((p) => ({
 }));
 ---
 
-<BlogLayout title="AI">
+<BlogLayout
+  title="AI"
+  description="AI 工具、大模型、提示词资源推荐，探索人工智能带来的无限可能"
+  keywords="AI工具,人工智能,大模型,提示词,数字人,AI写作">
+  <Breadcrumb collection="ai" />
   <h1 class="text-2xl font-bold mb-8 flex items-center gap-2">
     <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
     AI

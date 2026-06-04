@@ -1,0 +1,80 @@
+/* ===== 图片灯箱样式 ===== */
+.lightbox {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: auto;
+  max-width: 95vw;
+  max-height: 95vh;
+  overflow: visible;
+}
+
+/* dialog 背景遮罩 */
+.lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+/* 打开动画 */
+.lightbox[open] {
+  animation: lightbox-open 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lightbox[open]::backdrop {
+  animation: backdrop-open 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  z-index: 10;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* 文章内图片样式 */
+#article-content img {
+  cursor: zoom-in;
+}
+
+@keyframes lightbox-open {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes backdrop-open {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

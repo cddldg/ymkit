@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import PostList from '../../components/PostList.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import { resolveCover } from '../_imageStore';
 
 const allPosts = await getCollection('tools');
@@ -18,7 +19,11 @@ const postData = sorted.map((p) => ({
 }));
 ---
 
-<BlogLayout title="工具">
+<BlogLayout
+  title="工具"
+  description="在线工具、桌面应用、效率软件推荐，让工作更高效便捷"
+  keywords="在线工具,桌面应用,效率软件,开发工具,实用工具">
+  <Breadcrumb collection="tools" />
   <h1 class="text-2xl font-bold mb-8 flex items-center gap-2">
     <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
     工具
