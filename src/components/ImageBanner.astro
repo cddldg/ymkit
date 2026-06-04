@@ -3,233 +3,500 @@ import { BANNERS, BANNER_INTERVAL } from '../consts';
 
 interface Props {
   banners?: typeof BANNERS;
-  objectFit?: 'cover' | 'contain'; // 图片适配方式
 }
 
-const {
-  banners = BANNERS,
-  objectFit = 'cover',
-} = Astro.props;
-
+const { banners = BANNERS } = Astro.props;
 const count = banners.length;
 ---
 
-<section
-  class="banner-container mb-8"
-  data-count={count}
-  data-interval={BANNER_INTERVAL}
-  style={`--fit: ${objectFit}`}
->
-  <div class="banner-wrapper">
-    {banners.map((banner, index) => (
+<section class="carousel" aria-label="精选内容轮播" data-count={count} data-interval={BANNER_INTERVAL}>
+  <!-- 粒子画布 -->
+  <canvas class="carousel-particles" id="particle-canvas" aria-hidden="true"></canvas>
+
+  <!-- 进度条 -->
+  <div class="carousel-progress" id="carousel-progress">
+    <span class="carousel-progress-bar" id="progress-bar"></span>
+  </div>
+
+  <!-- 幻灯片 -->
+  <div class="carousel-track" id="carousel-track">
+    {banners.map((banner, i) => (
       <a
         href={banner.link}
-        class={`banner-slide ${index === 0 ? 'active' : ''}`}
-        data-index={index}
+        class={`carousel-slide ${i === 0 ? 'active' : ''}`}
+        data-index={i}
       >
         <img
           src={banner.image}
-          alt={banner.title}
-          loading={index === 0 ? 'eager' : 'lazy'}
-          class="banner-image"
+          alt={banner.title || `精选内容 ${i + 1}`}
+          class="carousel-img"
+          loading={i === 0 ? 'eager' : 'lazy'}
         />
-        <div class="banner-overlay">
-          <h2 class="banner-title">{banner.title}</h2>
+        <div class="carousel-overlay"></div>
+        <div class="carousel-content">
+          {banner.title && (
+            <span class="carousel-badge" id={`badge-${i}`}>#{banner.title}</span>
+          )}
+          <span class="carousel-cta">了解更多 &rarr;</span>
         </div>
       </a>
     ))}
   </div>
 
-  {/* 指示器 - 可点击 */}
-  <div class="banner-indicators">
-    {banners.map((_, index) => (
-      <button
-        class={`banner-dot ${index === 0 ? 'active' : ''}`}
-        data-index={index}
-        aria-label={`切换到第 ${index + 1} 张图片`}
-      />
-    ))}
+  <!-- 底部指示器 -->
+  <div class="carousel-controls">
+    <div class="carousel-dots" id="carousel-dots">
+      {banners.map((_, i) => (
+        <button
+          class={`carousel-dot ${i === 0 ? 'active' : ''}`}
+          data-index={i}
+          aria-label={`第 ${i + 1} 张`}
+        >
+          <span class="carousel-dot-progress"></span>
+        </button>
+      ))}
+    </div>
+    <span class="carousel-index" id="carousel-index">01 / {String(count).padStart(2, '0')}</span>
   </div>
 </section>
 
 <style>
-  .banner-container {
+  .carousel {
+    --accent: var(--color-primary, #e9536a);
     position: relative;
+    isolation: isolate;
     width: 100%;
+    height: 380px;
+    border-radius: 1.25rem;
     overflow: hidden;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    background: #0d1117;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.15);
   }
 
-  .banner-wrapper {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 40%; /* 2.5:1 宽高比 */
+  @media (min-width: 640px) {
+    .carousel { height: 440px; }
   }
 
-  .banner-slide {
+  @media (min-width: 1024px) {
+    .carousel { height: 480px; }
+  }
+
+  /* === 粒子画布 === */
+  .carousel-particles {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    text-decoration: none;
+    inset: 0;
+    z-index: 1;
     pointer-events: none;
   }
 
-  .banner-slide.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .banner-image {
-    width: 100%;
-    height: 100%;
-    object-fit: var(--fit);
-    background: #1a1a2e;
-  }
-
-  .banner-overlay {
+  /* === 进度条 === */
+  .carousel-progress {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
-    padding: 2rem 1.5rem 1.5rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-  }
-
-  .banner-title {
-    color: white;
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  }
-
-  .banner-indicators {
-    position: absolute;
-    bottom: 1rem;
-    right: 1.5rem;
-    display: flex;
-    gap: 0.75rem;
+    height: 3px;
     z-index: 10;
+    background: rgba(255,255,255,0.06);
   }
 
-  .banner-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    background: transparent;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0;
+  .carousel-progress-bar {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.1s linear;
+    box-shadow: 0 0 8px var(--accent);
   }
 
-  .banner-dot:hover {
-    background: rgba(255, 255, 255, 0.5);
-    transform: scale(1.2);
+  /* === 轨道 === */
+  .carousel-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
 
-  .banner-dot.active {
-    background: white;
-    transform: scale(1.1);
+  .carousel-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    text-decoration: none;
+    opacity: 0;
+    transform: scale(1.05);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
   }
 
-  /* 响应式调整 */
-  @media (max-width: 640px) {
-    .banner-wrapper {
-      padding-bottom: 60%; /* 移动端使用更高的宽高比 */
+  .carousel-slide.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    z-index: 2;
+  }
+
+  /* === 图片 === */
+  .carousel-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 8s ease-out;
+  }
+
+  .carousel-slide.active .carousel-img {
+    transform: scale(1.03);
+  }
+
+  /* === 渐变遮罩 === */
+  .carousel-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.1) 100%),
+      linear-gradient(to right, rgba(0,0,0,0.4) 0%, transparent 50%);
+    z-index: 1;
+  }
+
+  /* === 内容文字 === */
+  .carousel-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .carousel-content {
+      padding: 2.5rem 3rem;
     }
+  }
 
-    .banner-title {
+  .carousel-badge {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    letter-spacing: 0.02em;
+  }
+
+  @media (min-width: 640px) {
+    .carousel-badge {
       font-size: 1rem;
+      padding: 0.5rem 1.25rem;
     }
+  }
 
-    .banner-overlay {
-      padding: 1.5rem 1rem 1rem;
+  .carousel-cta {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+    transition: color 0.3s, gap 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .carousel-slide:hover .carousel-cta {
+    color: #fff;
+    gap: 0.5rem;
+  }
+
+  /* === 控制区 === */
+  .carousel-controls {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 2rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .carousel-controls {
+      bottom: 2rem;
+      right: 3rem;
+      gap: 1.25rem;
     }
+  }
 
-    .banner-dot {
-      width: 14px;
-      height: 14px;
+  /* === 圆点指示器 === */
+  .carousel-dots {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .carousel-dot {
+    width: 28px;
+    height: 3px;
+    border-radius: 3px;
+    border: none;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    transition: width 0.3s ease;
+  }
+
+  .carousel-dot.active {
+    width: 40px;
+    background: rgba(255,255,255,0.35);
+  }
+
+  .carousel-dot:hover {
+    background: rgba(255,255,255,0.4);
+  }
+
+  .carousel-dot-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 3px;
+  }
+
+  .carousel-dot.active .carousel-dot-progress {
+    transition: width 0.1s linear;
+  }
+
+  /* === 索引号 === */
+  .carousel-index {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.45);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+    min-width: 2.5em;
+    text-align: right;
+  }
+
+  /* === 响应式 === */
+  @media (max-width: 639px) {
+    .carousel-content {
+      padding: 1.5rem;
     }
-
-    .banner-indicators {
-      gap: 1rem;
+    .carousel-controls {
+      right: 1rem;
+      bottom: 1rem;
     }
   }
 </style>
 
 <script>
-  function initBanner() {
-    const containers = document.querySelectorAll('.banner-container');
+  function initCarousel() {
+    const containers = document.querySelectorAll('.carousel');
 
     containers.forEach((container) => {
-      const slides = container.querySelectorAll('.banner-slide');
-      const dots = container.querySelectorAll('.banner-dot');
-      const count = parseInt(container.getAttribute('data-count') || '0');
-      const interval = parseInt(container.getAttribute('data-interval') || '5') * 1000;
+      const track = container.querySelector<HTMLElement>('#carousel-track');
+      const slides = container.querySelectorAll<HTMLElement>('.carousel-slide');
+      const dots = container.querySelectorAll<HTMLElement>('.carousel-dot');
+      const indexEl = container.querySelector<HTMLElement>('#carousel-index');
+      const progressBar = container.querySelector<HTMLElement>('#progress-bar');
+      const canvas = container.querySelector<HTMLCanvasElement>('#particle-canvas');
 
-      if (count <= 1) return;
+      if (!track || slides.length <= 1) return;
 
+      const count = slides.length;
+      const intervalMs = parseInt(container.getAttribute('data-interval') || '5') * 1000;
       let currentIndex = 0;
-      let autoPlayTimer: ReturnType<typeof setInterval> | null = null;
+      let rafId: number | null = null;
+      let startTime = 0;
+      let paused = false;
 
-      // 切换到指定索引
-      function goToSlide(index: number) {
-        // 移除当前活跃状态
-        slides[currentIndex].classList.remove('active');
-        dots[currentIndex].classList.remove('active');
+      // ========== 粒子系统 ==========
+      let particles: { x: number; y: number; vx: number; vy: number; r: number; o: number }[] = [];
+      let ctx: CanvasRenderingContext2D | null = null;
 
-        // 更新索引
-        currentIndex = index;
-
-        // 添加新的活跃状态
-        slides[currentIndex].classList.add('active');
-        dots[currentIndex].classList.add('active');
+      function resizeCanvas() {
+        if (!canvas || !container) return;
+        const rect = container.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx = canvas.getContext('2d');
+        if (ctx) ctx.scale(dpr, dpr);
+        initParticles(rect.width, rect.height);
       }
 
-      // 下一张
+      function initParticles(w: number, h: number) {
+        particles = [];
+        const num = Math.floor((w * h) / 15000);
+        for (let i = 0; i < num; i++) {
+          particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            r: Math.random() * 1.5 + 0.5,
+            o: Math.random() * 0.4 + 0.1,
+          });
+        }
+      }
+
+      function drawParticles() {
+        if (!ctx || !canvas || paused) return;
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        ctx.clearRect(0, 0, w, h);
+
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0) p.x = w;
+          if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h;
+          if (p.y > h) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${p.o})`;
+          ctx.fill();
+        }
+
+        requestAnimationFrame(drawParticles);
+      }
+
+      // ========== 轮播逻辑 ==========
+      function goToSlide(index: number) {
+        slides[currentIndex].classList.remove('active');
+        const prevDot = dots[currentIndex];
+
+        currentIndex = index;
+
+        slides[currentIndex].classList.add('active');
+        dots[currentIndex].classList.add('active');
+        prevDot.classList.remove('active');
+
+        if (indexEl) {
+          indexEl.textContent = `${String(currentIndex + 1).padStart(2, '0')} / ${String(count).padStart(2, '0')}`;
+        }
+
+        // 重置进度
+        if (progressBar) progressBar.style.width = '0%';
+        if (rafId) cancelAnimationFrame(rafId);
+        startTime = performance.now();
+
+        // dot 进度重置
+        dots.forEach((d, i) => {
+          const dp = d.querySelector<HTMLElement>('.carousel-dot-progress');
+          if (dp) dp.style.width = i === currentIndex ? '0%' : '0%';
+        });
+
+        updateProgress();
+      }
+
       function nextSlide() {
         goToSlide((currentIndex + 1) % count);
       }
 
-      // 开始自动播放
-      function startAutoPlay() {
-        stopAutoPlay();
-        autoPlayTimer = setInterval(nextSlide, interval);
-      }
+      function updateProgress() {
+        if (paused) return;
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min((elapsed / intervalMs) * 100, 100);
 
-      // 停止自动播放
-      function stopAutoPlay() {
-        if (autoPlayTimer) {
-          clearInterval(autoPlayTimer);
-          autoPlayTimer = null;
+        if (progressBar) progressBar.style.width = progress + '%';
+
+        const activeDot = dots[currentIndex];
+        if (activeDot) {
+          const dp = activeDot.querySelector<HTMLElement>('.carousel-dot-progress');
+          if (dp) dp.style.width = progress + '%';
+        }
+
+        if (progress >= 100) {
+          nextSlide();
+        } else {
+          rafId = requestAnimationFrame(updateProgress);
         }
       }
 
-      // 绑定圆点点击事件
-      dots.forEach((dot, index) => {
+      function startAuto() {
+        stopAuto();
+        startTime = performance.now();
+        if (progressBar) progressBar.style.width = '0%';
+        updateProgress();
+      }
+
+      function stopAuto() {
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      }
+
+      function pause() {
+        paused = true;
+        stopAuto();
+      }
+
+      function resume() {
+        if (!paused) return;
+        paused = false;
+        startTime = performance.now();
+        updateProgress();
+        drawParticles();
+      }
+
+      // ========== 事件绑定 ==========
+      dots.forEach((dot, i) => {
         dot.addEventListener('click', () => {
-          goToSlide(index);
-          startAutoPlay(); // 点击后重新开始自动播放
+          goToSlide(i);
+          startAuto();
         });
       });
 
-      // 鼠标悬停暂停
-      container.addEventListener('mouseenter', stopAutoPlay);
-      container.addEventListener('mouseleave', startAutoPlay);
+      container.addEventListener('mouseenter', () => {
+        stopAuto();
+      });
+      container.addEventListener('mouseleave', () => {
+        startAuto();
+      });
 
-      // 开始自动播放
-      startAutoPlay();
+      // 粒子在鼠标悬停时暂停/恢复
+      container.addEventListener('mouseenter', pause);
+      container.addEventListener('mouseleave', resume);
+
+      // 触摸事件
+      let touchStartX = 0;
+      container.addEventListener('touchstart', (e) => {
+        touchStartX = (e as TouchEvent).touches[0].clientX;
+        stopAuto();
+      }, { passive: true });
+      container.addEventListener('touchend', (e) => {
+        const diff = touchStartX - (e as TouchEvent).changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+          goToSlide(diff > 0 ? (currentIndex + 1) % count : (currentIndex - 1 + count) % count);
+        }
+        startAuto();
+      });
+
+      // ========== 启动 ==========
+      resizeCanvas();
+      drawParticles();
+      startAuto();
+
+      // 窗口大小变化时重设 canvas
+      window.addEventListener('resize', resizeCanvas);
     });
   }
 
-  // 页面加载时初始化
-  document.addEventListener('astro:page-load', initBanner);
-  initBanner();
+  document.addEventListener('astro:page-load', initCarousel);
+  initCarousel();
 </script>

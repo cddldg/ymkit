@@ -1,5 +1,5 @@
 ---
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_AVATAR, SITE_COVER, SOCIAL_LINKS } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, CATEGORY_CARDS } from '../consts';
 
 interface Props {
   collections?: any[];
@@ -8,69 +8,396 @@ interface Props {
 const { collections = [] } = Astro.props;
 
 const totalCount = collections.reduce((sum: number, col: any[]) => sum + col.length, 0);
+
+const iconMap: Record<string, string> = {
+  plugin: 'M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
+  tool: 'M11.42 15.17l-5.384 5.384a2.025 2.025 0 01-2.864-2.864l5.384-5.384m2.864 2.864L15 12m0 0l3.72-3.72M15 12l-3.72 3.72M15 12H9m6 6v-6m0 0V9m0 6h-6',
+  ai: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z',
+};
 ---
 
-<section class="relative overflow-hidden rounded-2xl mb-10">
-  <div class="absolute inset-0">
-    <img
-      src={SITE_COVER}
-      alt=""
-      class="w-full h-full object-cover"
-      aria-hidden="true"
-    />
-    <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70"></div>
+<section class="hero" aria-label="网站介绍">
+  <!-- CSS 渐变光斑背景 -->
+  <div class="hero-bg">
+    <div class="hero-blob blob-1"></div>
+    <div class="hero-blob blob-2"></div>
+    <div class="hero-blob blob-3"></div>
   </div>
 
-  <div class="relative px-6 py-12 sm:px-10 sm:py-16 lg:py-20 text-center text-white">
-    <div class="mb-8">
-      <img
-        src={SITE_AVATAR}
-        alt={SITE_TITLE}
-        class="w-24 h-24 sm:w-28 sm:h-28 rounded-full mx-auto object-cover ring-4 ring-white/30 shadow-2xl"
-        width="112"
-        height="112"
-      />
+  <!-- 内容 -->
+  <div class="hero-content">
+    <!-- 标题 -->
+    <div class="hero-text">
+      <h1 class="hero-title">{SITE_TITLE}</h1>
+      <p class="hero-desc">{SITE_DESCRIPTION}</p>
     </div>
 
-    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
-      {SITE_TITLE}
-    </h1>
-    <p class="text-lg sm:text-xl text-white/80 font-light mb-6">
-      {SITE_DESCRIPTION}
-    </p>
+    <!-- 统计 -->
+    <div class="hero-stats">
+      <a href="/archives" class="hero-stat">
+        <span class="hero-stat-num">{totalCount}</span>
+        <span class="hero-stat-label">文章</span>
+      </a>
+      <span class="hero-stat-divider"></span>
+      <a href="/tags" class="hero-stat">
+        <span class="hero-stat-num">{CATEGORY_CARDS.length}</span>
+        <span class="hero-stat-label">分类</span>
+      </a>
+    </div>
 
-    <div class="flex items-center justify-center gap-4 mb-8">
-      {SOCIAL_LINKS.map((link) => (
-        <a
-          href={link.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-110"
-          title={link.name}
-        >
-          {link.icon === 'rss' && (
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+    <!-- 分类卡片 -->
+    <div class="hero-cards">
+      {CATEGORY_CARDS.map((card) => (
+        <a href={card.href} class="hero-card group">
+          <div class="hero-card-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d={iconMap[card.icon] || iconMap.plugin} />
             </svg>
-          )}
+          </div>
+          <div class="hero-card-text">
+            <span class="hero-card-label">{card.label}</span>
+            <span class="hero-card-desc">{card.description}</span>
+          </div>
+          <svg class="hero-card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
         </a>
       ))}
     </div>
-
-    <div class="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-      <a href="/archives" class="group text-center">
-        <div class="text-2xl sm:text-3xl font-bold group-hover:scale-110 transition-transform">
-          {totalCount}
-        </div>
-        <div class="text-sm text-white/70 mt-1">文章</div>
-      </a>
-      <div class="w-px h-10 bg-white/20 hidden sm:block"></div>
-      <a href="/tags" class="group text-center">
-        <div class="text-2xl sm:text-3xl font-bold group-hover:scale-110 transition-transform">
-          3
-        </div>
-        <div class="text-sm text-white/70 mt-1">分类</div>
-      </a>
-    </div>
   </div>
 </section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    margin-bottom: 2.5rem;
+    /* 渐变背景兜底 */
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  }
+
+  :root.dark .hero {
+    background: linear-gradient(135deg, #0f0c29, #1a1a3e, #0d1b2a);
+  }
+
+  /* === 光斑动画背景 === */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .hero-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  .blob-1 {
+    width: 400px;
+    height: 400px;
+    background: #e9536a;
+    top: -100px;
+    right: -80px;
+    animation-name: blob-float-1;
+    animation-duration: 12s;
+  }
+
+  .blob-2 {
+    width: 300px;
+    height: 300px;
+    background: #4facfe;
+    bottom: -80px;
+    left: -60px;
+    animation-name: blob-float-2;
+    animation-duration: 15s;
+  }
+
+  .blob-3 {
+    width: 250px;
+    height: 250px;
+    background: #a855f7;
+    top: 50%;
+    left: 40%;
+    animation-name: blob-float-3;
+    animation-duration: 18s;
+  }
+
+  @keyframes blob-float-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-30px, 20px) scale(1.1); }
+    66% { transform: translate(20px, -15px) scale(0.95); }
+  }
+
+  @keyframes blob-float-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(25px, -20px) scale(1.05); }
+    66% { transform: translate(-15px, 15px) scale(0.9); }
+  }
+
+  @keyframes blob-float-3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-20px, -25px) scale(1.08); }
+  }
+
+  /* === 内容区 === */
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-content {
+      padding: 3.5rem 2.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-content {
+      padding: 4rem 3rem;
+      gap: 2.5rem;
+    }
+  }
+
+  /* === 标题 === */
+  .hero-text {
+    text-align: center;
+    max-width: 600px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+
+  @media (min-width: 640px) {
+    .hero-title {
+      font-size: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-title {
+      font-size: 3rem;
+    }
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (min-width: 640px) {
+    .hero-desc {
+      font-size: 1.1rem;
+    }
+  }
+
+  /* === 统计 === */
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-stats {
+      gap: 2.5rem;
+    }
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: transform 0.3s, background 0.3s;
+  }
+
+  .hero-stat:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.14);
+  }
+
+  .hero-stat-num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  @media (min-width: 640px) {
+    .hero-stat-num {
+      font-size: 1.75rem;
+    }
+  }
+
+  .hero-stat-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-stat-divider {
+    width: 1px;
+    height: 2.5rem;
+    background: rgba(255,255,255,0.15);
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .hero-stat-divider {
+      display: block;
+    }
+  }
+
+  /* === 分类卡片 === */
+  .hero-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 640px;
+  }
+
+  @media (min-width: 640px) {
+    .hero-cards {
+      flex-direction: row;
+      gap: 1rem;
+    }
+  }
+
+  .hero-card {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1rem;
+    border-radius: 1rem;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none;
+    flex: 1;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  @media (min-width: 640px) {
+    .hero-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1.5rem 1rem;
+      gap: 0.75rem;
+    }
+  }
+
+  .hero-card:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .hero-card-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+
+  .hero-card:hover .hero-card-icon {
+    background: rgba(233,83,106,0.3);
+  }
+
+  .hero-card-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .hero-card-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .hero-card-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+  }
+
+  .hero-card-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    display: block;
+    transition: color 0.3s;
+  }
+
+  .hero-card:hover .hero-card-label {
+    color: rgba(255,255,255,1);
+  }
+
+  .hero-card-desc {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.55);
+    display: none;
+    line-height: 1.4;
+  }
+
+  @media (min-width: 640px) {
+    .hero-card-desc {
+      display: block;
+    }
+  }
+
+  .hero-card-arrow {
+    width: 1rem;
+    height: 1rem;
+    color: rgba(255,255,255,0.3);
+    flex-shrink: 0;
+    transition: transform 0.3s, color 0.3s;
+  }
+
+  @media (min-width: 640px) {
+    .hero-card-arrow {
+      display: none;
+    }
+  }
+
+  .hero-card:hover .hero-card-arrow {
+    transform: translateX(3px);
+    color: rgba(255,255,255,0.7);
+  }
+</style>
