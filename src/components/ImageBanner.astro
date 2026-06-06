@@ -69,9 +69,13 @@ const count = banners.length;
     height: 380px;
     border-radius: 1.25rem;
     overflow: hidden;
-    background: #0d1117;
+    background: var(--color-card-light);
     margin-bottom: 2.5rem;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.08);
+  }
+
+  :root.dark .carousel {
+    background: var(--color-card-dark);
   }
 
   @media (min-width: 640px) {
