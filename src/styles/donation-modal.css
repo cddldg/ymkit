@@ -1,0 +1,55 @@
+/* ===== 打赏弹窗容器样式 ===== */
+#donation-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+}
+
+#donation-modal.is-open {
+  display: block;
+}
+
+#donation-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+}
+
+#donation-modal-body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+#donation-modal-inner {
+  position: relative;
+  max-width: 460px;
+  width: 100%;
+}
+
+#donation-close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+}
+
+/* 公众号二维码放大按钮位置 */
+#donation-widget-root .gzh-qr-box .zoom-hint-btn {
+  bottom: 8px;
+  right: 8px;
+}

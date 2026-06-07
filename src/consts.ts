@@ -23,7 +23,7 @@ export const CATEGORY_CARDS = [
   {
     label: '插件',
     href: '/plugins',
-    description: '浏览器插件、VS Code 扩展等实用插件',
+    description: '浏览器插件、扩展等实用插件',
     icon: 'plugin',
   },
   {
@@ -35,7 +35,7 @@ export const CATEGORY_CARDS = [
   {
     label: 'AI',
     href: '/ai',
-    description: 'AI 工具、模型、提示词资源',
+    description: 'AI工具、模型、项目提示词资源',
     icon: 'ai',
   },
 ];

@@ -1,0 +1,249 @@
+---
+---
+
+<!doctype html>
+<html lang="zh-CN" class="scroll-smooth h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - 时空褶皱 | 一秒工具</title>
+    <link rel="icon" type="image/x-icon" href="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/logo.ico" />
+    <script is:inline src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes gradientMove {
+        0% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+        33% { transform: translate(30px, -50px) rotate(120deg) scale(1.1); }
+        66% { transform: translate(-20px, 20px) rotate(240deg) scale(0.95); }
+        100% { transform: translate(0px, 0px) rotate(360deg) scale(1); }
+      }
+      .animate-fluid-1 {
+        animation: gradientMove 18s infinite alternate ease-in-out;
+      }
+      .animate-fluid-2 {
+        animation: gradientMove 25s infinite alternate-reverse ease-in-out;
+      }
+
+      .text-fluid-gradient {
+        background: linear-gradient(135deg, #ff007f, #ffaa00, #00f0ff, #7000ff);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fluidFlow 8s ease infinite;
+      }
+      @keyframes fluidFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="relative min-h-screen overflow-hidden bg-[#050508] text-zinc-100 font-sans flex items-center justify-center h-full">
+
+    <!-- 1. 动态画布与背景层 -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-[10%] left-[15%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tr from-rose-500/20 to-violet-600/10 blur-[140px] animate-fluid-1 opacity-80"></div>
+      <div class="absolute bottom-[10%] right-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-br from-cyan-500/15 via-blue-600/10 to-amber-500/10 blur-[130px] animate-fluid-2 opacity-70"></div>
+
+      <div id="grid-bg" class="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:50px_50px] transition-transform duration-300 ease-out"></div>
+
+      <canvas id="particle-canvas" class="absolute inset-0 opacity-40"></canvas>
+
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,#050508_95%)]"></div>
+    </div>
+
+    <!-- 2. 主体磨砂玻璃卡片 -->
+    <main class="relative z-10 max-w-xl w-full mx-4 px-8 py-12 text-center rounded-3xl border border-white/[0.06] bg-zinc-950/40 backdrop-blur-3xl shadow-[0_30px_100px_rgba(0,0,0,0.8)] flex flex-col items-center transition-all duration-500">
+
+      <a href="/" class="group flex items-center gap-2 mb-6 px-3 py-1 rounded-full border border-white/[0.05] bg-white/[0.02] backdrop-blur-md transition-all hover:bg-white/[0.05] hover:border-white/[0.1]">
+        <img src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/logo.png" alt="一秒工具 Logo" class="w-4.5 h-4.5 transition-transform duration-500 group-hover:rotate-[360deg]" />
+        <span class="text-[10px] tracking-widest text-zinc-400 font-mono group-hover:text-zinc-200">YMKit / 404</span>
+      </a>
+
+      <div class="relative mb-4 select-none">
+        <div class="text-[8rem] md:text-[10rem] font-black leading-none tracking-tighter text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.15)] font-mono">
+          404
+        </div>
+        <div class="absolute inset-0 text-[8rem] md:text-[10rem] font-black leading-none tracking-tighter text-fluid-gradient font-mono mix-blend-screen scale-[0.98]">
+          404
+        </div>
+      </div>
+
+      <div class="space-y-2 mb-8">
+        <h2 class="text-base md:text-lg font-semibold tracking-widest text-zinc-100 uppercase font-mono">
+          Dimension Lost / 时空褶皱
+        </h2>
+        <p class="text-xs md:text-sm text-zinc-400 max-w-xs mx-auto leading-relaxed">
+          当前的折跃坐标已失效。别担心，我们将在一秒时光机的护航下安全返航。
+        </p>
+      </div>
+
+      <!-- 3. 科幻仪表盘倒计时 -->
+      <div class="relative w-36 h-36 mb-10 flex items-center justify-center group cursor-pointer" id="timemachine" title="点击立即折跃回首页">
+        <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-500/20 to-rose-500/20 opacity-30 blur-xl group-hover:opacity-60 transition-opacity duration-500"></div>
+        <div class="absolute inset-0 rounded-full border border-dashed border-zinc-700/50 animate-spin" style="animation-duration: 25s;"></div>
+
+        <svg class="absolute w-full h-full transform -rotate-90">
+          <circle cx="72" cy="72" r="62" class="stroke-zinc-800/40 fill-none" stroke-width="2"></circle>
+          <circle cx="72" cy="72" r="62" id="progress-bar" class="stroke-zinc-300 fill-none transition-all duration-1000 ease-linear" stroke-width="3" stroke-dasharray="390" stroke-dashoffset="0" stroke-linecap="round" style="filter: drop-shadow(0 0 6px rgba(255,255,255,0.3));"></circle>
+        </svg>
+
+        <div class="relative z-10 text-center flex flex-col items-center select-none">
+          <span class="text-[9px] text-zinc-500 uppercase tracking-widest font-mono">折跃值</span>
+          <span id="countdown" class="text-3xl font-bold font-mono tracking-tighter text-zinc-100 my-0.5">10</span>
+          <span class="text-[9px] text-amber-400/80 group-hover:text-amber-300 tracking-wider font-mono transition-colors">WARP NOW</span>
+        </div>
+      </div>
+
+      <!-- 4. 按钮组 -->
+      <div class="flex flex-col sm:flex-row items-center gap-3 w-full justify-center z-20">
+        <button
+          onclick="triggerWarp()"
+          class="relative group overflow-hidden px-8 py-3 rounded-xl bg-white text-zinc-950 text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:bg-zinc-200 active:scale-95 w-full sm:w-auto"
+        >
+          <span class="relative z-10 flex items-center justify-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.64 4.5h-4.5V9a14.98 14.98 0 0 0 10.45 4.37Z" />
+            </svg>
+            一秒折跃首页
+          </span>
+        </button>
+
+        <button
+          onclick="history.back()"
+          class="px-8 py-3 rounded-xl border border-white/[0.08] bg-white/[0.02] text-xs font-semibold tracking-widest uppercase text-zinc-300 hover:text-white hover:border-white/[0.15] hover:bg-white/[0.05] transition-all w-full sm:w-auto flex items-center justify-center gap-1.5"
+        >
+          返回上一个时空
+        </button>
+      </div>
+
+    </main>
+
+    <!-- 5. 交互脚本 -->
+    <script is:inline>
+      var secondsRemaining = 10;
+      var countdownEl = document.getElementById('countdown');
+      var progressBar = document.getElementById('progress-bar');
+      var timeMachine = document.getElementById('timemachine');
+      var gridBg = document.getElementById('grid-bg');
+      var canvas = document.getElementById('particle-canvas');
+      var ctx = canvas ? canvas.getContext('2d') : null;
+
+      var maxOffset = 390;
+
+      // 1. 仪表盘倒计时
+      var interval = setInterval(function() {
+        secondsRemaining--;
+        if (secondsRemaining >= 0) {
+          if (countdownEl) countdownEl.innerText = String(secondsRemaining);
+          var offset = maxOffset - (secondsRemaining / 10) * maxOffset;
+          if (progressBar) progressBar.style.strokeDashoffset = String(offset);
+        } else {
+          clearInterval(interval);
+          triggerWarp();
+        }
+      }, 1000);
+
+      // 2. 折跃离场特效
+      function triggerWarp() {
+        document.body.style.transition = 'all 1s cubic-bezier(0.16, 1, 0.3, 1)';
+        document.body.style.transform = 'scale(2.2) rotate(-10deg)';
+        document.body.style.filter = 'blur(40px) saturate(2.5)';
+        document.body.style.opacity = '0';
+        setTimeout(function() {
+          window.location.href = '/';
+        }, 850);
+      }
+
+      if (timeMachine) {
+        timeMachine.addEventListener('click', triggerWarp);
+      }
+
+      // 3. 视差网格
+      var mouseX = 0, mouseY = 0;
+      window.addEventListener('mousemove', function(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (!gridBg) return;
+        var x = (mouseX - window.innerWidth / 2) / 45;
+        var y = (mouseY - window.innerHeight / 2) / 45;
+        gridBg.style.transform = 'translateX(' + x + 'px) translateY(' + y + 'px) scale(1.08)';
+      });
+
+      // 4. 量子星尘画布
+      var particles = [];
+      var particleCount = 80;
+
+      function resizeCanvas() {
+        if (!canvas) return;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      function Particle() {
+        this.reset();
+      }
+      Particle.prototype.reset = function() {
+        this.x = Math.random() * (canvas ? canvas.width : window.innerWidth);
+        this.y = Math.random() * (canvas ? canvas.height : window.innerHeight);
+        this.size = Math.random() * 1.5 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.alpha = Math.random() * 0.5 + 0.2;
+      };
+      Particle.prototype.update = function() {
+        var self = this;
+        self.x += self.speedX;
+        self.y += self.speedY;
+
+        var dx = mouseX - self.x;
+        var dy = mouseY - self.y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150) {
+          var force = (150 - dist) / 1500;
+          self.x += (dx / dist) * force;
+          self.y += (dy / dist) * force;
+        }
+
+        var w = canvas ? canvas.width : window.innerWidth;
+        var h = canvas ? canvas.height : window.innerHeight;
+        if (self.x < 0 || self.x > w || self.y < 0 || self.y > h) {
+          self.reset();
+        }
+      };
+      Particle.prototype.draw = function() {
+        if (!ctx) return;
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      };
+
+      for (var i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+
+      function animate() {
+        if (!ctx || !canvas) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(function(p) {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+
+      window.onload = function() {
+        animate();
+      };
+    </script>
+  </body>
+</html>
