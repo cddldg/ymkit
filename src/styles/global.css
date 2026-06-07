@@ -231,3 +231,13 @@ html {
   opacity: 1;
 }
 
+/* 打赏心形横向翻转动画 */
+@keyframes heart-flip {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+.animate-heart-spin {
+  animation: heart-flip 3s ease-in-out infinite;
+}
+
