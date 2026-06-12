@@ -194,6 +194,29 @@ html {
   @apply shadow-primary/10;
 }
 
+.card-gradient-border {
+  @apply relative;
+}
+
+.card-gradient-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark), var(--color-primary));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card-gradient-border:hover::after {
+  opacity: 1;
+}
+
 .code-block-wrapper {
   position: relative;
 }

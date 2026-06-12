@@ -2,7 +2,9 @@
 title: 公众号
 description: 这是一个示例插件文档，展示插件页面的内容格式。
 date: 2026-05-31
-tags: [浏览器插件]
+tags:
+  - 浏览器插件
+  - 公众号
 cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/xxmv.webp
 pinned: false
 draft: false
@@ -10,7 +12,7 @@ draft: false
 
 ## 简介
 
-这是一个示例插件文档。你可以在这里介绍插件的功能、安装方式和使用方法。
+
 
 ## 功能特性
 
