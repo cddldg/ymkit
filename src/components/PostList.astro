@@ -29,6 +29,85 @@ const pinnedPosts = posts.filter((p) => p.data.pinned);
 const normalPosts = posts.filter((p) => !p.data.pinned);
 ---
 
+<!-- 防闪烁：在卡片渲染前读取 localStorage 设置 class -->
+<script is:inline>
+  (function() {
+    try {
+      var view = localStorage.getItem('postListView');
+      if (view === 'compact') {
+        document.documentElement.classList.add('post-list-compact');
+      }
+    } catch(e) {}
+  })();
+</script>
+
+<style is:inline>
+  /* 紧凑模式：单列横排小卡片 */
+  .post-list-compact .post-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+  .post-list-compact .post-grid > article {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.55rem 0.75rem !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid var(--color-border, #e5e7eb) !important;
+    background: transparent !important;
+  }
+  .dark .post-list-compact .post-grid > article {
+    border-bottom-color: rgba(255,255,255,0.06) !important;
+  }
+  .post-list-compact .post-grid > article:last-child {
+    border-bottom: none !important;
+  }
+  /* 隐藏封面 */
+  .post-list-compact .post-grid > article .aspect-\[2\/1\] {
+    display: none !important;
+  }
+  /* 链接变横排 */
+  .post-list-compact .post-grid > article > a {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  /* 标题缩小 */
+  .post-list-compact .post-grid > article h2 {
+    font-size: 0.75rem !important;
+    margin-bottom: 0 !important;
+    line-clamp: 1 !important;
+  }
+  /* 隐藏描述 */
+  .post-list-compact .post-grid > article p {
+    display: none !important;
+  }
+  /* 隐藏卡片内的标签区（改用横排内联） */
+  .post-list-compact .post-grid > article > div:not([class]) {
+    display: none !important;
+  }
+  /* 卡片内分类/置顶标记缩小 */
+  .post-list-compact .post-grid > article .p-4 {
+    padding: 0 !important;
+  }
+  .post-list-compact .post-grid > article .mb-2 {
+    margin-bottom: 0 !important;
+  }
+  /* 卡片内标签横排 */
+  .post-list-compact .post-grid > article .flex.flex-wrap {
+    display: inline-flex !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  .post-list-compact .post-grid > article .flex.flex-wrap a {
+    font-size: 0.625rem !important;
+    padding: 0.125rem 0.375rem !important;
+  }
+</style>
+
 {
   showPinned && pinnedPosts.length > 0 && (
     <section class="mb-10">
@@ -36,7 +115,7 @@ const normalPosts = posts.filter((p) => !p.data.pinned);
         <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
         置顶文章
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 post-grid">
         {pinnedPosts.map((post) => (
           <PostCard
             title={post.data.title}
@@ -60,19 +139,29 @@ const normalPosts = posts.filter((p) => !p.data.pinned);
 {
   normalPosts.length > 0 && (
     <section>
-      {!showPinned && pinnedPosts.length === 0 && (
-        <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-          <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
-          文章列表
-        </h2>
-      )}
-      {showPinned && normalPosts.length > 0 && (
-        <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-          <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
-          文章列表
-        </h2>
-      )}
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="flex items-center justify-between mb-6">
+        {!showPinned && pinnedPosts.length === 0 ? (
+          <h2 class="text-xl font-bold flex items-center gap-2">
+            <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
+            文章列表
+          </h2>
+        ) : (
+          <h2 class="text-xl font-bold flex items-center gap-2">
+            <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
+            文章列表
+          </h2>
+        )}
+        <button
+          id="postViewToggle"
+          class="shrink-0 text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:text-primary hover:border-primary dark:hover:text-primary dark:hover:border-primary transition-colors cursor-pointer bg-transparent"
+          title="切换简洁模式"
+          onclick="togglePostListView()"
+        >
+          <span class="toggle-label-normal">简洁模式</span>
+          <span class="toggle-label-compact hidden">标准模式</span>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 post-grid">
         {normalPosts.map((post) => (
           <PostCard
             title={post.data.title}
@@ -91,3 +180,35 @@ const normalPosts = posts.filter((p) => !p.data.pinned);
     </section>
   )
 }
+
+<script>
+  var POST_LIST_VIEW_KEY = 'postListView';
+
+  function updatePostListLabel() {
+    var compact = document.documentElement.classList.contains('post-list-compact');
+    var normalLabel = document.querySelector('.toggle-label-normal');
+    var compactLabel = document.querySelector('.toggle-label-compact');
+    if (normalLabel && compactLabel) {
+      normalLabel.classList.toggle('hidden', compact);
+      compactLabel.classList.toggle('hidden', !compact);
+    }
+  }
+
+  window.togglePostListView = function() {
+    var html = document.documentElement;
+    var compact = !html.classList.contains('post-list-compact');
+    if (compact) {
+      html.classList.add('post-list-compact');
+    } else {
+      html.classList.remove('post-list-compact');
+    }
+    try {
+      localStorage.setItem(POST_LIST_VIEW_KEY, compact ? 'compact' : 'normal');
+    } catch(e) {}
+    updatePostListLabel();
+  };
+
+  // 页面加载和 view transition 导航后同步标签状态
+  updatePostListLabel();
+  document.addEventListener('astro:page-load', updatePostListLabel);
+</script>
