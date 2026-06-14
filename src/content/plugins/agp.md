@@ -5,7 +5,7 @@ date: 2026-06-10
 tags:
   - 浏览器插件
   - 股票
-cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260612120216546.webp
+cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260614225246291.webp
 pinned: false
 draft: false
 ---
