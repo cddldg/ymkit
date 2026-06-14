@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_AVATAR, SOCIAL_LINKS } from '../consts';
 import { getWordCount } from '../utils/readingTime';
-import MusicPlayer from './MusicPlayer.astro';
 
 interface CurrentPost {
   id: string;
@@ -236,8 +235,6 @@ if (currentPost) {
       </div>
     </div>
   </div>
-
-  <MusicPlayer />
 </aside>
 
 <style is:inline>
