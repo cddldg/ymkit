@@ -5,7 +5,7 @@ date: 2026-05-31
 tags:
   - 浏览器插件
   - 视频号
-cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260614201547935.webp
+cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260614203243404.webp
 pinned: false
 draft: false
 ---
