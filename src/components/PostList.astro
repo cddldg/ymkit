@@ -194,6 +194,7 @@ const normalPosts = posts.filter((p) => !p.data.pinned);
     }
   }
 
+  // @ts-ignore — 挂到 window 上供 onclick 调用
   window.togglePostListView = function() {
     var html = document.documentElement;
     var compact = !html.classList.contains('post-list-compact');
