@@ -208,7 +208,17 @@ const normalPosts = posts.filter((p) => !p.data.pinned);
     updatePostListLabel();
   };
 
-  // 页面加载和 view transition 导航后同步标签状态
+  // 页面加载和 view transition 导航后恢复状态
   updatePostListLabel();
-  document.addEventListener('astro:page-load', updatePostListLabel);
+  document.addEventListener('astro:page-load', function() {
+    try {
+      var view = localStorage.getItem('postListView');
+      if (view === 'compact') {
+        document.documentElement.classList.add('post-list-compact');
+      } else {
+        document.documentElement.classList.remove('post-list-compact');
+      }
+    } catch(e) {}
+    updatePostListLabel();
+  });
 </script>
