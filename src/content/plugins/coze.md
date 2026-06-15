@@ -8,8 +8,6 @@ cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/2026061513152422
 pinned: false
 draft: false
 ---
-# Coze 扣子空间批量删除项目列表
-
 如果你用过 Coze 搭智能体，大概率遇到过这个问题：项目列表里堆积了几十个测试项目，想清理却发现 Coze 只支持**逐个删除**——点三个点、选删除、输项目名确认、等页面刷新，重复 N 次。
 
 ## 它能做什么
