@@ -5,12 +5,11 @@ date: 2026-06-16
 tags:
   - AI
   - ComfyUI
-cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260616190010359.webp
+cover: https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260621144339866.webp
 pinned: false
 draft: false
 ---
-
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260616190010359.webp)
+![image.png](https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260621144339866.webp)
 
 **本地、安全、无限制（发挥你的想象即可、你懂的）不啰嗦直接开始**
 

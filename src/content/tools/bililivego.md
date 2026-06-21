@@ -1,0 +1,12 @@
+---
+title: Bililive-go
+description: 多种直播平台的直播录制工具
+date: 2026-06-18
+tags:
+  - 直播
+  - 抖音
+cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/xxmv.webp
+pinned: false
+draft: false
+---
+## 一个开源免费项目，彻底告别了手动录直播的日子
