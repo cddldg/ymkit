@@ -206,7 +206,7 @@ if (currentPost) {
             <div class="sidebar-flip-front flex flex-col items-center">
               <img
                 id="sidebar-wx-img"
-                src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/wx.webp"
+                src="https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180321160.webp"
                 alt="微信赞赏码"
                 class="w-full rounded-lg aspect-square object-cover"
               />
@@ -215,7 +215,7 @@ if (currentPost) {
             <div class="sidebar-flip-back flex flex-col items-center">
               <img
                 id="sidebar-zfb-img"
-                src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/zfb.webp"
+                src="https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180325546.webp"
                 alt="支付宝赞赏码"
                 class="w-full rounded-lg aspect-square object-cover"
               />
@@ -227,7 +227,7 @@ if (currentPost) {
       <div class="flex-1 flex flex-col items-center">
         <img
           id="sidebar-gzh-img"
-          src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/gzh.webp"
+          src="https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180316257.webp"
           alt="公众号"
           class="w-full rounded-lg aspect-square object-cover"
         />
@@ -294,9 +294,9 @@ if (currentPost) {
   (function() {
     async function fetchSidebarQrData() {
       const defaultImg = {
-        wx: 'https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/wx.webp',
-        zfb: 'https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/zfb.webp',
-        gzh: 'https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/gzh.webp',
+        wx: 'https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180321160.webp',
+        zfb: 'https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180325546.webp',
+        gzh: 'https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180316257.webp',
       };
       try {
         const response = await fetch('https://gitee.com/api/v5/repos/dldg/BatchJob/contents/cf.json');

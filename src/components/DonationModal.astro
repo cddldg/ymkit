@@ -59,7 +59,7 @@
                       <div class="mini-face mini-back">
                         <div class="laser-scanner"></div>
                         <div class="qr-img-wrapper" id="wxWrapper">
-                          <img id="wxImg" class="qr-image" src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/wx.webp" alt="微信" />
+                          <img id="wxImg" class="qr-image" src="https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180321160.webp" alt="微信" />
                         </div>
                         <div class="zoom-hint-btn" onclick="openZoom('wx', event)" title="全屏放大扫描">🔍</div>
                       </div>
@@ -81,7 +81,7 @@
                       <div class="mini-face mini-back">
                         <div class="laser-scanner"></div>
                         <div class="qr-img-wrapper" id="zfbWrapper">
-                          <img id="zfbImg" class="qr-image" src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/zfb.webp" alt="支付宝" />
+                          <img id="zfbImg" class="qr-image" src="https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180325546.webp" alt="支付宝" />
                         </div>
                         <div class="zoom-hint-btn" onclick="openZoom('zfb', event)" title="全屏放大扫描">🔍</div>
                       </div>
@@ -108,7 +108,7 @@
               <div class="gzh-qr-box" onclick="openZoom('gzh', event)" title="点击全屏放大">
                 <div class="laser-scanner"></div>
                 <div class="qr-img-wrapper" id="gzhWrapper" style="width:100%; height:100%;">
-                  <img id="gzhImg" class="qr-image" src="https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/gzh.webp" alt="公众号" />
+                  <img id="gzhImg" class="qr-image" src="https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180316257.webp" alt="公众号" />
                 </div>
                 <div class="zoom-hint-btn">🔍</div>
               </div>
@@ -242,7 +242,7 @@
     async function fetchDonationData() {
       const defaultConfig = {
         ds: "能量注入 ✦ 请作者喝杯冰可乐",
-        img: { gzh: "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/gzh.webp", zfb: "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/zfb.webp", wx: "https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/wx.webp" }
+        img: { gzh: "https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180316257.webp", zfb: "https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180325546.webp", wx: "https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622180321160.webp" }
       };
       try {
         const response = await fetch('https://gitee.com/api/v5/repos/dldg/BatchJob/contents/cf.json');
