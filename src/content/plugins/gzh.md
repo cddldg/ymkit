@@ -5,7 +5,7 @@ date: 2026-06-10
 tags:
   - 浏览器插件
   - 公众号
-cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260614230009502.webp
+cover: https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260622235151064.webp
 pinned: false
 draft: false
 ---
