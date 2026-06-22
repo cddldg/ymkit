@@ -5,7 +5,7 @@ date: 2026-06-18
 tags:
   - 直播
   - 抖音
-cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/xxmv.webp
+cover: https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260623010219500.webp
 pinned: false
 draft: false
 ---

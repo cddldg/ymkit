@@ -4,7 +4,7 @@ description: 自动批量删除 Coze 平台上空间的项目/智能体。
 date: 2026-06-15
 tags:
   - 浏览器插件
-cover: https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260615131524225.webp
+cover: https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260623010635712.webp
 pinned: false
 draft: false
 ---

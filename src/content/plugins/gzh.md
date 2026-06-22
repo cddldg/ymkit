@@ -5,7 +5,7 @@ date: 2026-06-10
 tags:
   - 浏览器插件
   - 公众号
-cover: https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260622235151064.webp
+cover: https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260623011933988.webp
 pinned: false
 draft: false
 ---
