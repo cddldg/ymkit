@@ -2,8 +2,8 @@ export const SITE_TITLE = '一秒工具';
 export const SITE_DESCRIPTION = '分享实用插件、工具和 AI 资源';
 export const SITE_AUTHOR = '一秒工具';
 export const SITE_URL = 'https://www.ymkit.cn';
-export const SITE_AVATAR = 'https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622175624178.webp';
-export const SITE_COVER = 'https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622175624178.webp';
+export const SITE_AVATAR = 'https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260622175624178.webp';
+export const SITE_COVER = 'https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260622175624178.webp';
 
 export const PAGE_SIZE = 12;
 
@@ -44,12 +44,12 @@ export const BANNER_INTERVAL = 5; // 轮播间隔时间（秒）
 
 export const BANNERS = [
   {
-    image: 'https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260622175945369.webp',
+    image: 'https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260622175945369.webp',
     title: '',
     link: 'https://www.ymkit.cn',
   },
   {
-    image: 'https://cdn.jsdelivr.net/gh/cddldg/jst@main/img/20260621145615880.gif',
+    image: 'https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260621145615880.gif',
     title: '数字人',
     link: '/ai',
   }
