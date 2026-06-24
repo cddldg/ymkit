@@ -5,11 +5,11 @@ date: 2026-06-16
 tags:
   - AI
   - ComfyUI
-cover: https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260621144339866.webp
+cover: https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260621144339866.webp
 pinned: false
 draft: false
 ---
-![image.png](https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260621144339866.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260621144339866.webp)
 
 **本地、安全、无限制（发挥你的想象即可、你懂的）不啰嗦直接开始**
 

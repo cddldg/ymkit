@@ -5,7 +5,7 @@ date: 2026-06-10
 tags:
   - 浏览器插件
   - 股票
-cover: https://cdn.jsdmirror.com/gh/cddldg/jst@main/img/20260623011257182.webp
+cover: https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260623011257182.webp
 pinned: false
 draft: false
 ---
