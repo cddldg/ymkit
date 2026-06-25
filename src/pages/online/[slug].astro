@@ -32,10 +32,11 @@ const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
   <body>
     <div set:html={htmlContent} class="min-h-screen text-slate-100 flex flex-col lg:flex-row overflow-x-hidden" />
 
-    <!-- 右上角打赏按钮 -->
+    <!-- 右上角打赏按钮（默认隐藏，关闭弹窗后显示） -->
     <button
-      onclick="openDonation()"
-      class="fixed top-4 right-4 z-50 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-700 text-slate-300 hover:text-primary hover:border-primary text-sm font-medium transition-all cursor-pointer shadow-lg"
+      id="donation-trigger"
+      onclick="openDonation(); this.classList.add('hidden');"
+      class="hidden fixed top-4 right-4 z-50 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-700 text-slate-300 hover:text-primary hover:border-primary text-sm font-medium transition-all cursor-pointer shadow-lg"
       title="打赏"
     >
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -45,5 +46,22 @@ const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
     </button>
 
     <DonationModal />
+
+    <script is:inline>
+      // 监听打赏弹窗关闭 → 显示按钮
+      const observer = new MutationObserver(function() {
+        const modal = document.getElementById('donation-modal');
+        const btn = document.getElementById('donation-trigger');
+        if (modal && btn && !modal.classList.contains('is-open')) {
+          btn.classList.remove('hidden');
+        }
+      });
+      // 页面加载后自动打开打赏弹窗，并开始监听
+      setTimeout(function() {
+        openDonation();
+        const modal = document.getElementById('donation-modal');
+        if (modal) observer.observe(modal, { attributes: true, attributeFilter: ['class'] });
+      }, 500);
+    </script>
   </body>
 </html>
