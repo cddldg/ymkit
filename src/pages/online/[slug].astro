@@ -84,29 +84,26 @@ const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
     <DonationModal />
 
     <script is:inline>
-      // 覆盖 openDonation——不去改 body overflow，面板不遮挡
-      window.openDonation = function() {
-        document.getElementById('donation-modal').classList.add('is-open');
-        document.getElementById('donation-trigger').classList.add('hidden');
-      };
-      window.closeDonation = function() {
-        document.getElementById('donation-modal').classList.remove('is-open');
-        document.getElementById('donation-trigger').classList.remove('hidden');
-        document.body.style.overflow = '';
-      };
-
-      // 监听关闭按钮和遮罩（保留对关闭按钮的支持）
-      document.addEventListener('click', function(e) {
-        if (e.target.id === 'donation-close' || e.target.closest('#donation-close')) {
-          closeDonation();
+      // 等原生 openDonation 定义后，包装一下：调用原逻辑，但不要锁 body 滚动
+      var _timer = setInterval(function() {
+        if (typeof window.openDonation === 'function') {
+          clearInterval(_timer);
+          var _origOpen = window.openDonation;
+          window.openDonation = function() {
+            _origOpen();
+            document.body.style.overflow = ''; // 面板不锁滚动
+            document.getElementById('donation-trigger').classList.add('hidden');
+          };
+          var _origClose = window.closeDonation;
+          window.closeDonation = function() {
+            _origClose();
+            document.body.style.overflow = '';
+            document.getElementById('donation-trigger').classList.remove('hidden');
+          };
+          // 自动打开
+          openDonation();
         }
-      });
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeDonation();
-      });
-
-      // 页面加载后自动打开打赏面板
-      setTimeout(function() { openDonation(); }, 500);
+      }, 100);
     </script>
   </body>
 </html>
