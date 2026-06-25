@@ -26,6 +26,6 @@ const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
     <SEO title={tool.title} description={tool.description} />
   </head>
   <body>
-    <div set:html={htmlContent} />
+    <div set:html={htmlContent} class="min-h-screen text-slate-100 flex flex-col lg:flex-row overflow-x-hidden" />
   </body>
 </html>
