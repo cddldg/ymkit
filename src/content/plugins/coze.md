@@ -4,7 +4,7 @@ description: 自动批量删除 Coze 平台上空间的项目/智能体。
 date: 2026-06-15
 tags:
   - 浏览器插件
-cover: https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260623010635712.webp
+cover: https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625232546240.webp
 pinned: false
 draft: false
 ---
@@ -21,7 +21,7 @@ draft: false
 3. 点"扫描项目"，插件会自动滚屏加载所有卡片，提取项目名称
 4. 勾选要删的项目（支持全选）
 5. 点"开始删除"，剩下的事情全部自动完成
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260615125838500.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625232647208.webp)
 
 
 删除过程的每一步——悬停卡片、点击三个点按钮、在下拉菜单中找到"删除"选项、等待确认弹窗、填写项目名称、点击确认按钮——全部由插件模拟操作，不需要人工介入。

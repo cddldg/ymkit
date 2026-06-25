@@ -5,7 +5,7 @@ date: 2026-05-31
 tags:
   - 浏览器插件
   - 视频号
-cover: https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260623011611649.webp
+cover: https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625233815653.webp
 pinned: false
 draft: false
 ---
@@ -32,7 +32,7 @@ draft: false
 **🗑️ 批量删除**
 勾选要删的内容，一键删除。默认开启二次确认，防止误删。
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260614194541822.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625235918333.webp)
 
 
 ---
@@ -66,7 +66,7 @@ draft: false
 **删除前确认**
 默认开启二次确认弹窗。如果你信任自己的操作，也可以在设置里关掉，直接执行。
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260614194636715.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625235923220.webp)
 
 
 ---

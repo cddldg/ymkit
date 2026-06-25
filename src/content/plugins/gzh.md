@@ -1,16 +1,14 @@
 ---
 title: 公众号文章图片/视频/音频一键下载
-description: 跟了几个月的"大哥"突然清仓，我却在几小时后才知道！AI做个小插件，及时跟踪你关注的股票达人动态
+description: 公众号文章、贴图的图片、视频、音频一键下载 发送到飞书、Obsidian
 date: 2026-06-10
 tags:
   - 浏览器插件
   - 公众号
-cover: https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260623011933988.webp
+cover: https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625233550845.webp
 pinned: false
 draft: false
 ---
-
-# 公众号文章图片/视频/音频一键下载
 
 经常看公众号，总有些时候需要下载好的文章和里面的图片、视频、音频作为素材或者作为自己的知识库文章，也用过一些工具都没有符合自己的要求！
 
@@ -18,7 +16,7 @@ draft: false
 
 有的。自己手搓了个浏览器插件。
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260613173123140.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625224940831.webp)
 
 
 ---
@@ -27,7 +25,7 @@ draft: false
 
 就一件事：**打开公众号文章，点一下按钮，所有图片、视频、音频统统列出来，勾选→下载，完事。**
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260613171404154.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625224946467.webp)
 
 ### 1. 浮窗面板，不遮挡阅读
 
@@ -80,9 +78,9 @@ draft: false
 
 飞书导出支持配置自己的 App ID，直接写入你的飞书知识库；Obsidian 导出可以把图片下载到本地 vault，链接自动转成相对路径，离线也能看。
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260613171643934.webp)
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260613171724141.webp)
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260613171748911.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625224951399.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625224956395.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625225000774.webp)
 
 
 ### 6. 其他

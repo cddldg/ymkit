@@ -32,14 +32,14 @@ draft: false
 
 一句话：**自动盯着你关注的高手，一有动态就弹窗通知你。**
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260612120216546.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625235146279.webp)
 
 
 具体点说——
 
 你打开任意一个爱股票用户的主页，点一下插件图标，点「添加当前用户」。
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260612120026410.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625235150579.webp)
 
 
 完事了。
@@ -93,7 +93,7 @@ UA 太单一？封。
 
 A 股不是 24 小时交易。
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260612120408069.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625235156289.webp)
 
 
 凌晨三点去刷新爱股票，除了浪费电，没有意义。
@@ -114,7 +114,7 @@ A 股不是 24 小时交易。
 
 ## 提示音也能玩
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260612120512556.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625235202960.webp)
 
 
 我做了 10 种提示音，5 种基础款 + 5 种股票主题：
@@ -143,7 +143,7 @@ A 股不是 24 小时交易。
 
 3. 右上角（谷歌浏览器）或左下角（Edge）打开「开发者模式」
 
-![image.png](https://ymkit-1307887579.cos.ap-chengdu.myqcloud.com/img/20260612120620364.webp)
+![image.png](https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260625235208575.webp)
 
 
 4. 点「加载已解压的扩展程序」，选插件文件夹 或者直接把文件夹拖进来
@@ -170,7 +170,7 @@ A 股不是 24 小时交易。
  
 **建议/反馈/联系 关注公众号【一秒工具】，任意赞赏 获取插件下载链接。**
 
-[百度](https://pan.baidu.com/s/1hiUl9OCHgj-N6OB26x9JSg?pwd=ymki)
+[百度](https://pan.baidu.com/s/1hiUl9OCHgj-N6OB26x9JSg?pwd=ymki) 
 [夸克](https://pan.quark.cn/s/b10881bf1455?pwd=mtDP)
 
 ---
