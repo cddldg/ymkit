@@ -9,11 +9,11 @@ export const PAGE_SIZE = 12;
 
 export const NAV_ITEMS = [
   { label: '首页', href: '/' },
-  { label: '在线工具', href: '/online' },
   { label: '插件', href: '/plugins' },
   { label: '工具', href: '/tools' },
   { label: 'AI', href: '/ai' },
   { label: '归档', href: '/archives' },
+  { label: '在线工具', href: '/online' },
 ];
 
 export const SOCIAL_LINKS = [
