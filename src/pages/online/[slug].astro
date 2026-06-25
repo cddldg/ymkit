@@ -1,0 +1,31 @@
+---
+import SEO from '../../components/SEO.astro';
+import onlineTools from '../../data/online';
+
+export function getStaticPaths() {
+  return onlineTools.map((t) => ({ params: { slug: t.slug } }));
+}
+
+const { slug } = Astro.params;
+const tool = onlineTools.find((t) => t.slug === slug);
+if (!tool) return Astro.redirect('/404');
+
+const htmlModules = import.meta.glob('/src/data/online/*.html', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <SEO title={tool.title} description={tool.description} />
+  </head>
+  <body>
+    <div set:html={htmlContent} />
+  </body>
+</html>
