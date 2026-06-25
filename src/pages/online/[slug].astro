@@ -28,6 +28,42 @@ const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <SEO title={tool.title} description={tool.description} />
     <style is:inline set:html={donationModalCss + donationCss} />
+    <style is:inline>
+      /* 覆盖打赏弹窗为右上角固定面板 */
+      #donation-modal {
+        position: fixed !important;
+        inset: auto !important;
+        top: 16px !important;
+        right: 16px !important;
+        bottom: auto !important;
+        left: auto !important;
+        display: block !important;
+        z-index: 50 !important;
+        max-width: 380px;
+        width: auto;
+        pointer-events: auto;
+      }
+      #donation-modal .is-open { display: block !important; }
+      #donation-backdrop { display: none !important; }
+      #donation-modal-body {
+        position: static !important;
+        transform: none !important;
+        max-width: 380px !important;
+        width: 380px !important;
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+        border-radius: 16px !important;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+      }
+      #donation-close { position: absolute !important; top: 12px !important; right: 12px !important; }
+      /* 隐藏弹窗时不占空间 */
+      #donation-modal:not(.is-open) { display: none !important; }
+      /* 响应式：小屏幕占更少空间 */
+      @media (max-width: 480px) {
+        #donation-modal { top: 8px !important; right: 8px !important; max-width: 300px; }
+        #donation-modal-body { width: 300px !important; max-height: 70vh !important; }
+      }
+    </style>
   </head>
   <body>
     <div set:html={htmlContent} class="min-h-screen text-slate-100 flex flex-col lg:flex-row overflow-x-hidden" />
@@ -48,20 +84,29 @@ const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
     <DonationModal />
 
     <script is:inline>
-      // 监听打赏弹窗关闭 → 显示按钮
-      const observer = new MutationObserver(function() {
-        const modal = document.getElementById('donation-modal');
-        const btn = document.getElementById('donation-trigger');
-        if (modal && btn && !modal.classList.contains('is-open')) {
-          btn.classList.remove('hidden');
+      // 覆盖 openDonation——不去改 body overflow，面板不遮挡
+      window.openDonation = function() {
+        document.getElementById('donation-modal').classList.add('is-open');
+        document.getElementById('donation-trigger').classList.add('hidden');
+      };
+      window.closeDonation = function() {
+        document.getElementById('donation-modal').classList.remove('is-open');
+        document.getElementById('donation-trigger').classList.remove('hidden');
+        document.body.style.overflow = '';
+      };
+
+      // 监听关闭按钮和遮罩（保留对关闭按钮的支持）
+      document.addEventListener('click', function(e) {
+        if (e.target.id === 'donation-close' || e.target.closest('#donation-close')) {
+          closeDonation();
         }
       });
-      // 页面加载后自动打开打赏弹窗，并开始监听
-      setTimeout(function() {
-        openDonation();
-        const modal = document.getElementById('donation-modal');
-        if (modal) observer.observe(modal, { attributes: true, attributeFilter: ['class'] });
-      }, 500);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeDonation();
+      });
+
+      // 页面加载后自动打开打赏面板
+      setTimeout(function() { openDonation(); }, 500);
     </script>
   </body>
 </html>
