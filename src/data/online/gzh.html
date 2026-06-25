@@ -138,8 +138,8 @@
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold tracking-wide text-white">原图像素级复刻工具</h1>
-                    <p class="text-xs text-rose-400 font-medium font-mono">Typography & Layout Pro v4.1 ⚡</p>
+                    <h1 class="text-lg font-bold tracking-wide text-white">视频号封面设计</h1>
+                    <p class="text-xs text-rose-400 font-medium font-mono">视频号卡片在线设计器 ⚡</p>
                 </div>
             </div>
 
@@ -276,7 +276,7 @@
                     </h3>
                     <div>
                         <label class="block text-[11px] text-slate-400 mb-1">主标题文本</label>
-                        <input id="input-main-title" type="text" value="视频号批量管理" 
+                        <input id="input-main-title" type="text" value="视频号封面设计" 
                                class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-rose-500 transition-all">
                     </div>
                     <div>
@@ -357,7 +357,7 @@
                     </h3>
                     <div>
                         <label class="block text-[11px] text-slate-400 mb-1">副标题文本</label>
-                        <input id="input-sub-title" type="text" value="公众号文章图片/视频/音频一键下载" 
+                        <input id="input-sub-title" type="text" value="视频号卡片自定义设计，一键导出高清封面" 
                                class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-rose-500 transition-all">
                     </div>
                     <div>
@@ -584,10 +584,10 @@
                     <div id="text-container" class="text-center w-full flex-1 flex flex-col justify-center overflow-hidden pb-[4%]">
                         <!-- 主标题与副标题分别挂载其垂直偏移值，在布局计算中完全相互独立、绝不发生任何重叠干预 -->
                         <h2 id="preview-main-title" class="leading-tight text-emboss font-[900] break-words transition-all-custom">
-                            视频号批量管理
+                            视频号封面设计
                         </h2>
                         <p id="preview-sub-title" class="font-semibold break-words whitespace-normal leading-normal transition-all-custom">
-                            公众号文章图片/视频/音频一键下载
+                            视频号卡片自定义设计，一键导出高清封面
                         </p>
                     </div>
                 </div>
@@ -966,13 +966,13 @@
             previewMainTitle.style.fontFamily = mainFontF;
             previewSubTitle.style.fontFamily = subFontF;
 
-            previewMainTitle.innerText = inputMainTitle.value || '视频号批量管理';
+            previewMainTitle.innerText = inputMainTitle.value || '视频号封面设计';
             previewMainTitle.style.letterSpacing = `${mainSpacing}em`;
             previewMainTitle.style.paddingLeft = `${mainSpacing}em`; 
             previewMainTitle.style.lineHeight = mainLh;
             previewMainTitle.style.color = mColor;
 
-            previewSubTitle.innerText = inputSubTitle.value || '公众号文章图片/视频/音频一键下载';
+            previewSubTitle.innerText = inputSubTitle.value || '视频号卡片自定义设计，一键导出高清封面';
             previewSubTitle.style.letterSpacing = `${subSpacing}em`;
             previewSubTitle.style.paddingLeft = `${subSpacing}em`;
             previewSubTitle.style.color = sColor;
