@@ -1,30 +1,30 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import onlineTools from '../../data/online';
 ---
 
-<BaseLayout
+<BlogLayout
   title="在线工具"
   description="实用在线工具，打开即用"
 >
-  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-2xl font-bold mb-8 flex items-center gap-2">
-      <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
-      在线工具
-    </h1>
+  <Breadcrumb collection="online" />
+  <h1 class="text-2xl font-bold mb-8 flex items-center gap-2">
+    <span class="w-1 h-6 bg-primary rounded-full inline-block"></span>
+    在线工具
+  </h1>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {
-        onlineTools.map((tool) => (
-          <a
-            href={`/online/${tool.slug}`}
-            class="block p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary hover:shadow-md transition-all"
-          >
-            <h2 class="text-lg font-bold mb-2">{tool.title}</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">{tool.description}</p>
-          </a>
-        ))
-      }
-    </div>
-  </main>
-</BaseLayout>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {
+      onlineTools.map((tool) => (
+        <a
+          href={`/online/${tool.slug}`}
+          class="block p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary hover:shadow-md transition-all"
+        >
+          <h2 class="text-lg font-bold mb-2">{tool.title}</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">{tool.description}</p>
+        </a>
+      ))
+    }
+  </div>
+</BlogLayout>
