@@ -1268,13 +1268,13 @@
         }
         .decor-circle-1 {
             position: absolute; bottom: -10%; right: -10%; width: 50%; height: 50%; border-radius: 50%;
-            background: radial-gradient(circle, \${bg1}66 0%, \${bg2}00 70%); pointer-events: none;
-            display: \${selectBgStyle.value === 'user-upload' ? 'none' : 'block'};
+            background: radial-gradient(circle, ${bg1}66 0%, ${bg2}00 70%); pointer-events: none;
+            display: ${selectBgStyle.value === 'user-upload' ? 'none' : 'block'};
         }
         .decor-circle-2 {
             position: absolute; top: -10%; left: -10%; width: 40%; height: 40%; border-radius: 50%;
-            background: radial-gradient(circle, \${bg1}44 0%, \${bg2}00 70%); pointer-events: none;
-            display: \${selectBgStyle.value === 'user-upload' ? 'none' : 'block'};
+            background: radial-gradient(circle, ${bg1}44 0%, ${bg2}00 70%); pointer-events: none;
+            display: ${selectBgStyle.value === 'user-upload' ? 'none' : 'block'};
         }
         .decor-dots {
             position: absolute; bottom: 40px; left: 40px; width: 120px; height: 80px;
@@ -1282,19 +1282,19 @@
             background-size: 16px 16px; opacity: 0.8; pointer-events: none;
         }
         .decor-hashtag {
-            position: absolute; font-size: 24rem; font-weight: 900; color: rgba(255, 255, 255, \${rangeBgSymbolsOpacity.value / 100});
+            position: absolute; font-size: 24rem; font-weight: 900; color: rgba(255, 255, 255, ${rangeBgSymbolsOpacity.value / 100});
             left: 4%; bottom: 10%; pointer-events: none; line-height: 1; user-select: none; font-family: 'Inter', sans-serif;
-            display: \${(toggleBgSymbols.checked && selectBgStyle.value !== 'user-upload') ? 'block' : 'none'};
+            display: ${(toggleBgSymbols.checked && selectBgStyle.value !== 'user-upload') ? 'block' : 'none'};
         }
         .decor-letter-o1 {
             position: absolute; font-size: 25rem; font-weight: 900; color: rgba(255, 255, 255, \dots);
             right: 18%; top: 10%; pointer-events: none; line-height: 1; user-select: none; font-family: 'Inter', sans-serif;
-            display: \${(toggleBgSymbols.checked && selectBgStyle.value !== 'user-upload') ? 'block' : 'none'};
+            display: ${(toggleBgSymbols.checked && selectBgStyle.value !== 'user-upload') ? 'block' : 'none'};
         }
         .decor-letter-o2 {
             position: absolute; font-size: 25rem; font-weight: 900; color: rgba(255, 255, 255, \dots);
             right: 4%; top: 25%; pointer-events: none; line-height: 1; user-select: none; font-family: 'Inter', sans-serif;
-            display: \${(toggleBgSymbols.checked && selectBgStyle.value !== 'user-upload') ? 'block' : 'none'};
+            display: ${(toggleBgSymbols.checked && selectBgStyle.value !== 'user-upload') ? 'block' : 'none'};
         }
         /* 卡片比例放大调整 */
         .card-stack {
@@ -1306,12 +1306,12 @@
         .layer-1 {
             background-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            transform: rotate(\${a1}deg);
+            transform: rotate(${a1}deg);
         }
         .layer-2 {
             background-color: #ffd6db;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            transform: rotate(\${a2}deg);
+            transform: rotate(${a2}deg);
         }
         .layer-main {
             background-color: #ffffff;
@@ -1321,11 +1321,11 @@
             padding: 8% 6%; box-sizing: border-box; z-index: 5;
         }
         .app-icon {
-            width: \${iScale}%; aspect-ratio: 1/1; border-radius: \${iRadius}px;
+            width: ${iScale}%; aspect-ratio: 1/1; border-radius: ${iRadius}px;
             display: flex; align-items: center; justify-content: center; margin-bottom: 8%;
-            transform: translateY(\${iOffset}%);
+            transform: translateY(${iOffset}%);
             overflow: hidden;
-            \${innerIconStyles}
+            ${innerIconStyles}
         }
         .svg-icon {
             width: 62%; height: 62%; color: white; filter: drop-shadow(0 2px 3px rgba(150,5,30,0.25));
@@ -1335,24 +1335,24 @@
             overflow: hidden; padding-bottom: 3%;
         }
         .main-title {
-            color: \${mColor}; font-weight: 900;
-            font-family: \${fontFMain};
-            font-size: \${mSize}vw; 
-            letter-spacing: \${mSpacing}em;
-            padding-left: \${mSpacing}em;
-            line-height: \${mLh}; 
+            color: ${mColor}; font-weight: 900;
+            font-family: ${fontFMain};
+            font-size: ${mSize}vw; 
+            letter-spacing: ${mSpacing}em;
+            padding-left: ${mSpacing}em;
+            line-height: ${mLh}; 
             margin-top: 0;
-            margin-bottom: \${mMb}%; 
-            transform: translateY(\${mOffset}px);
-            text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.8), 0px 2px 3px \${bg2}22;
+            margin-bottom: ${mMb}%; 
+            transform: translateY(${mOffset}px);
+            text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.8), 0px 2px 3px ${bg2}22;
         }
         .sub-title {
-            color: \${sColor}; font-weight: 600; 
-            font-family: \${fontFSub};
-            font-size: \${sSize}vw;
-            letter-spacing: \${sSpacing}em; 
-            padding-left: \${sSpacing}em; 
-            transform: translateY(\${sOffset}px);
+            color: ${sColor}; font-weight: 600; 
+            font-family: ${fontFSub};
+            font-size: ${sSize}vw;
+            letter-spacing: ${sSpacing}em; 
+            padding-left: ${sSpacing}em; 
+            transform: translateY(${sOffset}px);
             margin: 0;
         }
     </style>
@@ -1372,7 +1372,7 @@
             <div class="card-layer layer-2"></div>
             <div class="card-layer layer-main">
                 <div class="app-icon">
-                    \${innerIconHTML}
+                    ${innerIconHTML}
                 </div>
                 <div class="text-container">
                     <h2 class="main-title">${mTitle}</h2>
