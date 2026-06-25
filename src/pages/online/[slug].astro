@@ -2,8 +2,8 @@
 import SEO from '../../components/SEO.astro';
 import DonationModal from '../../components/DonationModal.astro';
 import onlineTools from '../../data/online';
-import '../../styles/donation.css';
-import '../../styles/donation-modal.css';
+import donationCss from '../../styles/donation.css?raw';
+import donationModalCss from '../../styles/donation-modal.css?raw';
 
 export function getStaticPaths() {
   return onlineTools.map((t) => ({ params: { slug: t.slug } }));
@@ -27,6 +27,7 @@ const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <SEO title={tool.title} description={tool.description} />
+    <style is:inline set:html={donationModalCss + donationCss} />
   </head>
   <body>
     <div set:html={htmlContent} class="min-h-screen text-slate-100 flex flex-col lg:flex-row overflow-x-hidden" />
