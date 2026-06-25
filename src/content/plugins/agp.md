@@ -170,7 +170,8 @@ A 股不是 24 小时交易。
  
 **建议/反馈/联系 关注公众号【一秒工具】，任意赞赏 获取插件下载链接。**
 
-c
+[百度](https://pan.baidu.com/s/1hiUl9OCHgj-N6OB26x9JSg?pwd=ymki)
+[夸克](https://pan.quark.cn/s/b10881bf1455?pwd=mtDP)
 
 ---
 

@@ -111,5 +111,5 @@ draft: false
 *适用平台：Chrome / Edge 浏览器*
 *适用场景：公众号文章素材采集、内容导出、知识管理*
 
-[百度](https://pan.baidu.com/s/1yTu5tQtQpuzI31mxdq0paQ?pwd=ymki)
-[夸克](https://pan.quark.cn/s/7b25689f898c?pwd=Hv9c)
+[百度](https://pan.baidu.com/s/1hiUl9OCHgj-N6OB26x9JSg?pwd=ymki)
+[夸克](https://pan.quark.cn/s/b10881bf1455?pwd=mtDP)
