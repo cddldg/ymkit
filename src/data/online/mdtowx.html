@@ -1,0 +1,983 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+    <style>
+        /* 微信公众号特选系统字体组 */
+        .wechat-font {
+            font-family: -apple-system-font, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+        }
+        /* 美化编辑器与预览区滚动条 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* 公众号底衬模拟纹理纸张 */
+        .bg-grid {
+            background-color: #ffffff;
+            background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .bg-dots {
+            background-color: #fafbfc;
+            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+            background-size: 16px 16px;
+        }
+        .bg-lined {
+            background-color: #fcfdfd;
+            background-image: linear-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 100% 26px;
+        }
+    </style>
+    <div id="app-preloader" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0f172a; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; font-family: -apple-system, BlinkMacSystemFont, sans-serif; transition: opacity 0.3s ease-out, visibility 0.3s;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; max-width: 340px; text-align: center; padding: 20px;">
+            <div style="width: 48px; height: 48px; border: 3px solid rgba(16, 185, 129, 0.1); border-top: 3px solid #10b981; border-radius: 50%; animation: preloader-spin 0.8s linear infinite;"></div>
+            <div style="margin-top: -8px;">
+                <h2 style="color: #ffffff; font-size: 16px; font-weight: 700; margin: 0 0 6px 0; letter-spacing: 1px;">排版助手初始化中</h2>
+                <p style="color: #64748b; font-size: 11px; margin: 0; line-height: 1.5;">轻量高性能渲染引擎加载中，免编译提速...</p>
+            </div>
+            <div style="width: 180px; height: 3px; background-color: #1e293b; border-radius: 10px; overflow: hidden; position: relative;">
+                <div style="position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(90deg, #10b981, #34d399); width: 40%; border-radius: 10px; animation: preloader-bar 1.2s ease-in-out infinite;"></div>
+            </div>
+        </div>
+        <style>
+            @keyframes preloader-spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            @keyframes preloader-bar {
+                0% { left: -40%; width: 40%; }
+                50% { left: 30%; width: 60%; }
+                100% { left: 100%; width: 40%; }
+            }
+        </style>
+    </div>
+
+    <!-- React 挂载点 -->
+    <div id="root"></div>
+
+    <!-- 🌟 Preact + HTM 轻量免编译渲染架构 (彻底抛弃巨型 Babel 转换包) -->
+    <script type="module">
+        import { html, render, useState, useEffect, useRef, useMemo } from 'https://unpkg.com/htm/preact/standalone.mjs';
+
+        // 八大精美预设风格
+        const THEMES = [
+            {
+                id: 'elegant',
+                name: '古风绿竹 (中式)',
+                primaryColor: '#2b5c43',
+                secondaryColor: '#8ca18e',
+                textColor: '#2f2f2f',
+                h2Style: 'border-bottom',
+                blockquoteBorder: 4,
+                blockquoteRadius: 4,
+            },
+            {
+                id: 'modern',
+                name: '极简冷蓝 (科技)',
+                primaryColor: '#1e40af',
+                secondaryColor: '#60a5fa',
+                textColor: '#1f2937',
+                h2Style: 'border-left',
+                blockquoteBorder: 3,
+                blockquoteRadius: 6,
+            },
+            {
+                id: 'macaron',
+                name: '元气粉桃 (生活)',
+                primaryColor: '#db2777',
+                secondaryColor: '#f472b6',
+                textColor: '#374151',
+                h2Style: 'bubble',
+                blockquoteBorder: 4,
+                blockquoteRadius: 12,
+            },
+            {
+                id: 'dark',
+                name: '极客霓虹 (暗色)',
+                primaryColor: '#10b981',
+                secondaryColor: '#059669',
+                textColor: '#e2e8f0',
+                h2Style: 'border-dashed',
+                blockquoteBorder: 4,
+                blockquoteRadius: 2,
+            },
+            {
+                id: 'warmPaper',
+                name: '纸墨暖阳 (人文)',
+                primaryColor: '#c2410c',
+                secondaryColor: '#f97316',
+                textColor: '#3f3f46',
+                h2Style: 'border-left',
+                blockquoteBorder: 5,
+                blockquoteRadius: 8,
+            },
+            {
+                id: 'forest',
+                name: '雨后森林 (治愈)',
+                primaryColor: '#065f46',
+                secondaryColor: '#34d399',
+                textColor: '#27272a',
+                h2Style: 'border-bottom',
+                blockquoteBorder: 4,
+                blockquoteRadius: 6,
+            },
+            {
+                id: 'morandi',
+                name: '低奢莫兰迪 (轻奢)',
+                primaryColor: '#78716c',
+                secondaryColor: '#a8a29e',
+                textColor: '#44403c',
+                h2Style: 'short-dash',
+                blockquoteBorder: 3,
+                blockquoteRadius: 4,
+            },
+            {
+                id: 'cyberpunk',
+                name: '赛博霓虹 (潮牌)',
+                primaryColor: '#ec4899',
+                secondaryColor: '#06b6d4',
+                textColor: '#111827',
+                h2Style: 'bubble',
+                blockquoteBorder: 6,
+                blockquoteRadius: 0,
+            }
+        ];
+
+        // 默认模拟手机端背景
+        const BACKGROUNDS = [
+            { id: 'white', name: '经典白', class: 'bg-white', color: '#ffffff' },
+            { id: 'cream', name: '麦芽黄', class: 'bg-[#faf6f0]', color: '#faf6f0' },
+            { id: 'green', name: '护眼绿', class: 'bg-[#f1f7f1]', color: '#f1f7f1' },
+            { id: 'gray', name: '知乎灰', class: 'bg-[#f6f8fa]', color: '#f6f8fa' },
+            { id: 'grid', name: '格子纸', class: 'bg-grid', color: '#ffffff' },
+            { id: 'dots', name: '手账点', class: 'bg-dots', color: '#fafbfc' },
+            { id: 'lined', name: '横线纸', class: 'bg-lined', color: '#fcfdfd' }
+        ];
+
+        // 微信适配的代码高亮色系定义
+        const CODE_THEMES = [
+            { id: 'monokai', name: 'Monokai 暗黑', bg: '#272822', text: '#f8f8f2', border: 'none' },
+            { id: 'github-light', name: 'GitHub 极简白', bg: '#f6f8fa', text: '#24292e', border: '1px solid #eaecef' },
+            { id: 'wechat', name: '微信官方灰', bg: '#f8f9fa', text: '#3e3e3e', border: '1px solid #e1e4e8' },
+            { id: 'dracula', name: 'Dracula 魅紫', bg: '#282a36', text: '#f8f8f2', border: 'none' },
+            { id: 'terminal', name: 'Terminal 终端绿', bg: '#0c0c0c', text: '#39ff14', border: '1px solid #333333' },
+            { id: 'one-dark', name: 'One Dark 雅致', bg: '#282c34', text: '#abb2bf', border: 'none' }
+        ];
+
+        const DEFAULT_MARKDOWN = `# 探索 Markdown 优雅排版艺术
+
+微信公众号支持极其丰富的富文本展现形式，本工具能一键将规范的 **Markdown** 转换为满足微信后台渲染要求的排版。
+
+## 💡 为什么需要专门的微信排版？
+微信后台编辑器会过滤掉很多外部 **CSS 样式表**。我们的转换引擎会将样式**深度转换为行内样式 (Inline Style)**，确保排版万无一失。
+
+> **微信提示**：你可以在左边无限度修改属性，也可以按住编辑器与预览区中间的“分割线”自由拖动占比。
+
+---
+
+## 🎨 核心排版元素展示
+
+### 1. 列表演示
+* ⚙️ **灵活自定义**：不仅可调整行高、字间距，还能定制标题特殊设计。
+* 📱 **本地状态保持**：无需担心刷新，你的设置和文章都会自动保存在本地存储。
+* ⚡ **代码高亮**：对工程师、学术公众号极其友好的高亮结构。
+
+### 2. 精美代码块演示
+对于技术科普类公众号，美观且不换行的代码块格外重要：
+
+\`\`\`javascript
+// 拖拽调整核心逻辑
+function resizePanels(percentage) {
+  setEditorWidth(percentage);
+}
+\`\`\`
+
+现在，试着在左侧修改文字，或者直接微调属于你自己的专属样式调色盘吧！`;
+
+        function App() {
+            const [markdown, setMarkdown] = useState(DEFAULT_MARKDOWN);
+            const [currentTheme, setCurrentTheme] = useState(THEMES[0]);
+            
+            // 全局可调节属性状态
+            const [primaryColor, setPrimaryColor] = useState(THEMES[0].primaryColor);
+            const [secondaryColor, setSecondaryColor] = useState(THEMES[0].secondaryColor);
+            const [textColor, setTextColor] = useState(THEMES[0].textColor);
+            const [fontSize, setFontSize] = useState(15);
+            const [lineHeight, setLineHeight] = useState(1.8);
+            const [letterSpacing, setLetterSpacing] = useState(1);
+            const [paraMargin, setParaMargin] = useState(16);
+            
+            const [h2Style, setH2Style] = useState('border-bottom'); 
+            const [fontFamily, setFontFamily] = useState('sans-serif'); 
+            const [textAlign, setTextAlign] = useState('justify'); 
+            const [firstLineIndent, setFirstLineIndent] = useState(false); 
+            const [bqBorder, setBqBorder] = useState(4); 
+            const [bqRadius, setBqRadius] = useState(4); 
+            const [codeTheme, setCodeTheme] = useState('monokai'); 
+
+            const [bgOption, setBgOption] = useState(BACKGROUNDS[0]);
+
+            // 拖曳及布局模式
+            const [editorWidth, setEditorWidth] = useState(50); 
+            const [viewMode, setViewMode] = useState('phone'); 
+            const [sidebarOpen, setSidebarOpen] = useState(true);
+            const [toastMessage, setToastMessage] = useState("");
+            const [copySuccess, setCopySuccess] = useState(false);
+            const [themeMode, setThemeMode] = useState('light'); 
+
+            const containerRef = useRef(null);
+            const isDragging = useRef(false);
+            const previewRef = useRef(null);
+
+            // 🌟 首次挂载后平滑淡出并卸载预加载遮罩
+            useEffect(() => {
+                const loader = document.getElementById('app-preloader');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    loader.style.visibility = 'hidden';
+                    setTimeout(() => {
+                        loader.remove();
+                    }, 300);
+                }
+            }, []);
+
+            // 状态恢复：从 LocalStorage 读取保存的配置
+            useEffect(() => {
+                const savedState = localStorage.getItem("wechat_editor_state2");
+                if (savedState) {
+                    try {
+                        const parsed = JSON.parse(savedState);
+                        if (parsed.markdown) setMarkdown(parsed.markdown);
+                        if (parsed.fontSize) setFontSize(parsed.fontSize);
+                        if (parsed.primaryColor) setPrimaryColor(parsed.primaryColor);
+                        if (parsed.secondaryColor) setSecondaryColor(parsed.secondaryColor);
+                        if (parsed.textColor) setTextColor(parsed.textColor);
+                        if (parsed.lineHeight) setLineHeight(parsed.lineHeight);
+                        if (parsed.letterSpacing) setLetterSpacing(parsed.letterSpacing);
+                        if (parsed.paraMargin) setParaMargin(parsed.paraMargin);
+                        if (parsed.h2Style) setH2Style(parsed.h2Style);
+                        if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
+                        if (parsed.textAlign) setTextAlign(parsed.textAlign);
+                        if (parsed.firstLineIndent !== undefined) setFirstLineIndent(parsed.firstLineIndent);
+                        if (parsed.bqBorder) setBqBorder(parsed.bqBorder);
+                        if (parsed.bqRadius !== undefined) setBqRadius(parsed.bqRadius);
+                        if (parsed.themeMode !== undefined) setThemeMode(parsed.themeMode);
+                        if (parsed.codeTheme !== undefined) setCodeTheme(parsed.codeTheme);
+                        if (parsed.bgOptionId) {
+                            const matchedBg = BACKGROUNDS.find(b => b.id === parsed.bgOptionId);
+                            if (matchedBg) setBgOption(matchedBg);
+                        }
+                    } catch(e) { console.error("加载本地存储状态异常", e); }
+                }
+            }, []);
+
+            // 侦听变化：自动保存到 LocalStorage
+            useEffect(() => {
+                const stateToSave = {
+                    markdown, fontSize, primaryColor, secondaryColor, textColor,
+                    lineHeight, letterSpacing, paraMargin, h2Style, fontFamily,
+                    textAlign, firstLineIndent, bqBorder, bqRadius, themeMode, codeTheme, bgOptionId: bgOption.id
+                };
+
+                localStorage.setItem("wechat_editor_state2", JSON.stringify(stateToSave));
+            }, [markdown, fontSize, primaryColor, secondaryColor, textColor, lineHeight, letterSpacing, paraMargin, h2Style, fontFamily, textAlign, firstLineIndent, bqBorder, bqRadius, themeMode, codeTheme, bgOption]);
+
+            // 双向面板无级拖拽改变比例
+            const handleMouseDown = (e) => {
+                e.preventDefault();
+                isDragging.current = true;
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+            };
+
+            const handleMouseMove = (e) => {
+                if (!isDragging.current || !containerRef.current) return;
+                const containerRect = containerRef.current.getBoundingClientRect();
+                const relativeX = e.clientX - containerRect.left;
+                const percentage = (relativeX / containerRect.width) * 100;
+                setEditorWidth(Math.max(20, Math.min(80, percentage)));
+            };
+
+            const handleMouseUp = () => {
+                isDragging.current = false;
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+            };
+
+            const handleThemeSelect = (theme) => {
+                setCurrentTheme(theme);
+                setPrimaryColor(theme.primaryColor);
+                setSecondaryColor(theme.secondaryColor);
+                setTextColor(theme.textColor);
+                setH2Style(theme.h2Style);
+                setBqBorder(theme.blockquoteBorder);
+                setBqRadius(theme.blockquoteRadius);
+            };
+
+            const triggerToast = (msg) => {
+                setToastMessage(msg);
+                setTimeout(() => setToastMessage(""), 3000);
+            };
+
+            // 将选中的背景模式翻译成兼容微信公众号后台的 inline Style
+            const getBgStyleInline = (bg) => {
+                const basePaddingStyle = "padding: 24px 20px; box-sizing: border-box; min-height: 100%; border-radius: 8px;";
+                if (bg.id === 'grid') {
+                    return `${basePaddingStyle} background-color: #ffffff; background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px); background-size: 20px 20px;`;
+                } else if (bg.id === 'dots') {
+                    return `${basePaddingStyle} background-color: #fafbfc; background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px); background-size: 16px 16px;`;
+                } else if (bg.id === 'lined') {
+                    return `${basePaddingStyle} background-color: #fcfdfd; background-image: linear-gradient(#e2e8f0 1px, transparent 1px); background-size: 100% 26px;`;
+                } else {
+                    return `${basePaddingStyle} background-color: ${bg.color};`;
+                }
+            };
+
+            // Markdown 编译及行内样式强制化引擎 (useMemo 避免卡顿)
+            const convertedHtml = useMemo(() => {
+                try {
+                    marked.setOptions({ gfm: true, breaks: true });
+                    const rawHtml = marked.parse(markdown);
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(`<div>${rawHtml}</div>`, 'text/html');
+                    const rootNode = doc.body.firstChild;
+
+                    let cssFontFamily = '';
+                    if (fontFamily === 'serif') {
+                        cssFontFamily = 'font-family: Optima, Georgia, "Nimbus Roman No9 L", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "Source Han Serif CN", STSong, "AR PL New Sung", "AR PL SungtiL GB", serif;';
+                    } else if (fontFamily === 'monospace') {
+                        cssFontFamily = 'font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;';
+                    } else {
+                        cssFontFamily = 'font-family: -apple-system-font, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;';
+                    }
+
+                    const activeCodeTheme = CODE_THEMES.find(t => t.id === codeTheme) || CODE_THEMES[0];
+
+                    const styles = {
+                        h1: `font-size: ${fontSize + 4}px; font-weight: bold; color: ${primaryColor}; margin-top: 24px; margin-bottom: 16px; line-height: 1.3; text-align: left; ${cssFontFamily}`,
+                        h2: `font-size: ${fontSize + 2}px; font-weight: bold; color: ${primaryColor}; margin-top: 22px; margin-bottom: 14px; line-height: 1.4; text-align: left; ${cssFontFamily}`,
+                        h3: `font-size: ${fontSize + 1}px; font-weight: bold; color: ${primaryColor}; margin-top: 18px; margin-bottom: 10px; line-height: 1.4; text-align: left; ${cssFontFamily}`,
+                        p: `font-size: ${fontSize}px; color: ${textColor}; line-height: ${lineHeight}; letter-spacing: ${letterSpacing}px; margin-top: ${paraMargin}px; margin-bottom: ${paraMargin}px; text-align: ${textAlign}; word-break: break-all; ${firstLineIndent ? 'text-indent: 2em;' : ''} ${cssFontFamily}`,
+                        blockquote: `border-left: ${bqBorder}px solid ${primaryColor}; background-color: ${primaryColor}0c; padding: 12px 16px; margin: 16px 0; border-radius: ${bqRadius}px; color: ${textColor}d0; font-size: ${fontSize - 1}px; line-height: 1.7; ${cssFontFamily}`,
+                        pre: `background-color: ${activeCodeTheme.bg}; color: ${activeCodeTheme.text}; border: ${activeCodeTheme.border}; padding: 14px; border-radius: 8px; overflow-x: auto; font-family: Consolas, Monaco, monospace; font-size: 13px; line-height: 1.5; margin: 16px 0;`,
+                        code: `background-color: ${primaryColor}15; color: ${primaryColor}; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: ${fontSize - 1}px; word-break: break-all;`,
+                        ul: `list-style-type: disc; padding-left: 20px; margin: 12px 0; font-size: ${fontSize}px; color: ${textColor}; ${cssFontFamily}`,
+                        ol: `list-style-type: decimal; padding-left: 20px; margin: 12px 0; font-size: ${fontSize}px; color: ${textColor}; ${cssFontFamily}`,
+                        li: `margin-bottom: 6px; line-height: ${lineHeight}; letter-spacing: ${letterSpacing}px;`,
+                        strong: `font-weight: bold; color: ${primaryColor};`,
+                        em: `font-style: italic;`,
+                        a: `color: ${primaryColor}; text-decoration: underline;`,
+                        table: `width: 100%; border-collapse: collapse; margin: 16px 0; font-size: ${fontSize - 1}px; overflow-x: auto; display: block;`,
+                        th: `background-color: ${primaryColor}; color: #ffffff; padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: bold; text-align: left;`,
+                        td: `padding: 8px 12px; border: 1px solid #e2e8f0; text-align: left; color: ${textColor};`,
+                        hr: `border: 0; border-top: 1px solid ${secondaryColor}cc; margin: 24px 0;`
+                    };
+
+                    const applyCustomCssRules = (element, tag) => {
+                        if (tag === 'h2') {
+                            if (h2Style === 'border-bottom') {
+                                element.setAttribute('style', `${styles.h2} border-bottom: 2px solid ${primaryColor}; padding-bottom: 6px; display: inline-block;`);
+                            } else if (h2Style === 'border-left') {
+                                element.setAttribute('style', `${styles.h2} border-left: 5px solid ${primaryColor}; padding-left: 10px;`);
+                            } else if (h2Style === 'bubble') {
+                                element.setAttribute('style', `${styles.h2} background-color: ${primaryColor}1a; border-radius: 6px; padding: 6px 12px; display: inline-block; color: ${primaryColor};`);
+                            } else if (h2Style === 'short-dash') {
+                                element.setAttribute('style', `${styles.h2} text-align: center; font-weight: bold;`);
+                                element.innerHTML = `<span style="color: ${secondaryColor}; font-weight: normal; margin: 0 8px;">—</span> ${element.innerText} <span style="color: ${secondaryColor}; font-weight: normal; margin: 0 8px;">—</span>`;
+                            }
+                        }
+                    };
+
+                    const traverse = (element) => {
+                        if (!element || element.nodeType !== 1) return;
+                        const tag = element.tagName.toLowerCase();
+                        if (styles[tag]) {
+                            element.setAttribute('style', styles[tag]);
+                            applyCustomCssRules(element, tag);
+                        }
+                        if (tag === 'pre') {
+                            const innerCode = element.querySelector('code');
+                            if (innerCode) {
+                                innerCode.setAttribute('style', 'background: transparent; color: inherit; padding: 0; font-family: inherit; font-size: inherit;');
+                            }
+                        }
+                        Array.from(element.childNodes).forEach(traverse);
+                    };
+
+                    Array.from(rootNode.childNodes).forEach(traverse);
+                    return rootNode.innerHTML;
+                } catch (e) {
+                    console.error("排版转换异常: ", e);
+                    return `<p class="text-rose-500">解析发生错误，请检查您的 Markdown 格式是否包含非法标签。</p>`;
+                }
+            }, [markdown, primaryColor, secondaryColor, textColor, fontSize, lineHeight, letterSpacing, paraMargin, h2Style, fontFamily, textAlign, firstLineIndent, bqBorder, bqRadius, codeTheme]);
+
+            // 🌟 工业级高兼容剪贴板拷贝驱动 (基于事件劫持注入，无 DOM 节点和 Selection 依赖，完美绕开各种沙盒拦截)
+            const performSystemCopy = (content, asRichText = false) => {
+                try {
+                    const listener = (e) => {
+                        if (asRichText) {
+                            // 关键核心：向剪贴板写入精准富文本格式
+                            e.clipboardData.setData('text/html', content);
+                            
+                            // 极重要降级处理：提取纯文本填充到 text/plain 分流，彻底杜绝部分文本编辑器粘贴出空白的情况
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = content;
+                            const plainText = tempDiv.textContent || tempDiv.innerText || '';
+                            e.clipboardData.setData('text/plain', plainText);
+                        } else {
+                            e.clipboardData.setData('text/plain', content);
+                        }
+                        e.preventDefault(); // 阻止浏览器对选区的默认空白复制，强制使用我们定制的 Payload
+                    };
+
+                    // 绑定瞬时监听器 -> 触发原生复制指令 -> 注销监听器
+                    document.addEventListener('copy', listener);
+                    const successful = document.execCommand('copy');
+                    document.removeEventListener('copy', listener);
+
+                    // 如果 execCommand 因为某些极端沙盒完全受限，使用现代 Clipboard API 兜底
+                    if (!successful && navigator.clipboard) {
+                        if (!asRichText) {
+                            navigator.clipboard.writeText(content);
+                            return true;
+                        }
+                    }
+
+                    return successful;
+                } catch (err) {
+                    console.error('一键复制底层驱动遭遇意外:', err);
+                    // 最后的极简 textarea 选区复制降级兜底 (保证基础可用性)
+                    try {
+                        const tempTextarea = document.createElement('textarea');
+                        tempTextarea.value = asRichText ? content.replace(/<[^>]*>/g, '') : content;
+                        tempTextarea.style.position = 'fixed';
+                        tempTextarea.style.left = '-9999px';
+                        document.body.appendChild(tempTextarea);
+                        tempTextarea.select();
+                        const res = document.execCommand('copy');
+                        document.body.removeChild(tempTextarea);
+                        return res;
+                    } catch (innerErr) {
+                        return false;
+                    }
+                }
+            };
+
+            // 复制富文本至公众号，自动嵌套带有背景样式的包裹层
+            const handleCopyToClipboard = () => {
+                const bgStyle = getBgStyleInline(bgOption);
+                // 核心修复：用带有完整背景 inline-style 样式的外容器包裹转出的文章 HTML
+                const wrappedHtml = `<div style="${bgStyle}">${convertedHtml}</div>`;
+                
+                const successful = performSystemCopy(wrappedHtml, true);
+                if (successful) {
+                    setCopySuccess(true);
+                    triggerToast("🎉 复制排版与背景成功！快去微信后台直接粘贴（Ctrl+V）吧！");
+                    setTimeout(() => setCopySuccess(false), 2500);
+                } else {
+                    triggerToast("❌ 复制失败，请尝试刷新页面重试。");
+                }
+            };
+
+            // 复制 HTML 源代码 (包含包裹背景样式的 HTML)
+            const handleCopyRawHtml = () => {
+                const bgStyle = getBgStyleInline(bgOption);
+                const wrappedHtml = `<div style="${bgStyle}">${convertedHtml}</div>`;
+                
+                const successful = performSystemCopy(wrappedHtml, false);
+                if (successful) {
+                    triggerToast("🎉 已成功复制包含背景样式的完整 HTML 源码！");
+                } else {
+                    triggerToast("❌ 复制源码失败。");
+                }
+            };
+
+            const toggleThemeMode = () => {
+                setThemeMode(prev => prev === 'dark' ? 'light' : 'dark');
+            };
+
+            return html`
+                <div class="h-screen flex flex-col overflow-hidden transition-colors duration-300 ${themeMode === 'dark' ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-800'}">
+                    
+                    <!-- 顶部头部控制区 -->
+                    <header class="border-b px-4 py-3 flex items-center justify-between shadow-sm shrink-0 z-10 transition-colors duration-300 ${themeMode === 'dark' ? 'bg-slate-900 border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-800'}">
+                        <div class="flex items-center gap-3">
+                            <button 
+                                onclick=${() => setSidebarOpen(!sidebarOpen)}
+                                class="p-2 rounded-lg transition ${themeMode === 'dark' ? 'text-slate-400 hover:text-white hover:bg-slate-800' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}"
+                                title=${sidebarOpen ? "隐藏高级细节定制栏" : "展开高级细节定制栏"}
+                            >
+                                <svg class="w-5 h-5 transform transition-transform ${sidebarOpen ? '' : 'rotate-180'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            
+                            <div class="bg-gradient-to-tr from-emerald-600 to-green-400 p-1.5 rounded-lg text-white shadow">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </div>
+                            
+                            <div>
+                                <h1 class="text-sm font-bold bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent flex items-center gap-2">
+                                    微信公众号排版与复制助手
+                                    <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">V2.2 极速版</span>
+                                </h1>
+                                <p class="text-[10px] ${themeMode === 'dark' ? 'text-slate-500' : 'text-slate-400'}">
+                                    ⚡ 自动保存到浏览器本地存储
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 顶部核心交互按钮 -->
+                        <div class="flex items-center gap-3">
+                            <button
+                                onclick=${toggleThemeMode}
+                                class="px-3 py-1.5 rounded-xl border flex items-center gap-1.5 transition-all duration-200 hover:scale-[1.02] active:scale-95 text-xs font-semibold ${
+                                    themeMode === 'dark'
+                                        ? 'bg-slate-800 border-slate-700 text-amber-400 hover:bg-slate-700'
+                                        : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100 shadow-sm'
+                                }"
+                                title=${themeMode === 'dark' ? "切换到日间模式" : "切换到夜间模式"}
+                            >
+                                ${themeMode === 'dark' ? html`<span>☀️</span><span>日间模式</span>` : html`<span>🌙</span><span>夜间模式</span>`}
+                            </button>
+
+                            <button 
+                                onclick=${handleCopyToClipboard}
+                                class="px-4 py-2 rounded-lg font-semibold text-xs text-white shadow-lg transition-all duration-300 flex items-center gap-1.5 transform active:scale-95 ${
+                                    copySuccess ? 'bg-green-600 hover:bg-green-700' : 'bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-600 hover:to-teal-500'
+                                }"
+                            >
+                                ${copySuccess ? "✓ 已完美复制" : "一键复制排版"}
+                            </button>
+                        </div>
+                    </header>
+
+                    <!-- 三栏式无间缝弹性工作台 -->
+                    <main class="flex-1 flex overflow-hidden ${themeMode === 'dark' ? 'bg-slate-950' : 'bg-slate-100'}" ref=${containerRef}>
+                        
+                        <!-- 1. 左侧：独立详细参数控制面板 -->
+                        <aside 
+                            class="border-r flex flex-col shrink-0 transition-all duration-300 overflow-hidden ${
+                                sidebarOpen ? 'w-80' : 'w-0 border-r-0'
+                            } ${themeMode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}"
+                        >
+                            <div class="px-4 py-3 border-b flex justify-between items-center shrink-0 ${themeMode === 'dark' ? 'border-slate-800 bg-slate-900/50 text-slate-300' : 'border-slate-200 bg-slate-50 text-slate-800'}">
+                                <span class="text-xs font-bold flex items-center gap-1.5">
+                                    ⚙️ 高级细节定制
+                                </span>
+                            </div>
+
+                            <div class="flex-1 overflow-y-auto p-4 space-y-6">
+                                
+                                <!-- 模块 1: 预设排版 -->
+                                <div class="space-y-2">
+                                    <h3 class="text-xs font-bold uppercase tracking-wider flex items-center gap-1 ${themeMode === 'dark' ? 'text-slate-400' : 'text-slate-700'} font-semibold">🎨 预设风格模板</h3>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        ${THEMES.map((theme) => {
+                                            const isSelected = currentTheme.id === theme.id;
+                                            return html`
+                                                <button
+                                                    key=${theme.id}
+                                                    onclick=${() => handleThemeSelect(theme)}
+                                                    class="p-2 rounded-lg border text-left transition-all relative flex items-center gap-2 ${
+                                                        isSelected 
+                                                            ? 'border-emerald-500 dark:bg-emerald-500/10 bg-emerald-50 text-emerald-900 dark:text-emerald-200 font-semibold ring-2 ring-emerald-500/20' 
+                                                            : (themeMode === 'dark' ? 'border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 text-slate-400' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700')
+                                                    }"
+                                                >
+                                                    <span 
+                                                        class="w-4 h-4 rounded-full flex-shrink-0 border border-black/10" 
+                                                        style="background-color: ${theme.primaryColor}"
+                                                    />
+                                                    <span class="text-[11px] font-semibold truncate ${isSelected ? 'text-emerald-800 dark:text-emerald-300' : (themeMode === 'dark' ? 'text-slate-300' : 'text-slate-700')}">
+                                                        ${theme.name.split(' ')[0]}
+                                                    </span>
+                                                    ${isSelected ? html`<span class="ml-auto text-emerald-600 dark:text-emerald-400 text-[10px]">✓</span>` : ''}
+                                                </button>
+                                            `;
+                                        })}
+                                    </div>
+                                </div>
+
+                                <hr class=${themeMode === 'dark' ? 'border-slate-800' : 'border-slate-200'} />
+
+                                <!-- 模块 2: 行宽行间距精调 -->
+                                <div class="space-y-4">
+                                    <h3 class="text-xs font-bold uppercase tracking-wider ${themeMode === 'dark' ? 'text-slate-400' : 'text-slate-700'}">📐 排版字号/间距</h3>
+                                    
+                                    <div class="space-y-1.5 text-xs">
+                                        <div class="flex justify-between text-slate-600 dark:text-slate-400 font-semibold">
+                                            <span>基础字号</span>
+                                            <span class="font-mono text-emerald-600 dark:text-emerald-400">${fontSize}px</span>
+                                        </div>
+                                        <input 
+                                            type="range" min="13" max="20" step="1"
+                                            value=${fontSize} oninput=${(e) => setFontSize(Number(e.target.value))}
+                                            class="w-full h-1 rounded-lg appearance-none cursor-pointer accent-emerald-500 ${themeMode === 'dark' ? 'bg-slate-800' : 'bg-slate-200'}"
+                                        />
+                                    </div>
+
+                                    <div class="space-y-1.5 text-xs">
+                                        <div class="flex justify-between text-slate-600 dark:text-slate-400 font-semibold">
+                                            <span>行高倍数</span>
+                                            <span class="font-mono text-emerald-600 dark:text-emerald-400">${lineHeight}</span>
+                                        </div>
+                                        <input 
+                                            type="range" min="1.4" max="2.4" step="0.05"
+                                            value=${lineHeight} oninput=${(e) => setLineHeight(Number(e.target.value))}
+                                            class="w-full h-1 rounded-lg appearance-none cursor-pointer accent-emerald-500 ${themeMode === 'dark' ? 'bg-slate-800' : 'bg-slate-200'}"
+                                        />
+                                    </div>
+
+                                    <div class="space-y-1.5 text-xs">
+                                        <div class="flex justify-between text-slate-600 dark:text-slate-400 font-semibold">
+                                            <span>字间距</span>
+                                            <span class="font-mono text-emerald-600 dark:text-emerald-400">${letterSpacing}px</span>
+                                        </div>
+                                        <input 
+                                            type="range" min="0" max="4" step="0.2"
+                                            value=${letterSpacing} oninput=${(e) => setLetterSpacing(Number(e.target.value))}
+                                            class="w-full h-1 rounded-lg appearance-none cursor-pointer accent-emerald-500 ${themeMode === 'dark' ? 'bg-slate-800' : 'bg-slate-200'}"
+                                        />
+                                    </div>
+
+                                    <div class="space-y-1.5 text-xs">
+                                        <div class="flex justify-between text-slate-600 dark:text-slate-400 font-semibold">
+                                            <span>段落间距</span>
+                                            <span class="font-mono text-emerald-600 dark:text-emerald-400">${paraMargin}px</span>
+                                        </div>
+                                        <input 
+                                            type="range" min="8" max="28" step="1"
+                                            value=${paraMargin} oninput=${(e) => setParaMargin(Number(e.target.value))}
+                                            class="w-full h-1 rounded-lg appearance-none cursor-pointer accent-emerald-500 ${themeMode === 'dark' ? 'bg-slate-800' : 'bg-slate-200'}"
+                                        />
+                                    </div>
+                                </div>
+
+                                <hr class=${themeMode === 'dark' ? 'border-slate-800' : 'border-slate-200'} />
+
+                                <!-- 模块 3: 高级微信深度自定义 -->
+                                <div class="space-y-4">
+                                    <h3 class="text-xs font-bold uppercase tracking-wider ${themeMode === 'dark' ? 'text-slate-400' : 'text-slate-700'}">🔬 高级格式微调</h3>
+                                    
+                                    <div class="space-y-1.5 text-xs">
+                                        <span class="text-slate-600 dark:text-slate-400 block font-semibold">两端对齐选择</span>
+                                        <div class="grid grid-cols-3 gap-1 p-1 rounded-lg ${themeMode === 'dark' ? 'bg-slate-950' : 'bg-slate-200/50'}">
+                                            ${['justify', 'left', 'center'].map((align) => html`
+                                                <button
+                                                    key=${align}
+                                                    onclick=${() => setTextAlign(align)}
+                                                    class="py-1 rounded text-center font-bold capitalize text-[10px] ${
+                                                        textAlign === align 
+                                                            ? 'bg-emerald-600 text-white shadow' 
+                                                            : (themeMode === 'dark' ? 'text-slate-400 hover:text-slate-200' : 'text-slate-700 hover:text-slate-950 hover:bg-white')
+                                                    }"
+                                                >
+                                                    ${align === 'justify' ? '两端' : align === 'left' ? '居左' : '居中'}
+                                                </button>
+                                            `)}
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-1.5 text-xs">
+                                        <span class="text-slate-600 dark:text-slate-400 block font-semibold">基础字体系列</span>
+                                        <select 
+                                            value=${fontFamily} 
+                                            onchange=${(e) => setFontFamily(e.target.value)}
+                                            class="w-full border rounded p-1.5 text-[11px] outline-none ${themeMode === 'dark' ? 'bg-slate-950 text-slate-300 border-slate-800' : 'bg-white text-slate-800 border-slate-300 font-semibold'}"
+                                        >
+                                            <option value="sans-serif">无衬线系统黑体</option>
+                                            <option value="serif">中式衬线宋体系列</option>
+                                            <option value="monospace">硬核等宽科技体</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="space-y-1.5 text-xs">
+                                        <span class="text-slate-600 dark:text-slate-400 block font-semibold">💻 代码块高亮样式</span>
+                                        <select 
+                                            value=${codeTheme} 
+                                            onchange=${(e) => setCodeTheme(e.target.value)}
+                                            class="w-full border rounded p-1.5 text-[11px] outline-none ${themeMode === 'dark' ? 'bg-slate-950 text-slate-300 border-slate-800' : 'bg-white text-slate-800 border-slate-300 font-semibold'}"
+                                        >
+                                            ${CODE_THEMES.map((theme) => html`
+                                                <option key=${theme.id} value=${theme.id}>${theme.name}</option>
+                                            `)}
+                                        </select>
+                                    </div>
+
+                                    <div class="space-y-1.5 text-xs">
+                                        <span class="text-slate-600 dark:text-slate-400 block font-semibold">二级标题 (H2) 装饰风格</span>
+                                        <select 
+                                            value=${h2Style} 
+                                            onchange=${(e) => setH2Style(e.target.value)}
+                                            class="w-full border rounded p-1.5 text-[11px] outline-none ${themeMode === 'dark' ? 'bg-slate-950 text-slate-300 border-slate-800' : 'bg-white text-slate-800 border-slate-300 font-semibold'}"
+                                        >
+                                            <option value="border-bottom">中式典雅 (纯底下双横边)</option>
+                                            <option value="border-left">干练左块 (左侧粗线块)</option>
+                                            <option value="bubble">清新胶囊 (淡底色包裹)</option>
+                                            <option value="short-dash">两端横线 (— 二级标题 —)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-2 text-xs">
+                                        <div class="space-y-1">
+                                            <span class="text-slate-600 dark:text-slate-400 block text-[10px] font-semibold">引用左边框</span>
+                                            <input 
+                                                type="number" min="1" max="8" value=${bqBorder} 
+                                                oninput=${(e) => setBqBorder(Number(e.target.value))}
+                                                class="w-full border rounded p-1 outline-none text-center ${themeMode === 'dark' ? 'bg-slate-950 text-slate-300 border-slate-800' : 'bg-white text-slate-800 border-slate-300 font-semibold'}"
+                                            />
+                                        </div>
+                                        <div class="space-y-1">
+                                            <span class="text-slate-600 dark:text-slate-400 block text-[10px] font-semibold">引用圆角大小</span>
+                                            <input 
+                                                type="number" min="0" max="16" value=${bqRadius} 
+                                                oninput=${(e) => setBqRadius(Number(e.target.value))}
+                                                class="w-full border rounded p-1 outline-none text-center ${themeMode === 'dark' ? 'bg-slate-950 text-slate-300 border-slate-800' : 'bg-white text-slate-800 border-slate-300 font-semibold'}"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center justify-between text-xs pt-1">
+                                        <span class="text-slate-600 dark:text-slate-400 font-semibold">开启首行缩进 (2em)</span>
+                                        <label class="relative inline-flex items-center cursor-pointer select-none">
+                                            <input 
+                                                type="checkbox" checked=${firstLineIndent} 
+                                                onchange=${(e) => setFirstLineIndent(e.target.checked)} 
+                                                class="sr-only peer"
+                                            />
+                                            <div class="w-8 h-4 bg-slate-300 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 dark:after:bg-slate-500 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <hr class=${themeMode === 'dark' ? 'border-slate-800' : 'border-slate-200'} />
+
+                                <!-- 模块 4: 主题配调色盘 -->
+                                <div class="space-y-3">
+                                    <h3 class="text-xs font-bold uppercase tracking-wider ${themeMode === 'dark' ? 'text-slate-400' : 'text-slate-700'}">🎨 定制配色详情</h3>
+                                    
+                                    <div class="space-y-2 text-xs">
+                                        <div>
+                                            <span class="block text-slate-600 dark:text-slate-400 mb-1 font-semibold">主色 (核心标题/引用条)</span>
+                                            <div class="flex items-center gap-2 border p-1.5 rounded ${themeMode === 'dark' ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-300'}">
+                                                <input 
+                                                    type="color" value=${primaryColor} 
+                                                    oninput=${(e) => setPrimaryColor(e.target.value)}
+                                                    class="w-5 h-5 rounded border-0 cursor-pointer bg-transparent"
+                                                />
+                                                <span class="font-mono uppercase text-[10px] ${themeMode === 'dark' ? 'text-slate-400' : 'text-slate-800 font-bold'}">${primaryColor}</span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <span class="block text-slate-600 dark:text-slate-400 mb-1 font-semibold">副色 (辅助色线)</span>
+                                            <div class="flex items-center gap-2 border p-1.5 rounded ${themeMode === 'dark' ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-300'}">
+                                                <input 
+                                                    type="color" value=${secondaryColor} 
+                                                    oninput=${(e) => setSecondaryColor(e.target.value)}
+                                                    class="w-5 h-5 rounded border-0 cursor-pointer bg-transparent"
+                                                />
+                                                <span class="font-mono uppercase text-[10px] ${themeMode === 'dark' ? 'text-slate-400' : 'text-slate-800 font-bold'}">${secondaryColor}</span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <span class="block text-slate-600 dark:text-slate-400 mb-1 font-semibold">正文文字颜色</span>
+                                            <div class="flex items-center gap-2 border p-1.5 rounded ${themeMode === 'dark' ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-300'}">
+                                                <input 
+                                                    type="color" value=${textColor} 
+                                                    oninput=${(e) => setTextColor(e.target.value)}
+                                                    class="w-5 h-5 rounded border-0 cursor-pointer bg-transparent"
+                                                />
+                                                <span class="font-mono uppercase text-[10px] ${themeMode === 'dark' ? 'text-slate-400' : 'text-slate-800 font-bold'}">${textColor}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class=${themeMode === 'dark' ? 'border-slate-800' : 'border-slate-200'} />
+
+                                <!-- 模块 5: 微信高保真模拟底面选择 -->
+                                <div class="space-y-2">
+                                    <h3 class="text-xs font-bold uppercase tracking-wider ${themeMode === 'dark' ? 'text-slate-400' : 'text-slate-700'}">📜 模拟预览背景风格</h3>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        ${BACKGROUNDS.map((bg) => {
+                                            const isBgSelected = bgOption.id === bg.id;
+                                            return html`
+                                                <button
+                                                    key=${bg.id}
+                                                    onclick=${() => setBgOption(bg)}
+                                                    class="p-2 rounded text-xs transition-all border ${
+                                                        isBgSelected 
+                                                            ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-bold ring-2 ring-emerald-500/20' 
+                                                            : (themeMode === 'dark' ? 'border-slate-800 hover:border-slate-700 text-slate-400' : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white')
+                                                    }"
+                                                >
+                                                    ${bg.name}
+                                                </button>
+                                            `;
+                                        })}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </aside>
+
+                        <!-- 2. 中部：全高独立编辑器区 (宽度比例由 dragger 手动拖动调节) -->
+                        <section 
+                            style="width: ${editorWidth}%"
+                            class="min-w-[20%] max-w-[80%] flex flex-col shrink-0 transition-colors duration-300 ${themeMode === 'dark' ? 'bg-slate-950' : 'bg-white'}"
+                        >
+                            <div class="flex items-center justify-between border-b px-4 py-2.5 text-xs shrink-0 ${themeMode === 'dark' ? 'border-slate-800 bg-slate-900/40 text-slate-300' : 'border-slate-200 bg-slate-50 text-slate-700'}">
+                                <div class="flex items-center gap-1.5 font-semibold">
+                                    <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                    <span>编辑 Markdown 正文</span>
+                                </div>
+                                <span class="text-[10px]">左右拖拽中间分界线调节视野</span>
+                            </div>
+
+                            <div class="flex-1 relative">
+                                <textarea
+                                    value=${markdown}
+                                    oninput=${(e) => setMarkdown(e.target.value)}
+                                    placeholder="在此输入您的 Markdown 正文内容..."
+                                    class="w-full h-full p-5 focus:outline-none focus:ring-0 resize-none font-mono text-[14px] leading-relaxed transition-colors duration-300 ${themeMode === 'dark' ? 'text-slate-300 bg-slate-950' : 'text-slate-800 bg-white'}"
+                                />
+                            </div>
+                        </section>
+
+                        <!-- 🌟 左右核心随意拖动分界线 dragger -->
+                        <div 
+                            onmousedown=${handleMouseDown}
+                            class="w-1.5 cursor-col-resize transition-all h-full shrink-0 flex items-center justify-center relative group ${themeMode === 'dark' ? 'bg-slate-800 hover:bg-emerald-500' : 'bg-slate-200 hover:bg-emerald-500'}"
+                        >
+                            <div class="absolute w-4 h-8 rounded bg-slate-700 border border-slate-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
+                                <svg class="w-3 h-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- 3. 右侧：全高公众号实时预览区 -->
+                        <section class="flex-1 flex flex-col overflow-hidden transition-colors duration-300 ${themeMode === 'dark' ? 'bg-slate-900' : 'bg-slate-100'}">
+                            
+                            <!-- 手机预览与源代码视图选项卡 -->
+                            <div class="flex items-center justify-between px-4 py-2 border-b text-xs shrink-0 ${themeMode === 'dark' ? 'border-slate-800 bg-slate-950' : 'border-slate-200 bg-white'}">
+                                <div class="flex items-center gap-1 p-0.5 rounded-lg ${themeMode === 'dark' ? 'bg-slate-800' : 'bg-slate-200/60'}">
+                                    <button
+                                        onclick=${() => setViewMode('phone')}
+                                        class="px-3 py-1 rounded-md transition-all font-semibold ${
+                                            viewMode === 'phone' 
+                                                ? (themeMode === 'dark' ? 'bg-slate-700 text-white' : 'bg-white text-slate-850 shadow-sm') 
+                                                : (themeMode === 'dark' ? 'text-slate-400 hover:text-slate-200' : 'text-slate-600 hover:text-slate-900')
+                                        }"
+                                    >
+                                        📱 高仿真手机预览
+                                    </button>
+                                    <button
+                                        onclick=${() => setViewMode('rawHtml')}
+                                        class="px-3 py-1 rounded-md transition-all font-semibold ${
+                                            viewMode === 'rawHtml' 
+                                                ? (themeMode === 'dark' ? 'bg-slate-700 text-white' : 'bg-white text-slate-850 shadow-sm') 
+                                                : (themeMode === 'dark' ? 'text-slate-400 hover:text-slate-200' : 'text-slate-600 hover:text-slate-900')
+                                        }"
+                                    >
+                                        微信行内 HTML
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 主模拟器内容容器 -->
+                            <div class="flex-1 overflow-y-auto p-4 flex justify-center items-start">
+                                ${viewMode === 'phone' ? html`
+                                    <!-- 高保真手机窗口模拟 -->
+                                    <div class="w-[375px] max-w-full bg-white rounded-[32px] border-[12px] shadow-2xl overflow-hidden flex flex-col my-4 select-text ${themeMode === 'dark' ? 'border-slate-950' : 'border-slate-800'}">
+                                        
+                                        <!-- 系统模拟顶部条 -->
+                                        <div class="bg-slate-950 text-white px-6 py-2.5 flex justify-between items-center text-[10px] select-none">
+                                            <span class="font-semibold">09:41</span>
+                                            <div class="w-16 h-4 bg-slate-800 rounded-full flex items-center justify-center text-[8px] font-bold text-slate-400">
+                                                微信公众号
+                                            </div>
+                                            <div class="flex items-center gap-1">
+                                                <span>📶</span>
+                                                <span>5G</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- 微信界面头部导航 -->
+                                        <div class="bg-white border-b border-slate-100 px-4 py-3 flex items-center justify-between text-slate-800 shrink-0 select-none">
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                                </svg>
+                                                <span class="font-bold text-xs truncate max-w-[180px]">公众号推文预览</span>
+                                            </div>
+                                            <div class="flex gap-1 flex-shrink-0">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                                            </div>
+                                        </div>
+
+                                        <!-- 核心富文本渲染宿主区 (绑定背景纹理) -->
+                                        <div 
+                                            ref=${previewRef}
+                                            class="flex-1 overflow-y-auto p-5 wechat-font min-h-[480px] ${bgOption.class}"
+                                            style="${bgOption.class.startsWith('bg-[') ? `background-color: ${bgOption.color}` : ''}"
+                                            dangerouslySetInnerHTML=${{ __html: convertedHtml }}
+                                        />
+                                    </div>
+                                ` : html`
+                                    <!-- 高精度含行内样式的 HTML 源码审查区 -->
+                                    <div class="w-full max-w-2xl rounded-xl p-5 font-mono text-xs overflow-x-auto shadow-lg ${themeMode === 'dark' ? 'bg-slate-950 text-slate-300' : 'bg-white text-slate-700 border border-slate-200'}">
+                                        <div class="flex justify-between items-center border-b pb-3 mb-3 select-none ${themeMode === 'dark' ? 'border-slate-800 text-slate-400' : 'border-slate-200 text-slate-500'}">
+                                            <span>纯净公众号行内样式源码 (安全转义机制)</span>
+                                            <button 
+                                                onclick=${handleCopyRawHtml}
+                                                class="px-2.5 py-1 rounded font-semibold ${themeMode === 'dark' ? 'bg-slate-800 hover:bg-slate-700 text-emerald-400' : 'bg-slate-100 hover:bg-slate-200 text-emerald-600'}"
+                                            >
+                                                复制源码
+                                            </button>
+                                        </div>
+                                        <pre class="whitespace-pre-wrap word-break break-all select-all">${convertedHtml}</pre>
+                                    </div>
+                                `}
+                            </div>
+                        </section>
+
+                    </main>
+
+                    <!-- 全局通知框 (Toast) -->
+                    ${toastMessage ? html`
+                        <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 text-sm border animate-fade-in ${
+                            themeMode === 'dark' ? 'bg-slate-850/95 border-slate-800 text-white' : 'bg-white/95 border-slate-200 text-slate-850'
+                        }">
+                            <span class="text-emerald-400">✨</span>
+                            <p>${toastMessage}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        render(html`<${App} />`, document.getElementById('root'));
+    </script>
