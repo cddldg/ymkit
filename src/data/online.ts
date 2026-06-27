@@ -12,7 +12,7 @@ const onlineTools: ToolEntry[] = [
   },
   {
     slug: 'mdtowx',
-    title: 'Markdown微信公众号排版',
+    title: 'MarkDown转微信公众号排版',
     description: 'Markdown 转微信公众号排版，实时预览，一键复制到公众号后台',
   },
 ];
