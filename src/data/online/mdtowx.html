@@ -989,4 +989,16 @@ function resizePanels(percentage) {
         }
 
         render(html`<${App} />`, document.getElementById('root'));
+
+        // 打赏面板不影响工具页面滚动
+        var _mdtowxInterval = setInterval(function() {
+            if (typeof window.openDonation === 'function') {
+                clearInterval(_mdtowxInterval);
+                var _origOpenDonation = window.openDonation;
+                window.openDonation = function() {
+                    _origOpenDonation();
+                    document.body.style.overflow = '';
+                };
+            }
+        }, 200);
     </script>
