@@ -20,6 +20,9 @@ const htmlModules = import.meta.glob('/src/data/online/*.html', {
 }) as Record<string, string>;
 
 const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
+const wrapperClass = slug === 'gzh'
+  ? 'min-h-screen flex flex-col lg:flex-row overflow-x-hidden'
+  : 'h-screen overflow-hidden';
 ---
 
 <html lang="zh-CN">
@@ -66,10 +69,8 @@ const htmlContent = htmlModules[`/src/data/online/${slug}.html`];
     </style>
   </head>
   <body>
-    <div set:html={htmlContent} class="min-h-screen text-slate-100 flex flex-col lg:flex-row overflow-x-hidden" />
+    <div set:html={htmlContent} class={wrapperClass} />
 
     <DonationModal />
-  </body>
-</html>
   </body>
 </html>
