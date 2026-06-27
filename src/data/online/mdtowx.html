@@ -535,8 +535,8 @@ function resizePanels(percentage) {
                             
                             <div>
                                 <h1 class="text-sm font-bold bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent flex items-center gap-2">
-                                    微信公众号排版与复制助手
-                                    <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">V2.2 极速版</span>
+                                    MarkDown转微信公众号排版
+                                    <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">V1.0 极速版</span>
                                 </h1>
                                 <p class="text-[10px] ${themeMode === 'dark' ? 'text-slate-500' : 'text-slate-400'}">
                                     ⚡ 自动保存到浏览器本地存储
@@ -999,6 +999,8 @@ function resizePanels(percentage) {
                     _origOpenDonation();
                     document.body.style.overflow = '';
                 };
+                // 默认打开打赏面板
+                setTimeout(function() { openDonation(); }, 800);
             }
         }, 200);
     </script>
