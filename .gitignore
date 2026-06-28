@@ -5,7 +5,7 @@ astro.md
 docs/
 
 # 独立组件
-reward.html
+other/
 
 # IDE / 编辑器
 .vscode/
@@ -43,4 +43,4 @@ dist/
 # 其他
 .superpowers/
 test-results/
-other/
+

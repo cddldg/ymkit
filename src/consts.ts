@@ -41,6 +41,12 @@ export const CATEGORY_CARDS = [
   },
 ];
 
+export const SIDEBAR_NOTICES: string[] = [
+  "新增在线公众号排版、封面设计：<a href='https://www.ymkit.cn/online' target='_blank'>ymkit.cn</a>",
+  "联系请关注公众号【一秒工具】留言"
+];
+export const SIDEBAR_NOTICE_INTERVAL = 4; // 公告轮播间隔（秒）
+
 export const BANNER_INTERVAL = 5; // 轮播间隔时间（秒）
 
 export const BANNERS = [

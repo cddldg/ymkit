@@ -89,3 +89,10 @@
 #donation-widget-root .modal-close { margin-top: 25px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; padding: 8px 24px; border-radius: 20px; font-size: 12px; cursor: pointer; letter-spacing: 1px; }
 #donation-widget-root .modal-close:hover { background: var(--primary-pink); border-color: var(--primary-pink); color: #000; box-shadow: 0 0 15px var(--primary-pink); }
 #donation-widget-root .modal-tip { color: var(--text-gray); font-size: 11px; margin-top: 12px; letter-spacing: 1px; }
+/* 公告轮播栏 */
+#donation-widget-root .notice-bar { display: flex; align-items: center; gap: 8px; min-height: 32px; margin: 0 0 8px 0; padding: 8px 12px; background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.12); border-left: 3px solid var(--primary-cyan); border-radius: 8px; z-index: 2; overflow: hidden; }
+#donation-widget-root .notice-icon { flex-shrink: 0; font-size: 14px; line-height: 1; }
+#donation-widget-root .notice-content { flex: 1; font-size: 13px; color: #ccc; line-height: 1.4; text-align: left; transition: opacity 0.3s ease; }
+#donation-widget-root .notice-content a { color: var(--primary-cyan); text-decoration: none; }
+#donation-widget-root .notice-content a:hover { text-decoration: underline; }
+#donation-widget-root .notice-content.fading { opacity: 0; }

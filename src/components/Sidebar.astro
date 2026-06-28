@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_AVATAR, SOCIAL_LINKS } from '../consts';
+import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_AVATAR, SOCIAL_LINKS, SIDEBAR_NOTICES, SIDEBAR_NOTICE_INTERVAL } from '../consts';
 import { getWordCount } from '../utils/readingTime';
 
 interface CurrentPost {
@@ -87,6 +87,9 @@ if (currentPost) {
   // 非详情页：随机推荐
   recommendedPosts = [...sorted].sort(() => Math.random() - 0.5).slice(0, 5);
 }
+
+// 侧边栏公告数据
+const noticeData = SIDEBAR_NOTICES;
 ---
 
 <aside class="space-y-6">
@@ -136,6 +139,15 @@ if (currentPost) {
         <div class="font-semibold text-sm">{Math.round(totalWords / 1000)}k</div>
         <div class="text-xs text-gray-400">字数</div>
       </div>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-[var(--color-card-dark)] rounded-2xl shadow-sm p-5" id="sidebar-notice-card" data-notice={JSON.stringify(noticeData)} data-interval={SIDEBAR_NOTICE_INTERVAL}>
+    <h2 class="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100 flex items-center gap-2">
+      公告
+    </h2>
+    <div class="sidebar-notice-bar">
+      <span class="sidebar-notice-content" id="sidebarNoticeContent" set:html={noticeData[0]} />
     </div>
   </div>
 
@@ -262,6 +274,31 @@ if (currentPost) {
   .sidebar-flip-back {
     transform: rotateY(180deg);
   }
+  .sidebar-notice-bar {
+    min-height: 24px;
+    overflow: hidden;
+  }
+  .sidebar-notice-content {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+    text-align: left;
+    transition: opacity 0.3s ease;
+  }
+  :global(.dark) .sidebar-notice-content {
+    color: #999;
+  }
+  .sidebar-notice-content a {
+    color: var(--color-primary, #00b4d8);
+    text-decoration: none;
+  }
+  .sidebar-notice-content a:hover {
+    text-decoration: underline;
+  }
+  .sidebar-notice-content.fading {
+    opacity: 0;
+  }
 </style>
 
 <script is:inline>
@@ -292,6 +329,34 @@ if (currentPost) {
 
 <script is:inline>
   (function() {
+    var sidebarNoticeList = ["<a href='https://www.ymkit.cn' target='_blank'>官网：ymkit.cn</a>"];
+    var sidebarNoticeIndex = 0;
+    var sidebarNoticeTimer = null;
+
+    function initSidebarNotice() {
+      var card = document.getElementById('sidebar-notice-card');
+      if (!card || card.dataset.initialized) return;
+      card.dataset.initialized = 'true';
+      try {
+        var raw = card.getAttribute('data-notice');
+        if (raw) var parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed) && parsed.length) sidebarNoticeList = parsed;
+      } catch {}
+      var interval = parseInt(card.getAttribute('data-interval') || '3', 10) * 1000;
+      if (sidebarNoticeList.length > 1) {
+        sidebarNoticeTimer = setInterval(function() {
+          var el = document.getElementById('sidebarNoticeContent');
+          if (!el) return;
+          el.classList.add('fading');
+          setTimeout(function() {
+            sidebarNoticeIndex = (sidebarNoticeIndex + 1) % sidebarNoticeList.length;
+            el.innerHTML = sidebarNoticeList[sidebarNoticeIndex];
+            el.classList.remove('fading');
+          }, 300);
+        }, interval);
+      }
+    }
+
     async function fetchSidebarQrData() {
       const defaultImg = {
         wx: 'https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260622180321160.webp',
@@ -344,5 +409,8 @@ if (currentPost) {
 
     document.addEventListener('astro:page-load', initSidebarFlip);
     initSidebarFlip();
+
+    document.addEventListener('astro:page-load', initSidebarNotice);
+    initSidebarNotice();
   })();
 </script>
