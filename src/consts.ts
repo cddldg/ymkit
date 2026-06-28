@@ -56,6 +56,16 @@ export const BANNERS = [
     link: 'https://www.ymkit.cn',
   },
   {
+    image: 'https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260628134246095.webp',
+    title: 'MarkDown转微信公众号排版',
+    link: '/online/mdtowx',
+  },
+  {
+    image: 'https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260628134240895.webp',
+    title: '公众号封面设计',
+    link: '/online/gzh',
+  },
+  {
     image: 'https://cdn.jsdmirror.cn/gh/cddldg/jst@main/img/20260621145615880.gif',
     title: '数字人',
     link: '/ai',
