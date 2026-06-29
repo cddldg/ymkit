@@ -109,5 +109,7 @@ draft: false
 *适用平台：Chrome / Edge 浏览器*
 *适用场景：公众号文章素材采集、内容导出、知识管理*
 
+[公众号](https://mp.weixin.qq.com/s/j_ypTtWbf7SDFHDHNm7jbA)
 [百度](https://pan.baidu.com/s/1hiUl9OCHgj-N6OB26x9JSg?pwd=ymki)
 [夸克](https://pan.quark.cn/s/b10881bf1455?pwd=mtDP)
+[迅雷](https://pan.xunlei.com/s/VOwHHQKFwdW-IYI0AyYI3jb-A1?pwd=9e8e)

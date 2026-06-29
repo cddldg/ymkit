@@ -75,3 +75,4 @@ draft: false
 工作流json，下载下来拖进ComfyUI的界面就可以了。
 [百度](https://pan.baidu.com/s/1deHNcekhbF5SXk_X44-Nrw?pwd=ymki)
 [夸克](https://pan.quark.cn/s/0e455cabc915?pwd=P6uu)
+[迅雷](https://pan.xunlei.com/s/VOwHHQKFwdW-IYI0AyYI3jb-A1?pwd=9e8e)

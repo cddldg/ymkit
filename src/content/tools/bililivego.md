@@ -11,5 +11,7 @@ draft: false
 ---
 ## 一个开源免费项目，彻底告别了手动录直播的日子
 
+[公众号](https://mp.weixin.qq.com/s/Smmq9zat4sXJFZXg74TuDQ)
 [百度](https://pan.baidu.com/s/1hiUl9OCHgj-N6OB26x9JSg?pwd=ymki)
 [夸克](https://pan.quark.cn/s/b10881bf1455?pwd=mtDP)
+[迅雷](https://pan.xunlei.com/s/VOwHHQKFwdW-IYI0AyYI3jb-A1?pwd=9e8e)
