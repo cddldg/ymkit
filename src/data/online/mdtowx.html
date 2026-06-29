@@ -169,12 +169,24 @@
 
         // 微信适配的代码高亮色系定义
         const CODE_THEMES = [
-            { id: 'monokai', name: 'Monokai 暗黑', bg: '#272822', text: '#f8f8f2', border: 'none' },
-            { id: 'github-light', name: 'GitHub 极简白', bg: '#f6f8fa', text: '#24292e', border: '1px solid #eaecef' },
-            { id: 'wechat', name: '微信官方灰', bg: '#f8f9fa', text: '#3e3e3e', border: '1px solid #e1e4e8' },
-            { id: 'dracula', name: 'Dracula 魅紫', bg: '#282a36', text: '#f8f8f2', border: 'none' },
-            { id: 'terminal', name: 'Terminal 终端绿', bg: '#0c0c0c', text: '#39ff14', border: '1px solid #333333' },
-            { id: 'one-dark', name: 'One Dark 雅致', bg: '#282c34', text: '#abb2bf', border: 'none' }
+            { id: 'monokai', name: 'Monokai 暗黑', bg: '#272822', text: '#f8f8f2', border: 'none', isDark: true },
+            { id: 'monokai-sublime', name: 'Monokai Sublime', bg: '#23241f', text: '#f8f8f2', border: 'none', isDark: true },
+            { id: 'atom-one-dark', name: 'Atom One Dark', bg: '#282c34', text: '#abb2bf', border: 'none', isDark: true },
+            { id: 'github-dark', name: 'GitHub Dark', bg: '#0d1117', text: '#c9d1d9', border: 'none', isDark: true },
+            { id: 'dracula', name: 'Dracula 魅紫', bg: '#282a36', text: '#f8f8f2', border: 'none', isDark: true },
+            { id: 'nord', name: 'Nord 极北', bg: '#2e3440', text: '#d8dee9', border: 'none', isDark: true },
+            { id: 'night-owl', name: 'Night Owl 夜鸮', bg: '#011627', text: '#d6deeb', border: 'none', isDark: true },
+            { id: 'tokyo-night-dark', name: 'Tokyo Night', bg: '#1a1b26', text: '#a9b1d6', border: 'none', isDark: true },
+            { id: 'vs2015', name: 'VS 2015 暗色', bg: '#1e1e1e', text: '#dcdcdc', border: 'none', isDark: true },
+            { id: 'obsidian', name: 'Obsidian 暗岩', bg: '#282b2e', text: '#e0e2e4', border: 'none', isDark: true },
+            { id: 'tomorrow-night-blue', name: 'Tomorrow Night Blue', bg: '#002451', text: '#ffffff', border: 'none', isDark: true },
+            { id: 'shades-of-purple', name: 'Shades of Purple', bg: '#2d2b57', text: '#e3dfff', border: 'none', isDark: true },
+            { id: 'panda-syntax-dark', name: 'Panda Syntax', bg: '#2a2c2d', text: '#e6e6e6', border: 'none', isDark: true },
+            { id: 'stackoverflow-dark', name: 'StackOverflow Dark', bg: '#1c1b1b', text: '#ffffff', border: 'none', isDark: true },
+            { id: 'github-light', name: 'GitHub 极简白', bg: '#f6f8fa', text: '#24292e', border: '1px solid #eaecef', isDark: false },
+            { id: 'atom-one-light', name: 'Atom One Light', bg: '#fafafa', text: '#383a42', border: '1px solid #eaecef', isDark: false },
+            { id: 'xcode', name: 'Xcode 经典', bg: '#ffffff', text: '#000000', border: '1px solid #d8d8d8', isDark: false },
+            { id: 'vs', name: 'VS 亮色', bg: '#ffffff', text: '#000000', border: '1px solid #e0e0e0', isDark: false }
         ];
 
         const DEFAULT_MARKDOWN = `# 探索 Markdown 优雅排版艺术
@@ -375,7 +387,7 @@ function resizePanels(percentage) {
                         p: `font-size: ${fontSize}px; color: ${textColor}; line-height: ${lineHeight}; letter-spacing: ${letterSpacing}px; margin-top: ${paraMargin}px; margin-bottom: ${paraMargin}px; text-align: ${textAlign}; word-break: break-all; ${firstLineIndent ? 'text-indent: 2em;' : ''} ${cssFontFamily}`,
                         blockquote: `border-left: ${bqBorder}px solid ${primaryColor}; background-color: ${primaryColor}0c; padding: 12px 16px; margin: 16px 0; border-radius: ${bqRadius}px; color: ${textColor}d0; font-size: ${fontSize - 1}px; line-height: 1.7; ${cssFontFamily}`,
                         pre: `background-color: ${activeCodeTheme.bg}; color: ${activeCodeTheme.text}; border: ${activeCodeTheme.border}; padding: 14px; border-radius: 8px; overflow-x: auto; font-family: Consolas, Monaco, monospace; font-size: 13px; line-height: 1.5; margin: 16px 0;`,
-                        code: `background-color: ${primaryColor}15; color: ${primaryColor}; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: ${fontSize - 1}px; word-break: break-all;`,
+                        code: `background-color: ${activeCodeTheme.isDark ? '#ffffff15' : '#00000010'}; color: ${activeCodeTheme.isDark ? '#f8f8f2' : '#24292e'}; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: ${fontSize - 1}px; word-break: break-all;`,
                         ul: `list-style-type: disc; padding-left: 20px; margin: 12px 0; font-size: ${fontSize}px; color: ${textColor}; ${cssFontFamily}`,
                         ol: `list-style-type: decimal; padding-left: 20px; margin: 12px 0; font-size: ${fontSize}px; color: ${textColor}; ${cssFontFamily}`,
                         li: `margin-bottom: 6px; line-height: ${lineHeight}; letter-spacing: ${letterSpacing}px;`,
