@@ -334,15 +334,16 @@ function resizePanels(percentage) {
 
             // 将选中的背景模式翻译成兼容微信公众号后台的 inline Style
             const getBgStyleInline = (bg) => {
-                const basePaddingStyle = "padding: 24px 20px; box-sizing: border-box; min-height: 100%; border-radius: 8px;";
+                const baseTableStyle = "width: 100%; max-width: 100%; border-collapse: collapse; border: 0; margin: 0; padding: 0;";
+                const baseTdStyle = "padding: 24px 20px; box-sizing: border-box; min-height: 100%;";
                 if (bg.id === 'grid') {
-                    return `${basePaddingStyle} background-color: #ffffff; background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px); background-size: 20px 20px;`;
+                    return { wrap: (html) => `<table style="${baseTableStyle}"><tr><td style="${baseTdStyle} background-color: #ffffff; background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px); background-size: 20px 20px;">${html}</td></tr></table>` };
                 } else if (bg.id === 'dots') {
-                    return `${basePaddingStyle} background-color: #fafbfc; background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px); background-size: 16px 16px;`;
+                    return { wrap: (html) => `<table style="${baseTableStyle}"><tr><td style="${baseTdStyle} background-color: #fafbfc; background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px); background-size: 16px 16px;">${html}</td></tr></table>` };
                 } else if (bg.id === 'lined') {
-                    return `${basePaddingStyle} background-color: #fcfdfd; background-image: linear-gradient(#e2e8f0 1px, transparent 1px); background-size: 100% 26px;`;
+                    return { wrap: (html) => `<table style="${baseTableStyle}"><tr><td style="${baseTdStyle} background-color: #fcfdfd; background-image: linear-gradient(#e2e8f0 1px, transparent 1px); background-size: 100% 26px;">${html}</td></tr></table>` };
                 } else {
-                    return `${basePaddingStyle} background-color: ${bg.color};`;
+                    return { wrap: (html) => `<table style="${baseTableStyle}"><tr><td style="${baseTdStyle} background-color: ${bg.color};">${html}</td></tr></table>` };
                 }
             };
 
@@ -426,14 +427,14 @@ function resizePanels(percentage) {
                 }
             }, [markdown, primaryColor, secondaryColor, textColor, fontSize, lineHeight, letterSpacing, paraMargin, h2Style, fontFamily, textAlign, firstLineIndent, bqBorder, bqRadius, codeTheme]);
 
-            // 🌟 工业级高兼容剪贴板拷贝驱动 (基于事件劫持注入，无 DOM 节点和 Selection 依赖，完美绕开各种沙盒拦截)
+            // 🌟 工业级高兼容剪贴板拷贝驱动 (基于事件劫持注入 + 临时 DOM 选区，完美绕开沙盒拦截)
             const performSystemCopy = (content, asRichText = false) => {
                 try {
                     const listener = (e) => {
                         if (asRichText) {
                             // 关键核心：向剪贴板写入精准富文本格式
                             e.clipboardData.setData('text/html', content);
-                            
+
                             // 极重要降级处理：提取纯文本填充到 text/plain 分流，彻底杜绝部分文本编辑器粘贴出空白的情况
                             const tempDiv = document.createElement('div');
                             tempDiv.innerHTML = content;
@@ -445,17 +446,39 @@ function resizePanels(percentage) {
                         e.preventDefault(); // 阻止浏览器对选区的默认空白复制，强制使用我们定制的 Payload
                     };
 
-                    // 绑定瞬时监听器 -> 触发原生复制指令 -> 注销监听器
+                    // 绑定瞬时监听器 -> 创建临时 DOM 选区 -> 触发原生复制指令 -> 清理
                     document.addEventListener('copy', listener);
-                    const successful = document.execCommand('copy');
+
+                    let successful;
+                    if (asRichText) {
+                        // 富文本路径需要创建临时 DOM 元素并选中，确保 execCommand('copy') 可靠触发
+                        const wrapper = document.createElement('div');
+                        wrapper.innerHTML = content;
+                        wrapper.style.position = 'fixed';
+                        wrapper.style.left = '-9999px';
+                        wrapper.style.top = '0';
+                        document.body.appendChild(wrapper);
+
+                        const range = document.createRange();
+                        range.selectNodeContents(wrapper);
+                        const selection = window.getSelection();
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        successful = document.execCommand('copy');
+                        selection.removeAllRanges();
+                        document.body.removeChild(wrapper);
+                    } else {
+                        successful = document.execCommand('copy');
+                    }
+
                     document.removeEventListener('copy', listener);
 
                     // 如果 execCommand 因为某些极端沙盒完全受限，使用现代 Clipboard API 兜底
-                    if (!successful && navigator.clipboard) {
-                        if (!asRichText) {
-                            navigator.clipboard.writeText(content);
-                            return true;
-                        }
+                    if (!successful && navigator.clipboard && navigator.clipboard.write) {
+                        const blob = new Blob([content], { type: 'text/html' });
+                        const data = [new ClipboardItem({ 'text/html': blob })];
+                        navigator.clipboard.write(data).catch(() => {});
+                        return true;
                     }
 
                     return successful;
@@ -478,12 +501,10 @@ function resizePanels(percentage) {
                 }
             };
 
-            // 复制富文本至公众号，自动嵌套带有背景样式的包裹层
+            // 复制富文本至公众号，用 &lt;table&gt; 包裹背景层（微信保留 table 的 inline style，不会像 div 一样过滤掉）
             const handleCopyToClipboard = () => {
-                const bgStyle = getBgStyleInline(bgOption);
-                // 核心修复：用带有完整背景 inline-style 样式的外容器包裹转出的文章 HTML
-                const wrappedHtml = `<div style="${bgStyle}">${convertedHtml}</div>`;
-                
+                const wrappedHtml = getBgStyleInline(bgOption).wrap(convertedHtml);
+
                 const successful = performSystemCopy(wrappedHtml, true);
                 if (successful) {
                     setCopySuccess(true);
@@ -496,8 +517,7 @@ function resizePanels(percentage) {
 
             // 复制 HTML 源代码 (包含包裹背景样式的 HTML)
             const handleCopyRawHtml = () => {
-                const bgStyle = getBgStyleInline(bgOption);
-                const wrappedHtml = `<div style="${bgStyle}">${convertedHtml}</div>`;
+                const wrappedHtml = getBgStyleInline(bgOption).wrap(convertedHtml);
                 
                 const successful = performSystemCopy(wrappedHtml, false);
                 if (successful) {
